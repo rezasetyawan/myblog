@@ -1,5 +1,10 @@
+<script setup lang="ts">
+const layout:string = "my-layout"
+
+</script>
 <template>
-  <div>
-    <NuxtWelcome />
-  </div>
+  <NuxtLayout :name="layout">
+    <NuxtPage></NuxtPage>
+  </NuxtLayout>
 </template>
+
