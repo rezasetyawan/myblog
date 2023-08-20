@@ -54,9 +54,9 @@ const addImage = () => {
   }
 };
 
-const selectedHeadingLevel = ref<string>("1");
+const selectedHeadingLevel = ref<string>("2");
 
-type Level = 1 | 2 | 3 | 4 | 5 | 6;
+type Level = 2 | 3 | 4 | 5 | 6;
 
 const setHeadingLevel = () => {
   const headingLevel = parseInt(selectedHeadingLevel.value) as Level;
@@ -120,7 +120,7 @@ watch(
     >
       code
     </button>
-    
+
     <button
       @click="editor.chain().focus().setParagraph().run()"
       :class="{
@@ -135,12 +135,17 @@ watch(
       @change="setHeadingLevel"
       class="editor-select"
     >
-      <option value="1">Heading 1</option>
+      <!-- <option value="1">Heading 1</option>
       <option value="2">Heading 2</option>
       <option value="3">Heading 3</option>
       <option value="4">Heading 4</option>
       <option value="5">Heading 5</option>
-      <option value="6">Heading 6</option>
+      <option value="6">Heading 6</option> -->
+      <option value="2">Heading 1</option>
+      <option value="3">Heading 2</option>
+      <option value="4">Heading 3</option>
+      <option value="5">Heading 4</option>
+      <option value="6">Heading 5</option>
     </select>
     <select
       v-model="selectedTextAlign"
@@ -230,7 +235,8 @@ watch(
   /* Add other styling as needed */
 }
 
-button, select {
+button,
+select {
   margin: 4px;
 }
 .editor-button {

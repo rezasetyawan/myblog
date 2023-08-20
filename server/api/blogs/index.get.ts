@@ -3,7 +3,7 @@ import { serverSupabaseClient } from '#supabase/server'
 export default eventHandler(async (event): Promise<BlogSnapshots> => {
     const client = await serverSupabaseClient(event)
     try {
-        const { data: blogs, error } = await client.from('posts').select('id, title, created_at, image_url')
+        const { data: blogs, error } = await client.from('posts').select('id, title, created_at, image_url, comments(count)').order('created_at', { ascending: false })
         if (error) {
             console.error(error.message);
             throw new Error(error.message);

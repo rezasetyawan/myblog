@@ -3,4 +3,5 @@
 
 <template>
     <!-- <Hallo></Hallo> -->
+    <TiptapEditor/>
 </template>

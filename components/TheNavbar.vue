@@ -6,12 +6,12 @@ const toggleNavbar = () => emit("toggleNavbar");
 </script>
 <template>
   <header
-    class="grid grid-cols-3 gap-2.5 items-center sticky top-0 shadow z-[99] bg-[#ffffff] px-5 py-2 md:px-10 md:py-3"
+    class="grid grid-cols-3 gap-2.5 items-center sticky top-0 shadow z-[99] bg-[#ffffff] px-5 py-2 md:px-10 md:py-3 font-rubik"
   >
     <div class="">
       <NuxtLink to="/student/">
         <h1
-          class="font-sans text-red-800 font-bold text-base min-[425px]:text-xl md:text-2xl drop-shadow-md shadow-red-600/50"
+          class="text-red-800 font-bold text-base min-[425px]:text-xl md:text-2xl border-b-[3px] border-red-900 max-w-fit"
         >
           MyBlog
         </h1>
@@ -28,15 +28,15 @@ const toggleNavbar = () => emit("toggleNavbar");
           hidden: !props.showNavbar,
         }"
       >
-        <li class="inline-block text-center text-red-800 font-bold font-sans">
+        <li class="inline-block text-center text-red-800 font-bold">
           <NuxtLink
             to="/"
-            class="px-3 py-2 hover:text-red-800 hover:bg-slate-100 hover:rounded-md focus:bg-slate-200 focus:rounded-md"
+            class="px-3 py-2 hover:text-red-800 hover:bg-slate-100 "
           >
             Home
           </NuxtLink>
         </li>
-        <li class="inline-block text-center text-red-800 font-bold font-sans">
+        <li class="inline-block text-center text-red-800 font-bold">
           <NuxtLink
             to="/blogs"
             class="px-3 py-2 hover:text-red-800 hover:bg-slate-100 hover:rounded-md focus:bg-slate-200 focus:rounded-md"
@@ -44,7 +44,7 @@ const toggleNavbar = () => emit("toggleNavbar");
             Blog
           </NuxtLink>
         </li>
-        <li class="inline-block text-center text-red-800 font-bold font-sans">
+        <li class="inline-block text-center text-red-800 font-bold">
           <NuxtLink
             to="/about"
             class="px-3 py-2 hover:text-red-800 hover:bg-slate-100 hover:rounded-md focus:bg-slate-200 focus:rounded-md"
@@ -95,3 +95,44 @@ const toggleNavbar = () => emit("toggleNavbar");
     </div>
   </header>
 </template>
+<style scoped>
+@keyframes onblur {
+  0% {
+    border-bottom: 3px;
+    border-color: #991b1b;
+    border-width: 100%;
+  }
+
+  25% {
+    border-width: 75%;
+  }
+
+  50% {
+    border-width: 50%;
+  }
+
+  100% {
+    border-width: 0%;
+  }
+}
+
+@keyframes onhover {
+  0% {
+    border-bottom: 3px;
+    border-color: #991b1b;
+    border-width: 0%;
+  }
+
+  25% {
+    border-width: 25%;
+  }
+
+  50% {
+    border-width: 50%;
+  }
+
+  100% {
+    border-width: 100%;
+  }
+}
+</style>

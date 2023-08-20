@@ -11,10 +11,17 @@ export default defineNuxtConfig({
   routeRules: {
     '/blogs': { ssr: false }
   },
-  modules: ['@nuxtjs/supabase'],
+  modules: ['@nuxtjs/supabase','nuxt-icon',['@nuxtjs/google-fonts', {
+    families: {
+      Rubik: [300,400,500,600,700,800,900]
+    }
+  }]],
   supabase: {
     redirect: false,
     url: process.env.SUPABASE_URL,
     key: process.env.SUPABASE_KEY
   },
+  googleFonts: {
+    display: 'swap'
+  }
 })

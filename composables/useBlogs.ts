@@ -12,7 +12,12 @@ const getBlogs = async () => {
 const getBlogById = async (id: string) => {
     try {
         const { post } = await $fetch(`/api/blogs/${id}`)
-        return post
+        const comments = await $fetch(`/api/comments/${id}`)
+        return {
+            ...post,
+            comments: comments,
+            // comment_count: comments?.length
+        }
     } catch (error) {
         console.error(error)
     }

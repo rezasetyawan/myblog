@@ -9,10 +9,11 @@ module.exports = {
     "./app.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        rubik: ["Rubik", "sans-serif"],
+      },
+    },
   },
-  plugins: [
-    require('@tailwindcss/typography'),
-  ],
-}
-
+  plugins: [require("@tailwindcss/typography")],
+};

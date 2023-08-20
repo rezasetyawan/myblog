@@ -6,15 +6,19 @@ const { blog } = defineProps(["blog"]);
 
 <template>
   <NuxtLink :to="`/blog/${blog.id}`">
-    <div>
+    <div class="group">
       <img
         :src="blog.image_url"
-        class="min-h-[250px] max-h-[250px] object-cover"
+        class="min-h-[250px] max-h-[250px] object-cover brightness-90 group-hover:brightness-100 transition-all rounded-sm"
       />
-      <h2 class="text-center font-semibold text-xl py-3">{{ blog.title }}</h2>
-      <p class="text-sm font-semibold text-center">
+      <h3 class="text-center font-medium text-xl py-3 font-rubik">{{ blog.title }}</h3>
+     <div class="flex gap-3 items-center justify-center font-medium text-sm text-slate-700">
+      <p>
         {{ formatDate(blog.created_at) }}
       </p>
+      &#8226
+      <p>{{ blog.comments[0].count }} comments</p>
+     </div>
     </div>
   </NuxtLink>
 </template>

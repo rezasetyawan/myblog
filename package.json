@@ -10,11 +10,14 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@nuxtjs/google-fonts": "^3.0.2",
     "@nuxtjs/supabase": "^1.0.2",
     "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^18.17.1",
     "autoprefixer": "^10.4.14",
+    "eslint": "^8.47.0",
     "nuxt": "^3.6.5",
+    "nuxt-icon": "^0.5.0",
     "postcss": "^8.4.27",
     "tailwindcss": "^3.3.3"
   },
@@ -26,6 +29,7 @@
     "@tiptap/extension-underline": "^2.0.4",
     "@tiptap/pm": "^2.0.4",
     "@tiptap/starter-kit": "^2.0.4",
-    "@tiptap/vue-3": "^2.0.4"
+    "@tiptap/vue-3": "^2.0.4",
+    "nanoid": "^4.0.2"
   }
 }
