@@ -17,7 +17,7 @@ const { blog } = defineProps(["blog"]);
         {{ formatDate(blog.created_at) }}
       </p>
       &#8226
-      <p>{{ blog.comments[0].count }} comments</p>
+      <p>{{ blog.comment_counts }} comments</p>
      </div>
     </div>
   </NuxtLink>

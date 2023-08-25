@@ -1,51 +1,98 @@
 import { serverSupabaseClient } from '#supabase/server';
+import { SupabaseClient } from '@supabase/supabase-js';
 
-const fetchBlogData = async (client: any, blogId: string | null) => {
-    const { data: blogs, error } = await client
-        .from('posts')
-        .select('id, title, text, image_url, created_at, category_id')
-        .eq('id', blogId);
+interface blog {
+    id: string
+    title: string
+    image_url: string
+    created_at: string
+    category_id: string
+}
+interface category {
+    id: string
+    name: string
+}
+interface tag {
+    id: string
+    name: string
+}
 
-    if (error) {
-        throw new Error(error.message);
+// const fetchBlogData = async (client: SupabaseClient, blogId: string | undefined): Promise<GetBlogDetail | {}> => {
+//     try {
+//         const { data: blogs } = await client
+//             .from('posts')
+//             .select('id, title,text, image_url, created_at, category_id')
+//             .eq('id', blogId);
+
+//         const { data: categories } = await client.from('categories').select('*').eq('id', blogs?.length ? blogs[0].category_id : null);
+
+//         const { data: postTagsData } = await client.from('post_tags').select('tag_id').eq('post_id', blogId);
+
+//         const tagIds = postTagsData?.map((item: { tag_id: string }) => item.tag_id);
+
+//         const { data: tagsData } = await client.from('tags').select('*').in('id', tagIds?.length ? tagIds : []);
+
+//         const tags = tagsData || [];
+
+
+//         return {
+//             ...blogs[0],
+//             category: categories[0].name,
+//             tags: tags || [],
+//         }
+//     } catch (error: any) {
+//         throw new Error(error)
+//     }
+// };
+
+const fetchBlogData = async (client: SupabaseClient, blogId: string | undefined): Promise<GetBlogDetail | {}> => {
+    try {
+        const { data: blogs } = await client
+            .from('posts')
+            .select('id, title,text, image_url, created_at, category_id')
+            .eq('id', blogId);
+
+        if (!blogs || blogs.length === 0) {
+            throw new Error('Blog not found');
+        }
+
+        const blog = blogs[0];
+
+        const { data: categories } = await client.from('categories').select('*').eq('id', blog.category_id);
+
+        if (!categories || categories.length === 0) {
+            throw new Error('Category not found');
+        }
+
+        const { data: postTagsData } = await client.from('post_tags').select('tag_id').eq('post_id', blogId);
+        const tagIds = postTagsData?.map((item: { tag_id: string }) => item.tag_id);
+
+        const { data: tagsData } = await client.from('tags').select('*').in('id', tagIds || []);
+
+        const tags = tagsData || [];
+
+        return {
+            ...blog,
+            category: categories[0].name,
+            tags: tags,
+        };
+    } catch (error: any) {
+        throw new Error(error);
     }
-
-    const { data: categories } = await client.from('categories').select('*').eq('id', blogs[0].category_id);
-    // const { data: comments } = await client
-    //     .from('comments')
-    //     .select('*, public_users(name, avatar_url)')
-    //     .eq('post_id', blogId);
-
-    const { data: postTagsData } = await client.from('post_tags').select('tag_id').eq('post_id', blogId);
-    const tagIds = postTagsData.map((item: any) => item.tag_id);
-    const { data: tagsData } = await client.from('tags').select('*').in('id', tagIds);
-
-    const tags = tagsData || [];
-
-    return {
-        blogs: blogs[0],
-        categories: categories[0],
-        // comments: comments || [],
-        tags: tags || [],
-    };
 };
+
+
 
 export default eventHandler(async (event): Promise<BlogSnapshot> => {
     const client = await serverSupabaseClient(event);
-    const id = event.context.params?.id.toString() || null
+    const postId = event.context.params?.id.toString()
 
     try {
-        const { blogs, categories, tags } = await fetchBlogData(client, id);
+        const blog = await fetchBlogData(client, postId);
+        console.log('iini blog')
+        console.log(blog)
+        return { data: blog };
 
-        const post: GetBlogDetail = {
-            ...blogs,
-            category: categories.name,
-            // comments,
-            tags,
-            // comment_counts: comments.length,
-        };
-
-        return { post };
     } catch (error: any) {
         console.error(error);
         throw new Error(error);

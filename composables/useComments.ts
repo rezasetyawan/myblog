@@ -1,4 +1,4 @@
-const addComment = async (commentDraf: {}) => {
+const addComment = async (commentDraf: CommentDraf) => {
     try {
         console.log('runned')
         await $fetch('/api/comments', { method: 'POST', body: commentDraf })
@@ -13,11 +13,8 @@ const addComment = async (commentDraf: {}) => {
 
 const getComments = async (postId: string) => {
     try {
-        console.log('get comments')
-        const comments = await $fetch(`/api/comments/${postId}`)
-        return {
-            ...comments
-        }
+        const { data } = await useFetch(`/api/comments/${postId}`)
+        return data.value
     } catch (error) {
         console.error(error)
     }

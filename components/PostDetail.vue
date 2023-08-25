@@ -1,23 +1,5 @@
 <script setup lang="ts">
-const props = defineProps(["blog", "comments"]);
-import { getComments } from "../composables/useComments";
-// console.log(comments)
-
-// const comment = ref(comments);
-
-
-
-// const inikumpulankomen = ref()
-// console.log(props.comments)
-// inikumpulankomen.value = props.comments
-// console.log(inikumpulankomen)
-
-// const fetchComment = async () => {
-//   console.log("zzzz");
-//   const commentSnapshots = await getComments(postId.value);
-//   console.log(commentSnapshots);
-//   commentSnapshots ? (inikumpulankomen.value = commentSnapshots) : null;
-// };
+const props = defineProps(["blog", "commentData"]);
 </script>
 
 <template>
@@ -27,7 +9,7 @@ import { getComments } from "../composables/useComments";
         <Icon name="bi:calendar-fill" />{{ formatDate(props.blog.created_at) }}
       </p>
       <p class="flex items-center gap-1">
-        <Icon name="basil:chat-outline" size="24" />{{ props.blog.comment_counts }}
+        <Icon name="basil:chat-outline" size="24" />{{ props.commentData.comment_counts }}
         comments
       </p>
       <p class="flex items-center gap-1">
@@ -48,6 +30,6 @@ import { getComments } from "../composables/useComments";
       v-html="props.blog.text"
       class="prose prose-base max-w-none prose-stone mx-20 prose-pre:max-w-fit prose-h2:text-2xl prose-h2:font-extrabold"
     ></div>
-    <CommentSection :comments="props.comments"/>
+    <CommentSection :commentData="props.commentData"/>
   </section>
 </template>

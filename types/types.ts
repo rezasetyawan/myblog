@@ -2,9 +2,8 @@ declare interface GetBlog {
     id: string
     title: string
     created_at: string
-    comments: {count: number}[]
+    comment_counts: number
     image_url: string
-
 }
 
 declare interface GetBlogDetail {
@@ -13,8 +12,9 @@ declare interface GetBlogDetail {
     text: string
     image_url: string
     created_at: string
-    updated_at?: string
-    comments: GetComment[]
+    comments: {count : number}[]
+    category: string
+    tags: {id: string, name: string}[]
 }
 
 declare interface GetComment {
@@ -25,10 +25,27 @@ declare interface GetComment {
 }
 
 declare interface BlogSnapshots {
-    posts: GetBlog[] | []
+    data: GetBlog[] | []
 }
 
 
 declare interface BlogSnapshot {
-    post: GetBlogDetail | {}
+    data: GetBlogDetail | {}
+}
+
+declare interface CommentDraf {
+    parent_id: any;
+    name?: string;
+    email?: string;
+    text: string;
+    post_id: string
+}
+
+declare interface PostComment{
+    id: string;
+    text: string;
+    user_id: string;
+    post_id: string;
+    time: string;
+    parent_id: string;
 }

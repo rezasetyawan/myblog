@@ -5,30 +5,35 @@ import { getComments } from "../../composables/useComments";
 import { useRoute } from "vue-router";
 
 const blog = ref();
-const comments = ref();
-const blogId = ref<string>("");
+const commentData = ref();
+const postId = ref<string>("");
 const route = useRoute();
-blogId.value = route.params.id as string;
+
 const isLoading = ref<boolean>(false);
+
+onBeforeMount(() => {
+  postId.value = route.params.id as string;
+});
 
 onMounted(async () => {
   isLoading.value = true;
   try {
-    blog.value = await getBlogById(blogId.value);
-    const commentSnapshots = await getComments(blogId.value);
-    comments.value = commentSnapshots
+    const blogSnapshot = await getBlogById(postId.value);
+    console.log(blogSnapshot);
+
+    const commentSnapshots = await getComments(postId.value);
+    blog.value = blogSnapshot;
+    commentData.value = commentSnapshots;
     isLoading.value = false;
-    console.log(blog.value);
-    console.log(comments.value);
+    console.log(postId.value);
+    console.log(commentSnapshots)
   } catch (error) {
     console.error(error);
   }
 });
-
-
 </script>
 
 <template>
-  <PostDetail :blog="blog" :comments="comments" v-if="blog && comments"/>
+  <PostDetail :blog="blog" :commentData="commentData" v-if="blog && commentData" />
   <div v-if="isLoading" class="text-center">Loading...</div>
 </template>

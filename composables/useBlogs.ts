@@ -1,8 +1,8 @@
 const getBlogs = async () => {
     try {
-        const { posts } = await $fetch('/api/blogs')
-        console.log(posts)
-        return posts
+        const { data } = await useFetch('/api/blogs')
+        console.log(data.value)
+        return data.value?.data
     } catch (error) {
         console.error(error)
     }
@@ -11,13 +11,15 @@ const getBlogs = async () => {
 
 const getBlogById = async (id: string) => {
     try {
-        const { post } = await $fetch(`/api/blogs/${id}`)
-        const comments = await $fetch(`/api/comments/${id}`)
-        return {
-            ...post,
-            comments: comments,
-            // comment_count: comments?.length
-        }
+        // const { data } = await useFetch(`/api/blogs/${id}`)
+        // console.log(id)
+        // console.log(data)
+        // console.log(data.value?.data)
+        // return data
+
+        const { data } = await $fetch(`/api/blogs/${id}`)
+        console.log(data)
+        return data
     } catch (error) {
         console.error(error)
     }
