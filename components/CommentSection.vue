@@ -25,7 +25,7 @@ const hasActiveCommentForm = computed(() => {
       :comments="commentData.comments"
       :replyStates="replyStates"
       :postId="postId"
-      v-if="commentData.comments.length"
+      
       @commentAdded="refetchComments()"
     />
     <CommentForm v-show="!hasActiveCommentForm" class="my-5" @commentAdded="refetchComments()" :postId="postId"/>

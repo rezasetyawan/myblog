@@ -30,7 +30,7 @@ const toggleNavbar = () => emit("toggleNavbar");
       >
         <li class="inline-block text-center text-red-800 font-bold">
           <NuxtLink
-            to="/"
+            :to="'/'"
             class="px-3 py-2 hover:text-red-800 hover:bg-slate-100 "
           >
             Home
@@ -38,7 +38,7 @@ const toggleNavbar = () => emit("toggleNavbar");
         </li>
         <li class="inline-block text-center text-red-800 font-bold">
           <NuxtLink
-            to="/blogs"
+            :to="'/blogs'"
             class="px-3 py-2 hover:text-red-800 hover:bg-slate-100 hover:rounded-md focus:bg-slate-200 focus:rounded-md"
           >
             Blog
@@ -46,7 +46,7 @@ const toggleNavbar = () => emit("toggleNavbar");
         </li>
         <li class="inline-block text-center text-red-800 font-bold">
           <NuxtLink
-            to="/about"
+            :to="'/'"
             class="px-3 py-2 hover:text-red-800 hover:bg-slate-100 hover:rounded-md focus:bg-slate-200 focus:rounded-md"
           >
             About

@@ -13,7 +13,9 @@ const addComment = async (commentDraf: CommentDraf) => {
 
 const getComments = async (postId: string) => {
     try {
-        const { data } = await useFetch(`/api/comments/${postId}`)
+        const { data } = await useFetch(`/api/comments/${postId}`, {
+            key:`comments-${postId}`
+        })
         return data.value
     } catch (error) {
         console.error(error)

@@ -18,18 +18,31 @@ onBeforeMount(() => {
 onMounted(async () => {
   isLoading.value = true;
   try {
-    const blogSnapshot = await getBlogById(postId.value);
-    console.log(blogSnapshot);
+    // const blogSnapshot = await getBlogById(postId.value);
+    // console.log(blogSnapshot);
+    // const commentSnapshots = await getComments(postId.value);
+    // blog.value = blogSnapshot;
+    // commentData.value = commentSnapshots;
+    // isLoading.value = false;
+    // console.log(postId.value);
+    // console.log(commentSnapshots)
 
-    const commentSnapshots = await getComments(postId.value);
-    blog.value = blogSnapshot;
-    commentData.value = commentSnapshots;
-    isLoading.value = false;
-    console.log(postId.value);
-    console.log(commentSnapshots)
+    const {data: cacheBlog} = useNuxtData(postId.value)
+    console.log(postId.value)
+    const {data: cacheComments} = useNuxtData(`comments-${postId.value}`)
+  
+
+    if (cacheBlog.value && cacheComments.value) {
+      blog.value = cacheBlog.value.data
+      commentData.value = cacheComments.value
+    } else {
+      blog.value =  await getBlogById(postId.value);
+      commentData.value = await getComments(postId.value);
+    }
+   
   } catch (error) {
     console.error(error);
-  }
+  } 
 });
 </script>
 

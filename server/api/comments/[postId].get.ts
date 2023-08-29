@@ -58,6 +58,7 @@ export default eventHandler(async (event) => {
         const data = await fetchTopLevelComments(client, postId)
 
         console.log(data)
+        totalCount = 0
         return data
 
     } catch (error: any) {

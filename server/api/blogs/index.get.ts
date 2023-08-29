@@ -70,9 +70,26 @@ const getCommentCounts = async (client: SupabaseClient, postId: string) => {
 
 
 export default eventHandler(async (event): Promise<BlogSnapshots> => {
-    const client = await serverSupabaseClient(event)
+    const client = await serverSupabaseClient(event);
+    const query = getQuery(event);
+
     try {
-        const { data, error } = await client.from('posts').select('id, title, created_at, image_url').order('created_at', { ascending: false })
+        let queryBuilder = client.from('posts').select('id, title, created_at, image_url').order('created_at', { ascending: false });
+
+        if (query.category_id || query.search_key) {
+            query.category_id ? queryBuilder = queryBuilder.eq('category_id', query.category_id) : queryBuilder = queryBuilder.ilike('title', `%${query.search_key}%`)
+        }
+
+        if (!query.category_id && !query.search_key) {
+            queryBuilder = queryBuilder
+        }
+
+        if (query.category_id && query.search_key) {
+            queryBuilder = queryBuilder.eq('category_id', query.category_id).ilike('title', `%${query.search_key}%`);;
+        }
+
+        const { data, error } = await queryBuilder;
+
         if (error) {
             console.error(error.message);
             throw new Error(error.message);
@@ -88,6 +105,6 @@ export default eventHandler(async (event): Promise<BlogSnapshots> => {
         return { data: blogs };
 
     } catch (error: any) {
-        throw new Error(error)
+        throw new Error(error);
     }
-})
+});
