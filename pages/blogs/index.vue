@@ -3,13 +3,15 @@ import { getBlogs } from "../../composables/useBlogs";
 
 const client = useSupabaseClient();
 
-const blogs = ref();
+const blogs = ref<GetBlog[] | null | undefined>([]);
 const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
-
+const tags = ref<Array<{ id: string; name: string }> | null>(null);
 const isLoading = ref<boolean>(false);
+
 const queryParams = ref({
   searchKey: "",
   category: "",
+  tags: [] as string[]
 });
 
 const getCategories = async () => {
@@ -19,67 +21,85 @@ const getCategories = async () => {
     };
     return data;
   });
-
-  console.log(categories);
   blogCategories.value = categories.value;
 };
 
-const fecthBlogs = async (
-  search_key: string = "",
-  category_id: string = ""
-) => {
-  isLoading.value = true;
+const getTags = async () => {
+  const { data } = await useAsyncData("categories", async () => {
+    const { data } = (await client.from("tags").select("id, name")) as {
+      data: Array<{ id: string; name: string }>;
+    };
+    return data;
+  });
+  tags.value = data.value;
+}
 
+// const fetchBlogs = async (
+//   search_key: string = "",
+//   category_id: string = ""
+// ) => {
+//   try {
+//     isLoading.value = true;
+
+//     // const { data: blogSnapshots } = useNuxtData(
+//     //   `blogsnapshot-search_key=${search_key}&category_id=${category_id}`
+//     // );
+
+//     // console.log(blogSnapshots.value);
+//     // if (blogSnapshots.value !== null) {
+//     //   blogs.value = blogSnapshots.value;
+//     // } else {
+//       console.log("ampun bang");
+//       console.log(
+//         `blogsnapshot-search_key=${search_key}&category_id=${category_id}`
+//       );
+//       // console.log(blogSnapshots.value)
+//       blogs.value = await getBlogs(search_key, category_id);
+//       console.log(blogs.value);
+//     // }
+
+//     // if (blogs.value?.length === 0 || blogs.value === null) {
+//     //   blogs.value = await getBlogs(search_key, category_id);
+//     //   console.log(blogs.value);
+//     // }
+
+//     isLoading.value = false;
+
+//     queryParams.value = {
+//       searchKey: "",
+//       category: "",
+//       tags: []
+//     };
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
+
+const fetchBlogs = async (search_key: string = "", category_id: string = "") => {
   try {
-    // if (!route.params.search_key && !route.params.category_id) {
-    //   console.log('case 1')
-    //   blogs.value = await getBlogs();
-    // } else {
- 
-    // }
-    const { data: blogSnapshots } = useNuxtData("blogSnapshots");
-    if (blogSnapshots.value && !search_key && !category_id) {
-      blogs.value = blogSnapshots.value.data;
-      isLoading.value = false;
-      console.log(blogSnapshots.value)
-    } else {
-      console.log('tetetete')
-      const data = await getBlogs(search_key, category_id);
-     
-      blogs.value = data
-      console.log(blogs.value)
-      isLoading.value = false; 
-    }
+    isLoading.value = true;
+
+    
+
+    blogs.value = await getBlogs(search_key, category_id, queryParams.value.tags);
+
+    isLoading.value = false;
 
     queryParams.value = {
       searchKey: "",
       category: "",
+      tags: [] // Clear selected tags after fetching
     };
   } catch (error) {
     console.error(error);
   }
 };
 
-// const fecthBlogs = async () => { 
-//   isLoading.value = true;
-//   const route = useRoute();
-//   const { search_key, category_id } = route.query
 
-//   try {
-//     if (!search_key && !category_id) {
-//       blogs.value = await getBlogs();
-//     } else {
-//       blogs.value = await getBlogs(search_key, category_id);
-//     }
-//     isLoading.value = false;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
-
-onMounted(async () => {
-  await fecthBlogs();
+onBeforeMount(async () => {
+  await fetchBlogs(queryParams.value.searchKey, queryParams.value.category);
   await getCategories();
+  await getTags()
 });
 
 // onBeforeRouteUpdate(async (to, from) => {
@@ -94,17 +114,23 @@ const searchHandler = async () => {
     query: {
       search_key: queryParams.value.searchKey,
       category_id: queryParams.value.category,
+      tags: queryParams.value.tags,
     },
   });
 };
-     
- 
+
 onBeforeRouteUpdate(async (to, from) => {
-  await fecthBlogs(queryParams.value.searchKey, queryParams.value.category);
+  await fetchBlogs(queryParams.value.searchKey, queryParams.value.category);
 });
+
+watch(queryParams, () => {
+  console.log(queryParams)
+}, {immediate: true})
 </script>
 <template>
-  <section class="mx-20 flex justify-between items-center gap-3 p-2 font-rubik">
+  <section
+    class="mx-20 flex justify-between items-center gap-3 p-2 font-rubik my-3"
+  >
     <input
       type="text"
       class="p-2 focus:outline-none border-2 rounded-md w-full"
@@ -119,13 +145,32 @@ onBeforeRouteUpdate(async (to, from) => {
         v-for="category in blogCategories"
         :key="category.id"
         :value="category.id"
-        class="px-2 py-1 my-1" 
+        class="px-2 py-1 my-1"
       >
         {{ category.name }}
       </option>
     </select>
-    <button @click="searchHandler">Search</button>
+
+    
+    <button
+      @click="searchHandler"
+      class="px-[0.8em] py-[0.4em] bg-slate-100 rounded-md"
+    >
+      Search
+    </button>
   </section>
+  <div class="font-rubik mx-20">
+  <p>Select Tags:</p>
+  <label v-for="tag in tags" :key="tag.id" class="block max-w-fit">
+    <input
+      type="checkbox"
+      v-model="queryParams.tags"
+      :value="tag.id"
+      @change="console.log(queryParams)"
+    />
+    {{ tag.name }}
+  </label>
+</div>
   <Posts :blogs="blogs" />
   <h2 v-if="isLoading" class="text-center my-20">Loading...</h2>
   <h2 v-if="!blogs && !isLoading" class="text-center my-20">Blog Not Found</h2>
