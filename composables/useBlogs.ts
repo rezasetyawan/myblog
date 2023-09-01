@@ -1,14 +1,15 @@
-const getBlogs = async (search_key: string = "", category_id: string = "") => {
+const getBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "blogs") => {
     try {
-        const result = await useFetch('/api/blogs', {
+        const { data } = await useFetch('/api/blogs', {
             query: {
                 search_key: search_key,
-                category_id: category_id
+                category_id: category_id,
+                tags: tags,
+                page: page
             },
-            key: 'blogSnapshots'
+            key: cacheKey,
         })
-        
-        return result.data.value?.data
+        return data.value
     } catch (error) {
         console.error(error)
     }
@@ -18,14 +19,9 @@ const getBlogs = async (search_key: string = "", category_id: string = "") => {
 const getBlogById = async (id: string) => {
     try {
         const { data } = await useFetch(`/api/blogs/${id}`, {
-            key:`${id}`
+            key: `${id}`
         })
-        console.log(data.value?.data)
         return data.value?.data
-
-        // const { data } = await $fetch(`/api/blogs/${id}`)
-        // console.log(data)
-        return data
     } catch (error) {
         console.error(error)
     }
