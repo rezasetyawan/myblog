@@ -25,7 +25,8 @@ declare interface GetComment {
 }
 
 declare interface BlogSnapshots {
-    data: GetBlog[] | []
+    blogs: GetBlog[] | []
+    totalPage: number
 }
 
 
