@@ -27,26 +27,30 @@ onMounted(async () => {
     // console.log(postId.value);
     // console.log(commentSnapshots)
 
-    const {data: cacheBlog} = useNuxtData(postId.value)
-    console.log(postId.value)
-    const {data: cacheComments} = useNuxtData(`comments-${postId.value}`)
-  
+    const { data: cacheBlog } = useNuxtData(postId.value);
+    console.log(postId.value);
+    const { data: cacheComments } = useNuxtData(`comments-${postId.value}`);
 
     if (cacheBlog.value && cacheComments.value) {
-      blog.value = cacheBlog.value.data
-      commentData.value = cacheComments.value
+      blog.value = cacheBlog.value.data;
+      commentData.value = cacheComments.value;
     } else {
-      blog.value =  await getBlogById(postId.value);
+      blog.value = await getBlogById(postId.value);
       commentData.value = await getComments(postId.value);
     }
-   
+    isLoading.value = false;
   } catch (error) {
     console.error(error);
-  } 
+  }
 });
 </script>
 
 <template>
-  <PostDetail :blog="blog" :commentData="commentData" v-if="blog && commentData" />
-  <div v-if="isLoading" class="text-center">Loading...</div>
+  <PostDetail
+    :blog="blog"
+    :commentData="commentData"
+    v-if="blog && commentData"
+  />
+
+  <Loading v-if="isLoading" />
 </template>

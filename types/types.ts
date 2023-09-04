@@ -12,9 +12,9 @@ declare interface GetBlogDetail {
     text: string
     image_url: string
     created_at: string
-    comments: {count : number}[]
+    comments: { count: number }[]
     category: string
-    tags: {id: string, name: string}[]
+    tags: { id: string, name: string }[]
 }
 
 declare interface GetComment {
@@ -42,7 +42,7 @@ declare interface CommentDraf {
     post_id: string
 }
 
-declare interface PostComment{
+declare interface PostComment {
     id: string;
     text: string;
     user_id: string;

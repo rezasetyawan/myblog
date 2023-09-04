@@ -1,4 +1,4 @@
-const getBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "blogs") => {
+const getBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "/blogs") => {
     try {
         const { data } = await useFetch('/api/blogs', {
             query: {
@@ -9,6 +9,7 @@ const getBlogs = async (search_key: string = "", category_id: string = "", tags:
             },
             key: cacheKey,
         })
+        console.log(cacheKey)
         return data.value
     } catch (error) {
         console.error(error)
