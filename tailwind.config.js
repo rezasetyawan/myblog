@@ -13,6 +13,11 @@ module.exports = {
       fontFamily: {
         rubik: ["Rubik", "sans-serif"],
       },
+      screens: {
+        "mobile-s": "320px",
+        "mobile-m": "375px",
+        "mobile-l": "425px",
+      },
     },
   },
   plugins: [require("@tailwindcss/typography")],
