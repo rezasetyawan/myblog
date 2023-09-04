@@ -4,41 +4,27 @@ import { getBlogById } from "../../composables/useBlogs";
 import { getComments } from "../../composables/useComments";
 import { useRoute } from "vue-router";
 
-const blog = ref();
-const commentData = ref();
-const postId = ref<string>("");
 const route = useRoute();
-
-const isLoading = ref<boolean>(false);
-
-onBeforeMount(() => {
-  postId.value = route.params.id as string;
-});
+const blog = ref<GetBlogDetail | undefined>();
+const commentData = ref<CommentSnapshots | null | undefined>();
+const postId = ref<string>(route.params.id as string);
+const isLoading = ref<boolean>(true);
 
 onMounted(async () => {
-  isLoading.value = true;
   try {
-    // const blogSnapshot = await getBlogById(postId.value);
-    // console.log(blogSnapshot);
-    // const commentSnapshots = await getComments(postId.value);
-    // blog.value = blogSnapshot;
-    // commentData.value = commentSnapshots;
-    // isLoading.value = false;
-    // console.log(postId.value);
-    // console.log(commentSnapshots)
-
-    const { data: cacheBlog } = useNuxtData(postId.value);
-    console.log(postId.value);
     const { data: cacheComments } = useNuxtData(`comments-${postId.value}`);
+    const { data: cacheBlog } = useNuxtData(postId.value);
 
     if (cacheBlog.value && cacheComments.value) {
       blog.value = cacheBlog.value.data;
       commentData.value = cacheComments.value;
     } else {
-      blog.value = await getBlogById(postId.value);
-      commentData.value = await getComments(postId.value);
+      const blogResult = await getBlogById(postId.value);
+      const commentResults = await getComments(postId.value);
+      blog.value = blogResult;
+      commentData.value = commentResults;
     }
-    isLoading.value = false;
+    isLoading.value = false; 
   } catch (error) {
     console.error(error);
   }
@@ -51,6 +37,5 @@ onMounted(async () => {
     :commentData="commentData"
     v-if="blog && commentData"
   />
-
   <Loading v-if="isLoading" />
 </template>

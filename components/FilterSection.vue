@@ -7,14 +7,14 @@ interface PostCategoryAndTag {
 interface QueryParams {
   searchKey: string;
   category: string;
-  tags: string;
+  tags: string[];
   page: string;
 }
 
 interface Props {
   queryParams: QueryParams;
-  postCategories: PostCategoryAndTag[];
-  postTags: PostCategoryAndTag[];
+  postCategories: PostCategoryAndTag[] | null;
+  postTags: PostCategoryAndTag[] | null;
 }
 
 const props = defineProps<Props>();

@@ -13,7 +13,7 @@ const getComments = async (postId: string) => {
         const { data } = await useFetch(`/api/comments/${postId}`, {
             key: `comments-${postId}`
         })
-        return data.value
+        return data.value as CommentSnapshots
     } catch (error) {
         console.error(error)
     }

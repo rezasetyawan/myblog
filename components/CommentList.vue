@@ -1,15 +1,19 @@
 <script setup lang="ts">
-const props = defineProps(["comments", "replyStates"]);
+interface Props {
+  comments: GetComment[];
+  replyStates: object | any;
+}
+const props = defineProps<Props>();
 const emit = defineEmits(["commentAdded"]);
-
-// const localReplyStates = ref(props.replyStates); // Use prop as the initial local state
+const postId = ref<string>("");
+postId.value = useRoute().params.id as string;
 
 const prevVisibleReplyForm = ref<string>("");
 
 const toggleReplyForm = (commentId: string) => {
   if (props.replyStates[commentId] === true) {
     props.replyStates[commentId] = false;
-    prevVisibleReplyForm.value = ""; // Reset previous visible form
+    prevVisibleReplyForm.value = "";
   } else {
     Object.keys(props.replyStates).forEach((id) => {
       props.replyStates[id] = false;
@@ -18,34 +22,6 @@ const toggleReplyForm = (commentId: string) => {
     prevVisibleReplyForm.value = commentId;
   }
 };
-
-// const resetLocalReplyStates = () => {
-//   localReplyStates.value = {};
-// };
-
-// watch(
-//   props.replyStates,
-//   (newReplyStates) => {
-//     localReplyStates.value = { ...newReplyStates };
-//   },
-//   { immediate: true }
-// );
-
-// watch(props.comments, (newComments) => {
-//   // Update localReplyStates when new comments are received
-//   localReplyStates.value = Object.fromEntries(
-//     Object.keys(localReplyStates.value).map((commentId) => [
-//       commentId,
-//       newComments.some((comment: GetComment) => comment.id === commentId)
-//         ? localReplyStates.value[commentId]
-//         : false
-//     ])
-//   );
-// }, {immediate: true});
-
-// const updateReplyStates = (newCommentId: string) => {
-//   localReplyStates.value[newCommentId] = false;
-// };
 </script>
 
 <template>
@@ -76,8 +52,9 @@ const toggleReplyForm = (commentId: string) => {
         v-show="!!props.replyStates[comment.id]"
         class="my-1"
         :parent_id="comment.id"
-        @commentAdded="() =>  emit('commentAdded')"
+        @commentAdded="() => emit('commentAdded')"
         :title="`Reply ${comment.public_users.name}`"
+        :postId="postId"
       />
       <CommentList
         :comments="comment.replies"
