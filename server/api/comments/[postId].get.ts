@@ -27,10 +27,8 @@ const fetchTopLevelComments = async (client: SupabaseClient, postId: string | un
         .eq('post_id', postId).is('parent_id', null)
     if (error) {
         console.error(error)
-        return { comments: [], totalCount: 0 };
+        return { comments: [], comment_counts: 0 };
     }
-
-
 
     const commentsWithReplies = [];
 
@@ -50,17 +48,14 @@ const fetchTopLevelComments = async (client: SupabaseClient, postId: string | un
 }
 
 
-export default eventHandler(async (event) => {
+export default eventHandler(async (event):Promise <CommentSnapshots> => {
     const client = await serverSupabaseClient(event);
 
     try {
         const postId = event.context.params?.postId.toString()
         const data = await fetchTopLevelComments(client, postId)
-
-        console.log(data)
         totalCount = 0
         return data
-
     } catch (error: any) {
         console.error(error)
         throw new Error(error)

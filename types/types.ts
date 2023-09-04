@@ -12,17 +12,17 @@ declare interface GetBlogDetail {
     text: string
     image_url: string
     created_at: string
-    comments: {count : number}[]
+    comments: { count: number }[]
     category: string
-    tags: {id: string, name: string}[]
+    tags: { id: string, name: string }[]
 }
 
-declare interface GetComment {
-    id: string
-    user_id: string
-    text: string
-    time: string
-}
+// declare interface GetComment {
+//     id: string
+//     user_id: string
+//     text: string
+//     time: string
+// }
 
 declare interface BlogSnapshots {
     blogs: GetBlog[] | []
@@ -42,11 +42,27 @@ declare interface CommentDraf {
     post_id: string
 }
 
-declare interface PostComment{
+declare interface PostComment {
     id: string;
     text: string;
     user_id: string;
     post_id: string;
     time: string;
     parent_id: string;
+}
+
+declare interface GetComment {
+    id: string
+    parent_id: string | null
+    post_id: string
+    public_users: { name: string, avatar_url: string | null }
+    replies: GetComment[]
+    text: string
+    time: string
+    user_id: string
+}
+
+declare interface CommentSnapshots {
+    comments: GetComment[]
+    comment_counts: number
 }

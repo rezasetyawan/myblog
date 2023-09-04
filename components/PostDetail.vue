@@ -1,35 +1,51 @@
 <script setup lang="ts">
-const props = defineProps(["blog", "commentData"]);
+interface Props {
+  blog: GetBlogDetail;
+  commentData: CommentSnapshots;
+}
+const props = defineProps<Props>();
 </script>
 
 <template>
-  <section v-if="props.blog" class="py-10 px-28 mb-20">
-    <div class="flex gap-3 justify-center font-rubik">
+  <section v-if="props.blog" class="my-10 mx-3 mb-20 sm:mx-6 lg:mx-20"> 
+    <div class="flex gap-1 flex-wrap justify-center font-rubik text-sm mx-2 sm:text-base sm:gap-3 ">
       <p class="flex items-center gap-1">
         <Icon name="bi:calendar-fill" />{{ formatDate(props.blog.created_at) }}
       </p>
       <p class="flex items-center gap-1">
-        <Icon name="basil:chat-outline" size="24" />{{ props.commentData.comment_counts }}
+        <Icon name="basil:chat-outline" size="24" />{{
+          props.commentData.comment_counts
+        }}
         comments
       </p>
       <p class="flex items-center gap-1">
-        <Icon name="iconamoon:category-light" size="24" />{{ props.blog.category }}
+        <Icon name="iconamoon:category-light" size="24" />{{
+          props.blog.category
+        }}
       </p>
     </div>
-    <span
+    <div class="my-2">
+      <span
       v-for="tag in props.blog.tags"
       :key="tag.id"
-      class="m-2 underline rounded-md"
+      class="m-2 underline rounded-md text-sm sm:text-base"
       >#{{ tag.name }}</span
     >
-    <h2 class="text-3xl text-center font-rubik font-bold">{{ props.blog.title }}</h2>
+    </div>
+    <div class="my-3">
+      <h2 class="text-xl text-center font-rubik font-bold">
+      {{ props.blog.title }}
+    </h2>
     <div class="flex justify-center py-4">
-      <img :src="props.blog.image_url" class="max-w-lg" />
+      <NuxtImg :src="props.blog.image_url" class="max-w-sm aspect-[4/2] object-cover overflow-hidden sm:max-w-2xl" loading="lazy"
+        quality="50"
+        placeholder />
     </div>
     <div
       v-html="props.blog.text"
-      class="prose prose-base max-w-none prose-stone mx-20 prose-pre:max-w-fit prose-h2:text-2xl prose-h2:font-extrabold"
+      class="prose prose-base max-w-none prose-stone font-rubik mx-2 prose-pre:max-w-fit prose-h2:text-2xl prose-h2:font-extrabold"
     ></div>
-    <CommentSection :commentData="props.commentData"/>
+    <CommentSection :commentData="props.commentData" />
+    </div>
   </section>
 </template>

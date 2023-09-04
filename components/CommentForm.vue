@@ -1,13 +1,49 @@
 <script setup lang="ts">
-const props = defineProps(["title", "parent_id", "postId"]);
 import { addComment } from "../composables/useComments";
-const postId = ref<string>("");
+
+interface Props {
+  title?: string;
+  parent_id?: string;
+  postId: string;
+}
+
+interface User {
+  name: string;
+  email: string;
+}
+
+const props = defineProps<Props>();
 const emit = defineEmits(["commentAdded"]);
+
+const isLocalStorageAvailable = () => {
+  return typeof Storage !== undefined;
+};
+
+const getUserFromLocalStorage = (): User | null | undefined => {
+  let user: string | null = JSON.stringify({ name: "", email: "" });
+  if (isLocalStorageAvailable()) {
+    user = localStorage.getItem("user");
+    if (!user) {
+      return null;
+    }
+    return JSON.parse(user);
+  } else {
+    return null;
+  }
+};
+
+const setUserInLocalStorage = (userData: User) => {
+  if (isLocalStorageAvailable()) {
+    localStorage.setItem("user", JSON.stringify(userData));
+  }
+};
+
+const user = ref<User>({ name: "", email: "" });
 
 const commentDraft = ref<CommentDraf>({
   parent_id: props.parent_id ? props.parent_id : null,
-  name: "",
-  email: "",
+  name: user.value.name,
+  email: user.value.email,
   text: "",
   post_id: props.postId,
 });
@@ -15,24 +51,37 @@ const commentDraft = ref<CommentDraf>({
 const resetCommentDraft = () => {
   commentDraft.value = {
     parent_id: props.parent_id ? props.parent_id : null,
-    name: "",
-    email: "",
+    name: user.value.name,
+    email: user.value.email,
     text: "",
     post_id: props.postId,
   };
 };
 
+onMounted(() => {
+  const userData = getUserFromLocalStorage();
+  userData ? (user.value = userData) : null;
+});
+
 const onSubmitHandler = async () => {
-  console.log(props.postId)
+  user.value && setUserInLocalStorage(user.value);
   await addComment(commentDraft.value).then(() => {
-    resetCommentDraft()
-  })
+    resetCommentDraft();
+  });
   emit("commentAdded");
-  // emit("commentAdded", commentDraft.value.parent_id || null); // Pass the new comment's parent_id if available
 };
+
+watch(
+  () => user.value,
+  (newValue) => {
+    commentDraft.value.name = newValue.name;
+    commentDraft.value.email = newValue.email;
+  },
+  { immediate: true }
+);
 </script>
 <template>
-  <form class="font-rubik" @submit.prevent="onSubmitHandler">
+  <form class="font-rubik w-full" @submit.prevent="onSubmitHandler">
     <h2>{{ props.title ? props.title : "Leave a comment" }}</h2>
     <textarea
       rows="5"
@@ -46,15 +95,16 @@ const onSubmitHandler = async () => {
         type="text"
         placeholder="Name(required)"
         required
+        minlength="3"
         class="p-2 text-sm border-2 border-slate-700 w-full"
-        v-model="commentDraft.name"
+        v-model="user.name"
       />
       <input
         type="email"
         placeholder="Email(required)"
         required
         class="p-2 text-sm border-2 border-slate-700 w-full"
-        v-model="commentDraft.email"
+        v-model="user.email"
       />
     </div>
     <div class="flex justify-end">

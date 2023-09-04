@@ -11,11 +11,11 @@ export default defineNuxtConfig({
   routeRules: {
     '/blogs': { ssr: false }
   },
-  modules: ['@nuxtjs/supabase','nuxt-icon',['@nuxtjs/google-fonts', {
+  modules: ['@nuxtjs/supabase', 'nuxt-icon', ['@nuxtjs/google-fonts', {
     families: {
-      Rubik: [300,400,500,600,700,800,900]
+      Rubik: [300, 400, 500, 600, 700, 800, 900]
     }
-  }]],
+  }], '@nuxt/image',],
   supabase: {
     redirect: false,
     url: process.env.SUPABASE_URL,
@@ -23,5 +23,8 @@ export default defineNuxtConfig({
   },
   googleFonts: {
     display: 'swap'
+  },
+  image: {
+    domains:['https://ymnhboalwemiwvtfmzpz.supabase.co']
   }
 })

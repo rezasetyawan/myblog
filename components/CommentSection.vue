@@ -1,10 +1,12 @@
 <script setup lang="ts">
-const props = defineProps(["commentData"]);
-
+interface Props {
+  commentData: CommentSnapshots;
+}
+const props = defineProps<Props>();
 const postId = ref<string>("");
 postId.value = useRoute().params.id as string;
 
-const commentData = ref(props.commentData);
+const commentData = ref<CommentSnapshots | undefined>(props.commentData);
 
 const replyStates = ref({});
 
@@ -19,15 +21,21 @@ const hasActiveCommentForm = computed(() => {
 });
 </script>
 <template>
-  <article class="mx-20">
+  <article>
     <h3 class="my-6 font-medium">Comments</h3>
-    <CommentList
-      :comments="commentData.comments"
-      :replyStates="replyStates"
-      :postId="postId"
-      
+    <div class="mx-3 sm:mx-6 lg:mx-20">
+      <CommentList
+        :comments="commentData.comments"
+        :replyStates="replyStates"
+        @commentAdded="refetchComments()"
+      />
+      <CommentForm
+      v-show="!hasActiveCommentForm"
+      class="my-5"
       @commentAdded="refetchComments()"
+      :postId="postId"
     />
-    <CommentForm v-show="!hasActiveCommentForm" class="my-5" @commentAdded="refetchComments()" :postId="postId"/>
+    </div>
+    
   </article>
 </template>

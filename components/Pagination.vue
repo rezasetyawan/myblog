@@ -4,7 +4,7 @@ const props = defineProps({ page: Number, totalPage: Number });
 const { page = 1, totalPage = 1 } = toRefs(props);
 </script>
 <template>
-  <div class="flex font-rubik items-center justify-center gap-5 my-10">
+  <div class="flex font-rubik items-center justify-center gap-5 my-10 text-sm sm:text-base">
     <NuxtLink
       class="px-[0.8em] py-[0.4em] bg-slate-300 rounded-md"
       :to="{
