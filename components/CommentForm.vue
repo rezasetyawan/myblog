@@ -72,12 +72,12 @@ const onSubmitHandler = async () => {
 };
 
 watch(
-  () => user.value,
+  () => user,
   (newValue) => {
-    commentDraft.value.name = newValue.name;
-    commentDraft.value.email = newValue.email;
+    commentDraft.value.name = newValue.value.name;
+    commentDraft.value.email = newValue.value.email;
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 );
 </script>
 <template>
