@@ -81,7 +81,7 @@ watch(
 );
 </script>
 <template>
-  <form class="font-rubik" @submit.prevent="onSubmitHandler">
+  <form class="font-rubik w-full" @submit.prevent="onSubmitHandler">
     <h2>{{ props.title ? props.title : "Leave a comment" }}</h2>
     <textarea
       rows="5"

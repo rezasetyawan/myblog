@@ -29,9 +29,9 @@ const toggleReplyForm = (commentId: string) => {
     <div
       v-for="(comment, index) in props.comments"
       :key="comment.id"
-      :class="{ 'ml-8': comment.parent_id !== null }"
+      :class="{ 'ml-4 sm:ml-8': comment.parent_id !== null }"
     >
-      <div class="flex items-center gap-8 border-t-[1px] border-slate-200 py-3">
+      <div class="flex items-center justify-between gap-8 border-t-[1px] border-slate-200 py-3 font-rubik text-sm sm:text-base">
         <!-- <img
         :src="comment.public_users.avatar_url"
         :alt="comment.public_users.name + ' avatar'"

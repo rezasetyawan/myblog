@@ -14,7 +14,7 @@ const props = defineProps<Props>();
     <div class="group" v-if="!props.isLoading">
       <NuxtImg
         :src="props.blog.image_url"
-        class="min-h-[250px] max-h-[250px] object-cover brightness-90 group-hover:brightness-100 transition-all rounded-sm aspect-[4/2]"
+        class="min-h-[200px] max-h-[200px] sm:min-h-[250px] sm:max-h-[250px] object-cover brightness-90 group-hover:brightness-100 transition-all rounded-sm aspect-[4/2]"
         loading="lazy"
         quality="50"
         placeholder

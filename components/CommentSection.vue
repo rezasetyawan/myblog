@@ -21,18 +21,21 @@ const hasActiveCommentForm = computed(() => {
 });
 </script>
 <template>
-  <article class="mx-20">
+  <article>
     <h3 class="my-6 font-medium">Comments</h3>
-    <CommentList
-      :comments="commentData.comments"
-      :replyStates="replyStates"
-      @commentAdded="refetchComments()"
-    />
-    <CommentForm
+    <div class="mx-3 sm:mx-6 lg:mx-20">
+      <CommentList
+        :comments="commentData.comments"
+        :replyStates="replyStates"
+        @commentAdded="refetchComments()"
+      />
+      <CommentForm
       v-show="!hasActiveCommentForm"
       class="my-5"
       @commentAdded="refetchComments()"
       :postId="postId"
     />
+    </div>
+    
   </article>
 </template>
