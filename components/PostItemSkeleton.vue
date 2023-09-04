@@ -11,7 +11,7 @@ const props = defineProps({
   >
     <div class="rounded-md animate-pulse">
       <div
-        class="min-h-[250px] max-h-[250px] bg-gray-300 aspect-[4/3] rounded-md"
+        class="min-h-[170px] bg-gray-300 aspect-[4/2] rounded-md"
       ></div>
       <div class="my-3 w-60 h-5 bg-gray-300 mx-auto rounded-md"></div>
       <div class="flex gap-3 justify-center items-center">
