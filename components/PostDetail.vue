@@ -34,7 +34,9 @@ const props = defineProps<Props>();
       {{ props.blog.title }}
     </h2>
     <div class="flex justify-center py-4">
-      <img :src="props.blog.image_url" class="max-w-lg" />
+      <NuxtImg :src="props.blog.image_url" class="max-w-2xl aspect-[4/2] object-cover" loading="lazy"
+        quality="50"
+        placeholder />
     </div>
     <div
       v-html="props.blog.text"

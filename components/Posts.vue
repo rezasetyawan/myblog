@@ -28,6 +28,60 @@ const props = defineProps<Props>();
       :blog="blog"
       :isLoading="props.isLoading"
     />
+    <PostItem
+      v-for="blog in props.blogs"
+      :key="blog.id"
+      :blog="blog"
+      :isLoading="props.isLoading"
+    />
+    <PostItem
+      v-for="blog in props.blogs"
+      :key="blog.id"
+      :blog="blog"
+      :isLoading="props.isLoading"
+    />
+    <PostItem
+      v-for="blog in props.blogs"
+      :key="blog.id"
+      :blog="blog"
+      :isLoading="props.isLoading"
+    />
+    <PostItem
+      v-for="blog in props.blogs"
+      :key="blog.id"
+      :blog="blog"
+      :isLoading="props.isLoading"
+    />
+    <PostItem
+      v-for="blog in props.blogs"
+      :key="blog.id"
+      :blog="blog"
+      :isLoading="props.isLoading"
+    />
+    <PostItem
+      v-for="blog in props.blogs"
+      :key="blog.id"
+      :blog="blog"
+      :isLoading="props.isLoading"
+    />
+    <PostItem
+      v-for="blog in props.blogs"
+      :key="blog.id"
+      :blog="blog"
+      :isLoading="props.isLoading"
+    />
+    <PostItem
+      v-for="blog in props.blogs"
+      :key="blog.id"
+      :blog="blog"
+      :isLoading="props.isLoading"
+    />
+    <PostItem
+      v-for="blog in props.blogs"
+      :key="blog.id"
+      :blog="blog"
+      :isLoading="props.isLoading"
+    />
     <PostItemSkeleton v-if="isLoading" />
   </section>
 </template>
