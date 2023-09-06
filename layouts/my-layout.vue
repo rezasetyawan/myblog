@@ -7,6 +7,7 @@ const showNavbar = ref(false);
       :showNavbar="showNavbar"
       @toggleNavbar="showNavbar = !showNavbar"
     ></TheNavbar>
+    <ScrollToTopBtn/>
     <slot />
   </div>
 </template>
