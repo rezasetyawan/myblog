@@ -24,14 +24,21 @@ onMounted(async () => {
       blog.value = blogResult;
       commentData.value = commentResults;
     }
-    isLoading.value = false; 
+    isLoading.value = false;
   } catch (error) {
     console.error(error);
   }
 });
-</script>
 
+useHead({
+  title: blog.value?.title,
+  titleTemplate: blog.value?.title,
+});
+</script>
 <template>
+  <Head>
+  <Title>{{ blog?.title }}</Title>   
+</Head>
   <PostDetail
     :blog="blog"
     :commentData="commentData"
