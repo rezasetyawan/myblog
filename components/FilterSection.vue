@@ -50,7 +50,7 @@ const searchHandler = async () => {
       v-model="props.queryParams.searchKey"
       placeholder="Search blog..."
     />
-    <select v-model="props.queryParams.searchKey" class="p-[0.3em]">
+    <select v-model="props.queryParams.category" class="p-[0.3em]">
       <option value="" disabled class="px-2 py-1">Chose Category</option>
       <option value="" class="px-2 py-1 my-1">All Category</option>
       <option
