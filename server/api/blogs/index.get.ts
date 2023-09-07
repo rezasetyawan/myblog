@@ -1,11 +1,9 @@
 import { serverSupabaseClient } from '#supabase/server'
 import { SupabaseClient } from '@supabase/supabase-js';
-import { isArray } from 'util';
 
 interface Comment {
     id: string;
-    replies?: Comment[]; // Make replies property optional
-    // Other properties as needed
+    replies?: Comment[];
 }
 
 const getCommentCounts = async (client: SupabaseClient, postId: string) => {
@@ -21,6 +19,7 @@ const getCommentCounts = async (client: SupabaseClient, postId: string) => {
             }
 
             const replies: Comment[] = [];
+
             for (const reply of data) {
                 const nestedReplies = await fetchNestedReplies(client, reply.id);
                 replies.push({
@@ -53,13 +52,16 @@ const getCommentCounts = async (client: SupabaseClient, postId: string) => {
 
             for (const comment of comments) {
                 const nestedReplies = await fetchNestedReplies(client, comment.id);
+
                 commentsWithReplies.push({
                     ...comment,
                     replies: nestedReplies
                 });
+                totalCount++;
                 totalCount += nestedReplies.length;
             }
-            return; // Don't forget to return a value here
+
+            return
         } catch (error: any) {
             throw new Error(error);
         }
@@ -135,12 +137,11 @@ export default eventHandler(async (event): Promise<BlogSnapshots> => {
             throw new Error(error.message);
         }
 
-
-
         const blogs = await Promise.all(data.map(async (blog) => {
             const counts = await getCommentCounts(client, blog.id);
             return { ...blog, comment_counts: counts };
         }));
+
         return { blogs: blogs, totalPage: count ? Math.ceil(count / size) : 1 }
 
     } catch (error: any) {

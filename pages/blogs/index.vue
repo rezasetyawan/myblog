@@ -98,6 +98,24 @@ watch(
 watch(route, (newValue) => {
   cacheKey.value = newValue.fullPath;
 });
+
+useServerSeoMeta({
+  title: "My Blog",
+  ogTitle: "My Blog",
+  description: "Blog Website that talk about technology and daily life",
+  ogDescription: "Blog Website that talk about technology and daily life",
+});
+
+useHead({
+  title: "My Blogs",
+  titleTemplate: "My Blogs",
+  meta: [
+    {
+      name: "description",
+      content: "Blog Website that talk about technology and daily life",
+    },
+  ],
+});
 </script>
 <template>
   <main>

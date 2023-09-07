@@ -14,6 +14,7 @@ declare interface GetBlogDetail {
     created_at: string
     comments: { count: number }[]
     category: string
+    category_id: string
     tags: { id: string, name: string }[]
 }
 

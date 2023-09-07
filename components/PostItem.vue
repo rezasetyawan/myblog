@@ -17,6 +17,7 @@ const props = defineProps<Props>();
         class="min-h-[200px] max-h-[200px] sm:min-h-[250px] sm:max-h-[250px] object-cover brightness-90 group-hover:brightness-100 transition-all rounded-sm aspect-[4/2]"
         loading="lazy"
         quality="50"
+        :alt="props.blog.title"
         placeholder
       />
       <h3 class="text-center font-medium text-xl py-3 font-rubik">{{ props.blog.title }}</h3>

@@ -24,14 +24,28 @@ onMounted(async () => {
       blog.value = blogResult;
       commentData.value = commentResults;
     }
-    isLoading.value = false; 
+    isLoading.value = false;
   } catch (error) {
     console.error(error);
   }
 });
-</script>
 
+useHead({
+  title: blog.value?.title,
+  titleTemplate: blog.value?.title,
+});
+
+useServerSeoMeta({
+  title: blog.value?.title,
+  ogTitle: blog.value?.title,
+  description: blog.value?.text,
+  ogDescription: blog.value?.text,
+});
+</script>
 <template>
+  <Head>
+    <Title>{{ blog?.title }}</Title>
+  </Head>
   <PostDetail
     :blog="blog"
     :commentData="commentData"
