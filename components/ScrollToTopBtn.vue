@@ -40,14 +40,16 @@ const toggleVisible = () => {
   const scrolled = document.documentElement.scrollTop;
   if (scrolled > 300) {
     isVisible.value = true;
-    setTimeout(() => {
+    
+    //  setTimeout(() => {
       isRotated.value = true;
-    }, 0);
+    //  },100)
+    
   } else {
     isRotated.value = false;
-    setTimeout(() => {
+    // setTimeout(() => {
       isVisible.value = false;
-    }, 400);
+    // }, 250);
     
   }
 };
@@ -63,10 +65,10 @@ window.addEventListener("scroll", toggleVisible);
 </script>
 
 <template>
-  <button @click="scrollToTop" v-show="isVisible">
+  <button @click="scrollToTop"  class="fixed bottom-5 right-5 opacity-0 transition-all duration-200" :class="{'opacity-100': isVisible}">
     <span
-      class="fixed bottom-5 right-5 w-14 h-14 bg-red-800 flex justify-center items-center rounded-full z-[100] rotate-180 transition-transform duration-200 hover:rotate-0"
-      :class="{ 'rotate-0': isRotated , 'rotate-180': !isRotated}"
+      class="fixed bottom-5 right-5 w-14 h-14 bg-red-800 flex justify-center items-center rounded-full z-[100] rotate-0 transition-transform duration-200 hover:rotate-0"
+      :class="{ 'rotate-0': isRotated , 'rotate-180': !isVisible}"
     >
       <Icon name="bytesize:chevron-top" size="20" color="white" />
     </span>
