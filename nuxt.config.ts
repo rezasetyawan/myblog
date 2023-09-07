@@ -1,13 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  nitro: {
-    prerender: {
-      crawlLinks: true,
-      routes: [
-        '/',
-      ]
-    }
-  },
+  // nitro: {
+  //   prerender: {
+  //     crawlLinks: true,
+  //     routes: [
+  //       '/',
+  //     ]
+  //   }
+  // },
   devtools: { enabled: false },
   css: ['~/assets/styles/main.css'],
   postcss: {
