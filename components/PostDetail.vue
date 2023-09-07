@@ -60,6 +60,7 @@ const props = defineProps<Props>();
           loading="lazy"
           quality="50"
           placeholder
+          :alt="props.blog.title"
         />
       </div>
       <div
