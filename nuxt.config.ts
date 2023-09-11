@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   //     ]
   //   }
   // },
-  devtools: { enabled: false },
+  devtools: { enabled: true },
   css: ['~/assets/styles/main.css'],
   postcss: {
     plugins: {
