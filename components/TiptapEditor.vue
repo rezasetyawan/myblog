@@ -7,6 +7,8 @@ import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
 
+const emit = defineEmits(["onchange"]);
+
 const editor = useEditor({
   extensions: [
     StarterKit,
@@ -29,6 +31,9 @@ const editor = useEditor({
           Hi there,
         </h2>
       `,
+  onUpdate: () => {
+    emit("onchange", editor.value?.getHTML())
+  },
 });
 
 const getEditorContent = () => {
@@ -71,167 +76,172 @@ const selectedTextAlign = ref<string>("left");
 const setTextAlign = () => {
   editor.value?.chain().focus().setTextAlign(selectedTextAlign.value).run();
 };
-
-watch(
-  editor,
-  () => {
-    getEditorContent();
-  },
-  { immediate: true, deep: true }
-);
 </script>
-
 <template>
-  <div v-if="editor">
-    <button
-      @click="editor.chain().focus().toggleBold().run()"
-      :disabled="!editor.can().chain().focus().toggleBold().run()"
-      :class="{ 'is-active': editor.isActive('bold'), 'editor-button': true }"
+  <div class="mx-0 border-[1px] border-slate-200 rounded-md">
+    <div
+      v-if="editor"
+      class="border-b-[1px] p-3 border-slate-200 bg-slate-50 sticky top-[10%] z-[104]"
     >
-      bold
-    </button>
-    <button
-      @click="editor.chain().focus().toggleItalic().run()"
-      :disabled="!editor.can().chain().focus().toggleItalic().run()"
-      :class="{ 'is-active': editor.isActive('italic'), 'editor-button': true }"
-    >
-      italic
-    </button>
-    <button
-      @click="editor.chain().focus().toggleStrike().run()"
-      :disabled="!editor.can().chain().focus().toggleStrike().run()"
-      :class="{ 'is-active': editor.isActive('strike'), 'editor-button': true }"
-    >
-      strike
-    </button>
-    <button
-      @click="editor.chain().focus().toggleUnderline().run()"
-      :class="{
-        'is-active': editor.isActive('underline'),
-        'editor-button': true,
-      }"
-    >
-      toggleUnderline
-    </button>
-    <button
-      @click="editor.chain().focus().toggleCode().run()"
-      :disabled="!editor.can().chain().focus().toggleCode().run()"
-      :class="{ 'is-active': editor.isActive('code'), 'editor-button': true }"
-    >
-      code
-    </button>
+      <button
+        @click="editor.chain().focus().toggleBold().run()"
+        :disabled="!editor.can().chain().focus().toggleBold().run()"
+        :class="{ 'is-active': editor.isActive('bold'), 'editor-button': true }"
+      >
+        bold
+      </button>
+      <button
+        @click="editor.chain().focus().toggleItalic().run()"
+        :disabled="!editor.can().chain().focus().toggleItalic().run()"
+        :class="{
+          'is-active': editor.isActive('italic'),
+          'editor-button': true,
+        }"
+      >
+        italic
+      </button>
+      <button
+        @click="editor.chain().focus().toggleStrike().run()"
+        :disabled="!editor.can().chain().focus().toggleStrike().run()"
+        :class="{
+          'is-active': editor.isActive('strike'),
+          'editor-button': true,
+        }"
+      >
+        strike
+      </button>
+      <button
+        @click="editor.chain().focus().toggleUnderline().run()"
+        :class="{
+          'is-active': editor.isActive('underline'),
+          'editor-button': true,
+        }"
+      >
+        toggleUnderline
+      </button>
+      <button
+        @click="editor.chain().focus().toggleCode().run()"
+        :disabled="!editor.can().chain().focus().toggleCode().run()"
+        :class="{ 'is-active': editor.isActive('code'), 'editor-button': true }"
+      >
+        code
+      </button>
 
-    <button
-      @click="editor.chain().focus().setParagraph().run()"
-      :class="{
-        'is-active': editor.isActive('paragraph'),
-        'editor-button': true,
-      }"
-    >
-      paragraph
-    </button>
-    <select
-      v-model="selectedHeadingLevel"
-      @change="setHeadingLevel"
-      class="editor-select"
-    >
-      <!-- <option value="1">Heading 1</option>
+      <button
+        @click="editor.chain().focus().setParagraph().run()"
+        :class="{
+          'is-active': editor.isActive('paragraph'),
+          'editor-button': true,
+        }"
+      >
+        paragraph
+      </button>
+      <select
+        v-model="selectedHeadingLevel"
+        @change="setHeadingLevel"
+        class="editor-select"
+      >
+        <!-- <option value="1">Heading 1</option>
       <option value="2">Heading 2</option>
       <option value="3">Heading 3</option>
       <option value="4">Heading 4</option>
       <option value="5">Heading 5</option>
       <option value="6">Heading 6</option> -->
-      <option value="2">Heading 1</option>
-      <option value="3">Heading 2</option>
-      <option value="4">Heading 3</option>
-      <option value="5">Heading 4</option>
-      <option value="6">Heading 5</option>
-    </select>
-    <select
-      v-model="selectedTextAlign"
-      @change="setTextAlign"
-      class="editor-select"
-    >
-      <option value="left">text left</option>
-      <option value="right">text right</option>
-      <option value="center">text center</option>
-      <option value="justify">text justify</option>
-    </select>
+        <option value="2">Heading 1</option>
+        <option value="3">Heading 2</option>
+        <option value="4">Heading 3</option>
+        <option value="5">Heading 4</option>
+        <option value="6">Heading 5</option>
+      </select>
+      <select
+        v-model="selectedTextAlign"
+        @change="setTextAlign"
+        class="editor-select"
+      >
+        <option value="left">text left</option>
+        <option value="right">text right</option>
+        <option value="center">text center</option>
+        <option value="justify">text justify</option>
+      </select>
 
-    <button
-      @click="editor.chain().focus().toggleBulletList().run()"
-      :class="{
-        'is-active': editor.isActive('bullet list'),
-        'editor-button': true,
-      }"
-    >
-      bullet list
-    </button>
-    <button
-      @click="editor.chain().focus().toggleOrderedList().run()"
-      :class="{
-        'is-active': editor.isActive('ordered list'),
-        'editor-button': true,
-      }"
-    >
-      ordered list
-    </button>
-    <button
-      @click="editor.chain().focus().toggleCodeBlock().run()"
-      :class="{
-        'is-active': editor.isActive('code block'),
-        'editor-button': true,
-      }"
-    >
-      code block
-    </button>
-    <button
-      @click="editor.chain().focus().toggleBlockquote().run()"
-      :class="{
-        'is-active': editor.isActive('blockquote'),
-        'editor-button': true,
-      }"
-    >
-      blockquote
-    </button>
-    <button
-      @click="editor.chain().focus().setHorizontalRule().run()"
-      :class="{ 'editor-button': true }"
-    >
-      horizontal rule
-    </button>
-    <!-- <button
+      <button
+        @click="editor.chain().focus().toggleBulletList().run()"
+        :class="{
+          'is-active': editor.isActive('bullet list'),
+          'editor-button': true,
+        }"
+      >
+        bullet list
+      </button>
+      <button
+        @click="editor.chain().focus().toggleOrderedList().run()"
+        :class="{
+          'is-active': editor.isActive('ordered list'),
+          'editor-button': true,
+        }"
+      >
+        ordered list
+      </button>
+      <button
+        @click="editor.chain().focus().toggleCodeBlock().run()"
+        :class="{
+          'is-active': editor.isActive('code block'),
+          'editor-button': true,
+        }"
+      >
+        code block
+      </button>
+      <button
+        @click="editor.chain().focus().toggleBlockquote().run()"
+        :class="{
+          'is-active': editor.isActive('blockquote'),
+          'editor-button': true,
+        }"
+      >
+        blockquote
+      </button>
+      <button
+        @click="editor.chain().focus().setHorizontalRule().run()"
+        :class="{ 'editor-button': true }"
+      >
+        horizontal rule
+      </button>
+      <!-- <button
+
       @click="editor.chain().focus().setHardBreak().run()"
       :class="{ 'editor-button': true }"
     >
       hard break
     </button> -->
-    <button @click="addImage" :class="{ 'editor-button': true }">
-      setImage
-    </button>
-    <button
-      @click="editor.chain().undo().run()"
-      :disabled="!editor.can().chain().undo().run()"
-      :class="{ 'editor-button': true }"
-    >
-      undo
-    </button>
-    <button
-      @click="editor.chain().redo().run()"
-      :disabled="!editor.can().chain().redo().run()"
-      :class="{ 'editor-button': true }"
-    >
-      redo
+      <button @click="addImage" :class="{ 'editor-button': true }">
+        setImage
+      </button>
+      <button
+        @click="editor.chain().undo().run()"
+        :disabled="!editor.can().chain().undo().run()"
+        :class="{ 'editor-button': true }"
+      >
+        undo
+      </button>
+      <button
+        @click="editor.chain().redo().run()"
+        :disabled="!editor.can().chain().redo().run()"
+        :class="{ 'editor-button': true }"
+      >
+        redo
+      </button>
+    </div>
+    <editor-content :editor="editor" class="min-h-[80vh]" />
+    <button class="bg-white text-sm yr" @click="getEditorContent">
+      console content
     </button>
   </div>
-  <editor-content :editor="editor" />
-  <button @click="getEditorContent">console content</button>
 </template>
 
 <style scoped>
 /* Basic editor styles */
 .editor-select {
-  @apply px-2 py-1 border rounded-md transition-colors duration-100 ease-in-out;
+  @apply px-[0.8em] py-[0.3em] border rounded-md transition-colors duration-100 ease-in-out text-sm lg:text-base;
   /* Add other styling as needed */
 }
 
@@ -240,7 +250,8 @@ select {
   margin: 4px;
 }
 .editor-button {
-  @apply px-2 py-1 border rounded-md transition-colors duration-100 ease-in-out;
+  /* @apply px-2 py-1 border rounded-md transition-colors duration-100 ease-in-out bg-white text-sm lg:text-base; */
+  @apply px-[0.8em] py-[0.3em] border rounded-md transition-colors duration-100 ease-in-out bg-white text-sm lg:text-base;
 }
 
 .editor-button.is-active {

@@ -24,6 +24,32 @@ const signOutUser = async () => {
   >
     <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
       <ul class="space-y-2 font-medium text-sm">
+        <!-- <li class="group">
+          <NuxtLink
+            to="/author/newpost"
+            class="flex items-center p-2 font-semibold rounded-lg hover:bg-gray-100"
+          >
+            <Icon
+              name="icon-park:plus"
+              size="24"
+              class="w-6 h-6 transition duration-75 group-hover:scale-105 font-semibold"
+            />
+            <span class="ml-3">New Post</span>
+          </NuxtLink>
+        </li> -->
+        <li class="group">
+          <NuxtLink
+            to="/author/newpost"
+            class="flex items-center p-2 font-semibold rounded-lg hover:bg-gray-100"
+          >
+            <Icon
+              name="octicon:plus-16"
+              size="24"
+              class="w-6 h-6 transition duration-75 group-hover:scale-105 font-semibold"
+            />
+            <span class="flex-1 ml-3 whitespace-nowrap">New Post</span>
+          </NuxtLink>
+        </li>
         <li class="group">
           <NuxtLink
             to="/author/"
@@ -46,8 +72,11 @@ const signOutUser = async () => {
             to="/author/posts"
             class="flex items-center p-2 font-semibold rounded-lg hover:bg-gray-100"
           >
-            <Icon name="ooui:articles-rtl" size="24" />
-
+            <Icon
+              name="ooui:articles-rtl"
+              size="24"
+              class="w-6 h-6 transition duration-75 group-hover:scale-105 font-semibold"
+            />
             <span class="flex-1 ml-3 whitespace-nowrap"> Posts </span>
           </NuxtLink>
         </li>
@@ -56,7 +85,11 @@ const signOutUser = async () => {
             to="/author/images"
             class="flex items-center p-2 font-semibold rounded-lg hover:bg-gray-100"
           >
-            <Icon name="ion:images" size="24" />
+            <Icon
+              name="ion:images"
+              size="24"
+              class="w-6 h-6 transition duration-75 group-hover:scale-105 font-semibold"
+            />
             <span class="flex-1 ml-3 whitespace-nowrap"> Images </span>
           </NuxtLink>
         </li>
