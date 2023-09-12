@@ -40,6 +40,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
+      SUPABASE_URL: process.env.SUPABASE_URL as string,
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL,
       siteName: process.env.SITE_NAME,
       siteDescription: process.env.SITE_DESC,

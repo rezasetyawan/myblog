@@ -7,6 +7,11 @@ import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEditor, EditorContent } from "@tiptap/vue-3";
 
+interface Props {
+  text: string;
+}
+
+const props = defineProps<Props>();
 const emit = defineEmits(["onchange"]);
 
 const editor = useEditor({
@@ -26,20 +31,11 @@ const editor = useEditor({
         "prose prose-sm sm:prose-base lg:prose-base xl:prose-xl m-5 focus:outline-none px-20 min-w-fit max-w-[100%]",
     },
   },
-  content: `
-        <h2>
-          Hi there,
-        </h2>
-      `,
+  content: props.text,
   onUpdate: () => {
-    emit("onchange", editor.value?.getHTML())
+    emit("onchange", editor.value?.getHTML());
   },
 });
-
-const getEditorContent = () => {
-  const content = editor.value?.getHTML();
-  console.log(content);
-};
 
 const addImage = () => {
   const url = window.prompt("URL");
@@ -81,7 +77,7 @@ const setTextAlign = () => {
   <div class="mx-0 border-[1px] border-slate-200 rounded-md">
     <div
       v-if="editor"
-      class="border-b-[1px] p-3 border-slate-200 bg-slate-50 sticky top-[10%] z-[104]"
+      class="border-b-[1px] p-3 border-slate-200 bg-slate-50 sticky top-[9%] z-[104]"
     >
       <button
         @click="editor.chain().focus().toggleBold().run()"
@@ -232,9 +228,6 @@ const setTextAlign = () => {
       </button>
     </div>
     <editor-content :editor="editor" class="min-h-[80vh]" />
-    <button class="bg-white text-sm yr" @click="getEditorContent">
-      console content
-    </button>
   </div>
 </template>
 
@@ -243,6 +236,9 @@ const setTextAlign = () => {
 .editor-select {
   @apply px-[0.8em] py-[0.3em] border rounded-md transition-colors duration-100 ease-in-out text-sm lg:text-base;
   /* Add other styling as needed */
+}
+.editor-select option {
+  @apply px-[0.8em] py-[0.3em] border rounded-md transition-colors duration-100 ease-in-out text-sm lg:text-base;
 }
 
 button,

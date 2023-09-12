@@ -1,3 +1,13 @@
+declare interface AddBlog {
+    id: string
+    title: string
+    text: string
+    created_at: string
+    updated_at: string
+    category_id: string
+    image_url: string
+}
+
 declare interface GetBlog {
     id: string
     title: string

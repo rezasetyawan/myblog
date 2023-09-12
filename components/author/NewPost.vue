@@ -1,18 +1,27 @@
 <script setup lang="ts">
+import { nanoid } from "nanoid";
+import { addBlog } from "../../composables/useBlogs";
+import { addImage } from "../../composables/usePostImage";
+
 const client = useSupabaseClient();
 const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
 const taglist = ref<Array<{ id: string; name: string }> | null>(null);
+const image = ref<File | null>(null);
+const config = useRuntimeConfig();
 
 interface ContentDraft {
-  content: string;
-  category: string;
-  tags: string[];
+  title: string;
+  text: string;
+  category_id: string;
 }
+
 const contentDraft = ref<ContentDraft>({
-  content: "",
-  category: "",
-  tags: [],
+  title: "",
+  text: `<h2>Hi there,</h2>`,
+  category_id: "",
 });
+
+const contentTags = ref<string[]>([]);
 
 const getCategories = async () => {
   const { data: categories } = await useAsyncData("categories", async () => {
@@ -39,17 +48,42 @@ onMounted(async () => {
   await getTags();
 });
 
-watch(contentDraft.value, () => {
-  console.log(contentDraft.value);
-});
-
 const checkedTags = computed(() =>
-  taglist.value?.filter((tag) => contentDraft.value.tags.includes(tag.id))
+  taglist.value?.filter((tag) => contentTags.value.includes(tag.id))
 );
 
 const uncheckedTags = computed(() =>
-  taglist.value?.filter((tag) => !contentDraft.value.tags.includes(tag.id))
+  taglist.value?.filter((tag) => !contentTags.value.includes(tag.id))
 );
+
+const onFileChangeHandler = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  !!target.files && (image.value = target.files[0]);
+};
+const onSubmitHandler = async () => {
+  try {
+    const postId = `post-${nanoid(10)}`;
+    const timestamp = Date.now().toString();
+
+    let imageUrl = "";
+    if (image.value) {
+      const imgUrl = await addImage(client, postId, image.value);
+      !!imgUrl && (imageUrl = imgUrl);
+    }
+
+    const postData: AddBlog = {
+      id: postId,
+      created_at: timestamp,
+      updated_at: timestamp,
+      image_url: imageUrl,
+      ...contentDraft.value,
+    };
+
+    await addBlog(client, postId, postData, contentTags.value);
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>
 <template>
   <main class="font-rubik sm:mx-6 lg:mx-20">
@@ -58,13 +92,16 @@ const uncheckedTags = computed(() =>
       <label class="font-medium my-1">Title</label>
       <input
         class="bg-white px-[0.4em] py-[0.3em] border-[1px] rounded-md block w-[50%] focus:outline-none"
+        v-model="contentDraft.title"
+        required
       />
     </div>
     <div class="my-5">
       <label class="font-medium my-1 block">Category</label>
       <select
         class="px-[0.4em] py-[0.3em] block border-[1px] rounded-md b"
-        v-model="contentDraft.category"
+        v-model="contentDraft.category_id"
+        required
       >
         <option value="" disabled class="px-2 py-1">Chose Category</option>
         <option
@@ -87,10 +124,9 @@ const uncheckedTags = computed(() =>
         >
           <input
             type="checkbox"
-            v-model="contentDraft.tags"
+            v-model="contentTags"
             :value="tag.id"
             class="w-full h-full hidden"
-            required
           />
           {{ tag.name }}
         </label>
@@ -101,10 +137,9 @@ const uncheckedTags = computed(() =>
         >
           <input
             type="checkbox"
-            v-model="contentDraft.tags"
+            v-model="contentTags"
             :value="tag.id"
             class="w-full h-full hidden"
-            required
           />
           {{ tag.name }}
         </label>
@@ -112,32 +147,41 @@ const uncheckedTags = computed(() =>
     </div>
     <div class="my-5 w-fit">
       <label class="font-medium">Image</label>
-      <div class="flex items-center gap-2 relative">
+      <div class="flex items-center w-fit gap-2 relative">
         <div class="bg-slate-200 p-1 w-fit rounded-md absolute -z-10">
           <Icon
             name="octicon:plus-16"
             size="24"
-            class="w-6 h-6 transition duration-75 group-hover:scale-105 font-semibold"
+            class="w-6 h-6 font-semibold"
           />
         </div>
         <input
           type="file"
           accept="image/png, image/jpeg, image/jpg"
-          class="block w-fit file:hidden pb-3 py-4 my-3 pl-10 font-normal hover:cursor-pointer"
-          required
+          @change="(event) => onFileChangeHandler(event)"
+          class="block max-w-fit file:hidden pb-3 py-4 my-3 pl-12 font-normal hover:cursor-pointer"
         />
       </div>
     </div>
     <div class="my-5">
       <label class="font-medium my-1 block">Body</label>
       <TiptapEditor
-        @onchange="(editorcontent) => (contentDraft.content = editorcontent)"
+        :text="contentDraft.text"
+        @onchange="(editorcontent) => (contentDraft.text = editorcontent)"
       />
+    </div>
+    <div class="flex justify-end items-center">
+      <button
+        @click="onSubmitHandler"
+        class="text-base leading-tight font-bold text-white bg-red-800 px-3 py-1.5 my-2 lg:text-lg"
+      >
+        CREATE POST
+      </button>
     </div>
   </main>
 </template>
 <style scoped>
 .checked-label {
-  background-color: #e2e8f0; /* Change this color to your desired background color */
+  background-color: #e2e8f0;
 }
 </style>
