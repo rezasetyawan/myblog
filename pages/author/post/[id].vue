@@ -41,7 +41,7 @@ useServerSeoMeta({
   <Head>
     <Title>{{ blog?.title }}</Title>
   </Head>
-  <PostDetail
+  <AuthorPostDetail
     :blog="blog"
     :commentData="commentData"
     v-if="blog && commentData"

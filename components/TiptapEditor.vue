@@ -28,7 +28,7 @@ const editor = useEditor({
   editorProps: {
     attributes: {
       class:
-        "prose prose-sm sm:prose-base lg:prose-base xl:prose-xl m-5 focus:outline-none px-20 min-w-fit max-w-[100%]",
+        "prose prose-base max-w-none prose-stone font-rubik mx-2 prose-pre:max-w-fit prose-h2:text-2xl prose-h2:font-extrabold focus:outline-none ",
     },
   },
   content: props.text,

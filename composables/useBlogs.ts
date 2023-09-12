@@ -20,7 +20,6 @@ const getBlogs = async (search_key: string = "", category_id: string = "", tags:
 
 
 const getBlogById = async (id: string) => {
-    console.log(id)
     try {
         const { data } = await useFetch(`/api/blogs/${id}`, {
             key: `${id}`
@@ -37,10 +36,10 @@ const addBlog = async (client: SupabaseClient, postId: string, postData: AddBlog
 
         const tagArrayPromises = postTags.map((tagId) => {
             const id = `post_tag-${nanoid(5)}`
-            client.from('post_tags').insert({ id: id, post_id: postId, tag_id: tagId } as never)
+            return client.from('post_tags').insert({ id: id, post_id: postId, tag_id: tagId } as never)
         })
+        await Promise.all(tagArrayPromises)
 
-        Promise.all(tagArrayPromises)
     } catch (error) {
         console.error(error)
     }

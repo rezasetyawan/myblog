@@ -67,8 +67,8 @@ onBeforeMount(async () => {
 
 onBeforeRouteUpdate(async (to, from) => {
   if (Object.keys(to.query).length !== 0) {
-    to.fullPath === "/blogs?page=1"
-      ? (cacheKey.value = "/blogs")
+    to.fullPath === "/author/posts?page=1"
+      ? (cacheKey.value = "/author/posts")
       : (cacheKey.value = to.fullPath);
 
     page.value = parseInt(to.query.page as string) || 1;
