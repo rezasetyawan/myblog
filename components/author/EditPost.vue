@@ -3,10 +3,9 @@ import { nanoid } from "nanoid";
 import { addBlog } from "../../composables/useBlogs";
 import { addImage } from "../../composables/usePostImage";
 
-const client = useSupabaseClient();
-const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
-const taglist = ref<Array<{ id: string; name: string }> | null>(null);
-const image = ref<File | null>(null);
+interface Props {
+  blog: GetBlogDetail;
+}
 
 interface ContentDraft {
   title: string;
@@ -14,15 +13,24 @@ interface ContentDraft {
   category_id: string;
   is_published: boolean;
 }
+const props = defineProps<Props>();
+
+const { blog } = toRefs(props);
+const client = useSupabaseClient();
+const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
+const taglist = ref<Array<{ id: string; name: string }> | null>(null);
+const image = ref<File | null>(null);
 
 const contentDraft = ref<ContentDraft>({
-  title: "",
-  text: `<h2>Hi there,</h2>`,
-  category_id: "",
-  is_published: false,
+  title: blog.value ? blog.value.title : "",
+  text: blog.value ? blog.value.text : `<h2>Hi there,</h2>`,
+  category_id: blog.value ? blog.value.category_id : "",
+  is_published:
+    blog.value.is_published !== undefined ? blog.value.is_published : false,
 });
 
 const contentTags = ref<string[]>([]);
+blog.value ? (contentTags.value = blog.value.tags.map((tag) => tag.id)) : null;
 
 const getCategories = async () => {
   const { data: categories } = await useAsyncData("categories", async () => {
@@ -44,9 +52,37 @@ const getTags = async () => {
   taglist.value = data.value;
 };
 
+const getImageFile = async (): Promise<Blob> => {
+  const { data } = await useFetch(blog.value.image_url);
+  return data.value as Blob;
+};
+
+const setImageInitialValue = async () => {
+  const blob: Blob = await getImageFile();
+
+  const file = new File([blob], `${blog.value.title}-img`, {
+    type: blob.type,
+  });
+
+  image.value = file;
+};
+
 onMounted(async () => {
   await getCategories();
   await getTags();
+  setImageInitialValue()
+});
+
+watch(contentDraft.value, () => {
+  console.log(contentDraft.value);
+});
+
+watch(contentTags.value, () => {
+  console.log(contentTags.value);
+});
+
+watch(image, () => {
+  console.log(image.value);
 });
 
 const onTagsUpdateHandler = (tagId: string) => {
@@ -95,15 +131,20 @@ const onSubmitHandler = async () => {
 };
 </script>
 <template>
-  <AuthorPostForm
-    :contentDraft="contentDraft"
-    :contentTags="contentTags"
-    :categories="blogCategories"
-    :tags="taglist"
-    :image="image"
-    @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
-    @onfilechange="(event: Event) => onFileChangeHandler(event)"
-    @onsubmit="onSubmitHandler"
-    class="mb-16"
-  />
+  <div>
+    <button class="absolute top-5 left-5" @click="() => useRouter().go(-1)">
+      <Icon name="eva:arrow-back-fill" class="w-8 h-8" />
+    </button>
+    <AuthorPostForm
+      :contentDraft="contentDraft"
+      :contentTags="contentTags"
+      :categories="blogCategories"
+      :tags="taglist"
+      :image="image"
+      @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
+      @onfilechange="(event: Event) => onFileChangeHandler(event)"
+      @onsubmit="onSubmitHandler"
+      class="mb-16"
+    />
+  </div>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import { getAuthorBlogs } from '../../composables/useBlogs';
 const client = useSupabaseClient();
 const route = useRoute();
 
@@ -44,7 +44,7 @@ const fetchBlogs = async () => {
     if (blogsDataCache.value) {
       blogsData.value = blogsDataCache.value;
     } else {
-      blogsData.value = await getBlogs(
+      blogsData.value = await getAuthorBlogs(
         queryParams.value.searchKey,
         queryParams.value.category,
         queryParams.value.tags,
@@ -75,7 +75,7 @@ onBeforeRouteUpdate(async (to, from) => {
     await fetchBlogs();
   } else {
     isLoading.value = true;
-    blogsData.value = await getBlogs();
+    blogsData.value = await getAuthorBlogs();
     isLoading.value = false;
     queryParams.value = {
       searchKey: "",

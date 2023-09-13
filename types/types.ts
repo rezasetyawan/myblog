@@ -6,6 +6,17 @@ declare interface AddBlog {
     updated_at: string
     category_id: string
     image_url: string
+    is_published: boolean
+
+}
+
+declare interface UpdateBlog {
+    title?: string
+    text?: string
+    updated_at?: string
+    category_id?: string
+    image_url?: string
+    is_published?: boolean
 }
 
 declare interface GetBlog {
@@ -14,6 +25,7 @@ declare interface GetBlog {
     created_at: string
     comment_counts: number
     image_url: string
+    is_published?: boolean
 }
 
 declare interface GetBlogDetail {
@@ -23,9 +35,10 @@ declare interface GetBlogDetail {
     image_url: string
     created_at: string
     comments: { count: number }[]
-    category: string
+    category?: string
     category_id: string
-    tags: { id: string, name: string }[]
+    is_published?: boolean
+    tags: { id: string, name?: string }[]
 }
 
 // declare interface GetComment {

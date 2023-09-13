@@ -8,6 +8,8 @@ const showNavbar = ref(false);
       @toggleNavbar="showNavbar = !showNavbar"
     ></TheNavbar>
     <!-- <ScrollToTopBtn/> -->
-    <slot />
+    <div class="relative">
+      <slot /> 
+    </div>
   </div>
 </template>

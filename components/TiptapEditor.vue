@@ -227,7 +227,7 @@ const setTextAlign = () => {
         redo
       </button>
     </div>
-    <editor-content :editor="editor" class="min-h-[80vh]" />
+    <editor-content :editor="editor" class="min-h-[80vh] p-4" spellcheck="false"/>
   </div>
 </template>
 

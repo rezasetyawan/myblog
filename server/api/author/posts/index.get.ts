@@ -81,14 +81,14 @@ const getPagination = (page: number = 1, size: number = 1) => {
 export default eventHandler(async (event): Promise<BlogSnapshots> => {
     const client = await serverSupabaseClient(event);
     const query = getQuery(event);
-    const size = 1
+    const size = 5
 
     const tags: string[] = Array.isArray(query.tags) ? query.tags : typeof query.tags === 'string' ? [query.tags] : [];
 
     const { from, to } = getPagination(query.page ? parseInt(query.page as string) : 0, size)
 
     try {
-        let queryBuilder = client.from('posts').select('id, title, created_at, image_url', { count: 'exact' }).order('created_at', { ascending: false });
+        let queryBuilder = client.from('posts').select('id, title, created_at, image_url, is_published', { count: 'exact' }).order('created_at', { ascending: false });
 
         if (tags.length > 0 || query.category_id || query.search_key) {
             if (tags.length > 0) {
@@ -130,7 +130,7 @@ export default eventHandler(async (event): Promise<BlogSnapshots> => {
             queryBuilder = queryBuilder.eq('category_id', query.category_id).ilike('title', `%${query.search_key}%`);
         }
 
-        const { data, count, error } = await queryBuilder.eq('is_published', true).range(from, to)
+        const { data, count, error } = await queryBuilder.range(from, to)
 
         if (error) {
             console.error(error.message);
