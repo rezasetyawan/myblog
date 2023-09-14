@@ -8,7 +8,7 @@ const props = defineProps<Props>();
 
 <template>
   <section v-if="props.blog" class="my-10 mx-3 mb-20 sm:mx-6 lg:mx-20">
-    <button class="absolute top-0 left-5" @click="() => useRouter().go(-1)">
+    <button class="absolute top-5 left-5" @click="() => useRouter().go(-1)">
       <Icon name="eva:arrow-back-fill" class="w-8 h-8" />
     </button>
     <div
@@ -26,7 +26,7 @@ const props = defineProps<Props>();
       <p class="flex items-center gap-1">
         <NuxtLink
           :to="{
-            path: '/blogs',
+            path: '/author/posts',
             query: {
               category_id: props.blog.category_id,
             },
@@ -44,7 +44,7 @@ const props = defineProps<Props>();
         :key="tag.id"
         class="m-2 underline rounded-md text-sm sm:text-base"
         :to="{
-          path: '/blogs',
+          path: '/author/posts',
           query: {
             tags: [tag.id],
           },
