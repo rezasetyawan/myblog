@@ -3,17 +3,15 @@ interface Props {
   blogs: GetBlog[] | undefined | [];
 }
 const props = defineProps<Props>();
-
+const emit = defineEmits(["update-post-status", "delete-post"]);
 const { blogs } = toRefs(props);
 
-const handlePublishStatusChange = (postid: string) => {
-  const index = blogs.value?.findIndex((blog) => blog.id === postid);
+const handlePublishStatusChange = (postId: string) => {
+  emit("update-post-status", postId);
+};
 
-  if (index !== -1 && index !== undefined) {
-    blogs.value
-      ? (blogs.value[index].is_published = !blogs.value[index].is_published)
-      : null;
-  }
+const handleDeletePost = (postId: string) => {
+  emit("delete-post", postId);
 };
 </script>
 <template>
@@ -25,8 +23,8 @@ const handlePublishStatusChange = (postid: string) => {
       v-for="blog in blogs"
       :key="blog.id"
       :blog="blog"
-      @updatePublishStatus="(id) => handlePublishStatusChange(id)"
+      @updatePublishStatus="(id: string) => handlePublishStatusChange(id)"
+      @deletePost="(id: string) => handleDeletePost(id)"
     />
-   
   </section>
 </template>

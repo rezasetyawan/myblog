@@ -7,6 +7,7 @@ const client = useSupabaseClient();
 const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
 const taglist = ref<Array<{ id: string; name: string }> | null>(null);
 const image = ref<File | null>(null);
+const config = useRuntimeConfig();
 
 interface ContentDraft {
   title: string;
@@ -69,13 +70,23 @@ const onSubmitHandler = async () => {
     if (!contentTags.value.length) {
       throw new Error("mohon sertakan tag");
     }
+
+    if (!contentDraft.value.category_id.length) {
+      throw new Error("mohon sertakan category");
+    }
     const postId = `post-${nanoid(10)}`;
     const timestamp = Date.now().toString();
 
     let imageUrl = "";
     if (image.value) {
-      const imgUrl = await addImage(client, postId, image.value);
-      !!imgUrl && (imageUrl = imgUrl);
+      const imgUrl = await addImage(
+        client,
+        postId,
+        image.value,
+        config.public.SUPABASE_URL as string
+      );
+      imgUrl && (imageUrl = imgUrl);
+      console.log(imageUrl);
     }
 
     const postData: AddBlog = {

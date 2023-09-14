@@ -90,3 +90,23 @@ declare interface CommentSnapshots {
     comments: GetComment[]
     comment_counts: number
 }
+
+declare interface ImageMetaData {
+    cacheControl: string;
+    contentLength: number;
+    eTag: string;
+    httpStatusCode: number;
+    lastModified: string;
+    mimetype: string;
+    size: number;
+}
+
+declare interface ImageData {
+    created_at: string;
+    id: string;
+    metadata: ImageMetaData;
+    name: string;
+    updated_at: string;
+    url?: string;
+    post?: string;
+}

@@ -1,6 +1,5 @@
 import { nanoid } from "nanoid"
 import { SupabaseClient } from '@supabase/supabase-js';
-import { client } from "process";
 
 const getBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "/blogs") => {
     try {
@@ -91,4 +90,20 @@ const deleteBlogByID = async (client: SupabaseClient, postId: string) => {
         console.error(error)
     }
 }
-export { getBlogs, getBlogById, addBlog, getAuthorBlogs, updateBlogById, getBlogData, deleteBlogByID }
+
+const updateBlogTagsById = async (client: SupabaseClient, postId: string, postTags: string[]) => {
+    try {
+        await client.from('post_tags').delete().eq('post_id', postId)
+
+        const tagArrayPromises = postTags.map((tagId) => {
+            const id = `post_tag-${nanoid(5)}`
+            return client.from('post_tags').insert({ id: id, post_id: postId, tag_id: tagId } as never)
+        })
+        await Promise.all(tagArrayPromises)
+    }
+    catch (error) {
+        console.error(error)
+    }
+
+}
+export { getBlogs, getBlogById, addBlog, getAuthorBlogs, updateBlogById, getBlogData, deleteBlogByID, updateBlogTagsById }

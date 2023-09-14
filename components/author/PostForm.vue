@@ -17,6 +17,7 @@ interface Props {
   categories: PostCategoryAndTag[] | null | undefined;
   tags: PostCategoryAndTag[] | null | undefined;
   image?: File | null;
+  isEdit?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -53,9 +54,9 @@ if (image) {
 
 const getImageUrl = () => {
   if (image?.value) {
-    return URL.createObjectURL(image.value)
+    return URL.createObjectURL(image.value);
   }
-}
+};
 
 onMounted(() => {
   setInputInitialValue();
@@ -63,7 +64,12 @@ onMounted(() => {
 </script>
 <template>
   <div class="font-rubik sm:mx-6 lg:mx-20">
-    <h2 class="font-bold text-3xl my-10 text-center">Create New Post</h2>
+    <button class="absolute top-5 left-5" @click="() => useRouter().go(-1)">
+      <Icon name="eva:arrow-back-fill" class="w-8 h-8" />
+    </button>
+    <h2 class="font-bold text-3xl my-10 text-center">
+      {{ props.isEdit ? "Edit Post" : "Create New Post" }}
+    </h2>
     <div class="my-5">
       <label class="font-medium my-1">Title</label>
       <input
@@ -124,11 +130,11 @@ onMounted(() => {
     <div class="my-5 w-fit">
       <label class="font-medium">Image</label>
       <img
-          v-if="image"
-         :src="getImageUrl()"
-          alt="Selected Image"
-          class="max-w-[150px] mt-3"
-        />
+        v-if="image"
+        :src="getImageUrl()"
+        alt="Selected Image"
+        class="max-w-[150px] mt-3"
+      />
       <div class="flex items-center w-fit gap-2 relative">
         <div class="bg-slate-200 p-1 w-fit rounded-md absolute -z-10">
           <Icon
@@ -158,7 +164,7 @@ onMounted(() => {
         @click="() => emit('onsubmit')"
         class="text-base leading-tight font-bold text-white bg-red-800 px-3 py-1.5 my-2 lg:text-lg"
       >
-        CREATE POST
+        {{ props.isEdit ? "UPDATE POST" : "CREATE POST" }}
       </button>
     </div>
   </div>

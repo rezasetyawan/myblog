@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import {updateBlogById, deleteBlogByID} from '../../composables/useBlogs'
+import {deleteImage} from '../../composables/usePostImage'
+import {getFileNameFromUrl} from '../../utils/getFileName'
+
 const client = useSupabaseClient()
 
 interface Props {
@@ -7,7 +10,7 @@ interface Props {
   isLoading?: boolean;
 }
 const props = defineProps<Props>();
-const emit = defineEmits(["updatePublishStatus"])
+const emit = defineEmits(["updatePublishStatus","deletePost"])
 
 const updatePostPublishStatus = async () => {
 try {
@@ -25,12 +28,16 @@ const deletePostHandler = async (title: string, postId: string) => {
  if (deletePost) {
   try {
     await deleteBlogByID(client, postId)
+
+    const fileKey = getFileNameFromUrl(props.blog.image_url, 'post-images')
+    await deleteImage(client, fileKey ? fileKey : '')
+    emit('deletePost', props.blog.id)
   }
   catch (error) {
         console.error(error)
     }
  }
-}
+ }
 </script>
 <template>
   
@@ -61,7 +68,7 @@ const deletePostHandler = async (title: string, postId: string) => {
         </div>
       </div>
     </NuxtLink>
-      <div class="z-10">
+      <div class="z-10 flex flex-col justify-center gap-6 mr-4 ">
        <div class="flex items-center gap-2"> 
         <button v-if="props.blog.is_published" @click="updatePostPublishStatus">
           <Icon name="material-symbols:send-and-archive" class="h-6 w-6" />
@@ -76,7 +83,8 @@ const deletePostHandler = async (title: string, postId: string) => {
         
         <button @click="() => deletePostHandler(blog.title, blog.id)">
           <Icon name="mdi:trash" class="h-6 w-6"/>
-        </button></div>
+        </button>
+      </div>
         <div
           class="flex gap-3 items-center justify-center font-medium text-sm text-black"
         >
