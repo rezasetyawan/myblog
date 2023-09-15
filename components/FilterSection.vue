@@ -41,16 +41,19 @@ const searchHandler = async () => {
 </script>
 <template>
   <section
-    class="mx-20 flex justify-between items-center gap-3 p-2 font-rubik my-3"
+    class="mx-3 flex flex-wrap justify-between items-center gap-3 p-2 font-rubik my-3 sm:flex-nowrap sm:mx-5 lg:mx-10"
   >
     <input
       type="text"
-      class="p-2 focus:outline-none border-2 rounded-md w-full"
+      class="p-[0.4em] focus:outline-none border-2 rounded-md w-full text-sm sm:text-base"
       @keyup.enter="searchHandler"
       v-model="props.queryParams.searchKey"
       placeholder="Search blog..."
     />
-    <select v-model="props.queryParams.category" class="p-[0.3em]">
+    <select
+      v-model="props.queryParams.category"
+      class="px-[0.8em] py-[0.4em] text-sm sm:text-base"
+    >
       <option value="" disabled class="px-2 py-1">Chose Category</option>
       <option value="" class="px-2 py-1 my-1">All Category</option>
       <option
@@ -65,12 +68,12 @@ const searchHandler = async () => {
 
     <button
       @click="searchHandler"
-      class="px-[0.8em] py-[0.4em] bg-slate-100 rounded-md"
+      class="px-[0.8em] py-[0.4em] bg-slate-100 rounded-md text-sm sm:text-base"
     >
       Search
     </button>
   </section>
-  <div class="font-rubik mx-20">
+  <div class="font-rubik mx-3 sm:mx-5 lg:mx-10 text-sm sm:text-base">
     <p>Select Tags:</p>
     <div class="flex flex-wrap max-w-[300px] gap-0">
       <label
@@ -89,7 +92,7 @@ const searchHandler = async () => {
       <label
         v-for="tag in uncheckedTags"
         :key="tag.id"
-        class="border-2 border-slate-100 px-[0.8em] py-[0.4em] rounded-md hover:cursor-pointer"
+        class="border-2 border-slate-100 px-[0.8em] py-[0.4em] rounded-md hover:cursor-pointer text-sm sm:text-base"
       >
         <input
           type="checkbox"

@@ -9,9 +9,6 @@ onMounted(() => {
     sidebarWidth.value = element.offsetWidth;
   }
 });
-watch(sidebar, () => {
-  console.log(sidebarWidth.value);
-});
 </script>
 
 <template>
@@ -33,22 +30,16 @@ watch(sidebar, () => {
 </template>
 
 <style scoped>
-/* Add your other styles here */
-
-/* Apply width style only for tablet-sized screens and above */
-
 * {
   overflow-x: hidden;
 }
 .tablet-and-above {
-  width: 100%; /* Default width for smaller screens */
+  width: 100%;
 }
 
 @media (min-width: 640px) {
   .tablet-and-above {
-    width: calc(
-      100% - var(--my-css-variable)
-    ); /* Adjust for tablet and above */
+    width: calc(100% - var(--my-css-variable));
   }
 }
 </style>

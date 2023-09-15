@@ -21,6 +21,7 @@ const props = defineProps<Props>();
 
 const { blog } = toRefs(props);
 const client = useSupabaseClient();
+
 const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
 const taglist = ref<Array<{ id: string; name: string }> | null>(null);
 const image = ref<File>();
@@ -101,7 +102,6 @@ onMounted(async () => {
   await getCategories();
   await getTags();
   await setImageInitialValue();
-  console.log(imageInitialValue?.name);
 
   if (image.value) {
     watch(image, () => {
@@ -125,59 +125,167 @@ const onFileChangeHandler = (event: Event) => {
   !!target.files && (image.value = target.files[0]);
 };
 
+const checkIsPostChanged = () => {
+  const isContentChanged: boolean = !isObjectEqual(
+    contentDraft.value,
+    initialContentDraft
+  );
+
+  const isTagsChanged: boolean = !isArrayEqual(
+    (contentTags.value as []) || [],
+    initialContentTags as []
+  );
+
+  if (isContentChanged || isTagsChanged || isImageChanged.value) {
+    return true;
+  }
+
+  return false;
+};
+
+const updatePost = async () => {
+  const isContentChanged: boolean = !isObjectEqual(
+    contentDraft.value,
+    initialContentDraft
+  );
+
+  const isTagsChanged: boolean = !isArrayEqual(
+    (contentTags.value as []) || [],
+    initialContentTags as []
+  );
+
+  const updatedAt = Date.now().toString();
+  let imageUrl;
+
+  if (
+    isImageChanged.value &&
+    image.value !== undefined &&
+    image.value !== null
+  ) {
+    console.log("UPDATING IMAGE");
+    await deleteImage(client, imageInitialValue.name);
+    imageUrl = await updateImageById(
+      client,
+      blog.value.id,
+      image.value,
+      config.public.SUPABASE_URL as string
+    );
+  }
+
+  await updateBlogById(client, blog.value.id, {
+    updated_at: updatedAt,
+    ...contentDraft.value,
+    image_url: imageUrl,
+    is_published: false,
+  });
+
+  // if (
+  //   isImageChanged.value &&
+  //   image.value !== undefined &&
+  //   image.value !== null
+  // ) {
+  //   console.log(imageInitialValue?.name);
+  //   await deleteImage(client, imageInitialValue.name);
+  //   imageUrl = await updateImageById(
+  //     client,
+  //     blog.value.id,
+  //     image.value,
+  //     config.public.SUPABASE_URL as string
+  //   );
+
+  //   await updateBlogById(client, blog.value.id, {
+  //     image_url: imageUrl,
+  //   });
+
+  //   const fileKey = getFileNameFromUrl(imageUrl ? imageUrl : "", "post-images");
+
+  //   console.log(fileKey);
+  // }
+
+  if (isContentChanged) {
+    console.log("UPDATING CONTENT");
+    await updateBlogById(client, blog.value.id, {
+      updated_at: updatedAt,
+      ...contentDraft.value,
+      image_url: imageUrl,
+    });
+  }
+
+  if (isTagsChanged && contentTags.value) {
+    console.log("UPDATING TAGS");
+    await updateBlogTagsById(client, blog.value.id, contentTags.value);
+  }
+};
+
+onBeforeRouteLeave(async (to, from, next) => {
+  if (checkIsPostChanged()) {
+    if (
+      confirm("You changed the post content, do you want save it as draft?")
+    ) {
+      await updatePost();
+      clearNuxtData(blog.value.id);
+      next();
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
 const onSubmitHandler = async () => {
   try {
-    const isContentChanged: boolean = !isObjectEqual(
-      contentDraft.value,
-      initialContentDraft
-    );
+    // const isContentChanged: boolean = !isObjectEqual(
+    //   contentDraft.value,
+    //   initialContentDraft
+    // );
 
-    const isTagsChanged: boolean = !isArrayEqual(
-      (contentTags.value as []) || [],
-      initialContentTags as []
-    );
+    // const isTagsChanged: boolean = !isArrayEqual(
+    //   (contentTags.value as []) || [],
+    //   initialContentTags as []
+    // );
 
-    const updatedAt = Date.now().toString();
-    let imageUrl;
+    // const updatedAt = Date.now().toString();
+    // let imageUrl;
 
-    if (
-      isImageChanged.value &&
-      image.value !== undefined &&
-      image.value !== null
-    ) {
-      console.log(imageInitialValue?.name);
-      await deleteImage(client, imageInitialValue.name);
-      imageUrl = await updateImageById(
-        client,
-        blog.value.id,
-        image.value,
-        config.public.SUPABASE_URL as string
-      );
+    // if (
+    //   isImageChanged.value &&
+    //   image.value !== undefined &&
+    //   image.value !== null
+    // ) {
+    //   console.log(imageInitialValue?.name);
+    //   await deleteImage(client, imageInitialValue.name);
+    //   imageUrl = await updateImageById(
+    //     client,
+    //     blog.value.id,
+    //     image.value,
+    //     config.public.SUPABASE_URL as string
+    //   );
 
-      await updateBlogById(client, blog.value.id, {
-        image_url: imageUrl,
-      });
+    //   await updateBlogById(client, blog.value.id, {
+    //     image_url: imageUrl,
+    //   });
 
-      const fileKey = getFileNameFromUrl(
-        imageUrl ? imageUrl : "",
-        "post-images"
-      );
+    //   const fileKey = getFileNameFromUrl(
+    //     imageUrl ? imageUrl : "",
+    //     "post-images"
+    //   );
 
-      console.log(fileKey);
-    }
+    //   console.log(fileKey);
+    // }
 
-    if (isContentChanged) {
-      await updateBlogById(client, blog.value.id, {
-        updated_at: updatedAt,
-        ...contentDraft.value,
-        image_url: imageUrl,
-      });
-    }
+    // if (isContentChanged) {
+    //   await updateBlogById(client, blog.value.id, {
+    //     updated_at: updatedAt,
+    //     ...contentDraft.value,
+    //     image_url: imageUrl,
+    //   });
+    // }
 
-    if (isTagsChanged && contentTags.value) {
-      await updateBlogTagsById(client, blog.value.id, contentTags.value);
-    }
-
+    // if (isTagsChanged && contentTags.value) {
+    //   await updateBlogTagsById(client, blog.value.id, contentTags.value);
+    // }
+    await updatePost();
     clearNuxtData(blog.value.id);
     alert("updated");
   } catch (error: any) {

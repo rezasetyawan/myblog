@@ -11,10 +11,10 @@ const page = ref<number>(parseInt(route.query.page as string) || 1);
 const cacheKey = ref<string>("");
 
 const queryParams = ref({
-  searchKey: route.query.search_key ? (route.query.search_key as string) : "",
+  searchKey: route.query.search_key ? (route.query.search_key as string) :  "",
   category: route.query.category_id ? (route.query.category_id as string) : "",
   tags: route.query.tags?.length ? (route.query.tags as string[]) : [],
-  page: route.query.page ? (route.query.page as string) : "1",
+  page: route.query ? (route.query.page as string) : "1",
 });
 
 const getCategories = async () => {
@@ -58,7 +58,7 @@ const fetchBlogs = async () => {
   }
 };
 
-onBeforeMount(async () => {
+onMounted(async () => {
   cacheKey.value = route.fullPath;
   await fetchBlogs();
   await getCategories();
