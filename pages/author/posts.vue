@@ -37,26 +37,52 @@ const getTags = async () => {
   taglist.value = data.value;
 };
 
+// const fetchBlogs = async () => {
+//   try {
+//     isLoading.value = true;
+//     // const { data: blogsDataCache } = useNuxtData(cacheKey.value);
+//     // if (blogsDataCache.value) {
+//     //   blogsData.value = blogsDataCache.value;
+//     // } else {
+//       blogsData.value = await getAuthorBlogs(
+//         queryParams.value.searchKey,
+//         queryParams.value.category,
+//         queryParams.value.tags,
+//         page.value,
+//         cacheKey.value
+//       );
+//     // }
+//     blogsData.value && (isLoading.value = false);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
+
 const fetchBlogs = async () => {
   try {
     isLoading.value = true;
-    const { data: blogsDataCache } = useNuxtData(cacheKey.value);
-    if (blogsDataCache.value) {
-      blogsData.value = blogsDataCache.value;
-    } else {
-      blogsData.value = await getAuthorBlogs(
-        queryParams.value.searchKey,
-        queryParams.value.category,
-        queryParams.value.tags,
-        page.value,
-        cacheKey.value
-      );
-    }
+    console.log("searchKey:", queryParams.value.searchKey);
+    console.log("category:", queryParams.value.category);
+    console.log("tags:", queryParams.value.tags);
+    console.log("page:", page.value);
+    console.log("cacheKey:", cacheKey.value);
+
+    blogsData.value = await getAuthorBlogs(
+      queryParams.value.searchKey,
+      queryParams.value.category,
+      queryParams.value.tags,
+      page.value,
+      cacheKey.value
+    );
+
+    console.log("blogsData:", blogsData.value);
+    
     blogsData.value && (isLoading.value = false);
   } catch (error) {
     console.error(error);
   }
 };
+
 
 onMounted(async () => {
   cacheKey.value = route.fullPath;

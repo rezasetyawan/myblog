@@ -72,10 +72,12 @@ const getCommentCounts = async (client: SupabaseClient, postId: string) => {
 }
 
 const getPagination = (page: number = 1, size: number = 1) => {
-    const limit = size ? +size : 12
-    const from = page ? (page - 1) * limit : 0
-    const to = page ? from + size - 1 : size - 1
-    return { from, to }
+    
+        const limit = size ? +size : 12
+        const from = page ? (page - 1) * limit : 0
+        const to = page ? from + size - 1 : size - 1
+        return { from, to }
+    
 }
 
 export default eventHandler(async (event): Promise<BlogSnapshots> => {
@@ -130,7 +132,7 @@ export default eventHandler(async (event): Promise<BlogSnapshots> => {
             queryBuilder = queryBuilder.eq('category_id', query.category_id).ilike('title', `%${query.search_key}%`);
         }
 
-        const { data, count, error } = await queryBuilder.range(from, to)
+        const { data, count, error } = await queryBuilder.range(from,to)
 
         if (error) {
             console.error(error.message);
@@ -148,4 +150,3 @@ export default eventHandler(async (event): Promise<BlogSnapshots> => {
         throw new Error(error);
     }
 });
-

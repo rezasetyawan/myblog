@@ -16,7 +16,7 @@ const { page = 1, totalPage = 1 } = toRefs(props);
             page: page > 1 ? page - 1 : 1,
           },
         }"
-        :class="{ 'bg-red-700': page === 1 }"
+        :class="{ 'bg-[#b91c1c]': page === 1 }"
       >
         Prev
       </NuxtLink>
@@ -59,7 +59,7 @@ const { page = 1, totalPage = 1 } = toRefs(props);
             page: page === totalPage ? page : page + 1,
           },
         }"
-        :class="{ 'bg-red-700': page === totalPage }"
+        :class="{ 'bg-[#b91c1c]': page === totalPage }"
       >
         Next
       </NuxtLink>
@@ -70,4 +70,8 @@ const { page = 1, totalPage = 1 } = toRefs(props);
 .active_link {
   border: 1px solid #991b1b;
 }
+
+/* .disable {
+  background-color: #b91c1c;
+} */
 </style>
