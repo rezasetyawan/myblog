@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { getBlogs } from "../../composables/useBlogs";
-
+import { getAuthorBlogs } from "../../composables/useBlogs";
 const client = useSupabaseClient();
 const route = useRoute();
 
@@ -12,10 +11,10 @@ const page = ref<number>(parseInt(route.query.page as string) || 1);
 const cacheKey = ref<string>("");
 
 const queryParams = ref({
-  searchKey: route.query.search_key ? (route.query.search_key as string) : "",
+  searchKey: route.query.search_key ? (route.query.search_key as string) :  "",
   category: route.query.category_id ? (route.query.category_id as string) : "",
   tags: route.query.tags?.length ? (route.query.tags as string[]) : [],
-  page: route.query.page ? (route.query.page as string) : "1",
+  page: route.query ? (route.query.page as string) : "1",
 });
 
 const getCategories = async () => {
@@ -38,29 +37,54 @@ const getTags = async () => {
   taglist.value = data.value;
 };
 
+// const fetchBlogs = async () => {
+//   try {
+//     isLoading.value = true;
+//     // const { data: blogsDataCache } = useNuxtData(cacheKey.value);
+//     // if (blogsDataCache.value) {
+//     //   blogsData.value = blogsDataCache.value;
+//     // } else {
+//       blogsData.value = await getAuthorBlogs(
+//         queryParams.value.searchKey,
+//         queryParams.value.category,
+//         queryParams.value.tags,
+//         page.value,
+//         cacheKey.value
+//       );
+//     // }
+//     blogsData.value && (isLoading.value = false);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
+
 const fetchBlogs = async () => {
   try {
     isLoading.value = true;
-    const { data: blogsDataCache } = useNuxtData(cacheKey.value);
-    if (blogsDataCache.value) {
-      blogsData.value = blogsDataCache.value;
-    } else {
-      blogsData.value = await getBlogs(
-        queryParams.value.searchKey,
-        queryParams.value.category,
-        queryParams.value.tags,
-        page.value,
-        cacheKey.value
-      );
-    }
-    console.log(blogsData.value)
+    console.log("searchKey:", queryParams.value.searchKey);
+    console.log("category:", queryParams.value.category);
+    console.log("tags:", queryParams.value.tags);
+    console.log("page:", page.value);
+    console.log("cacheKey:", cacheKey.value);
+
+    blogsData.value = await getAuthorBlogs(
+      queryParams.value.searchKey,
+      queryParams.value.category,
+      queryParams.value.tags,
+      page.value,
+      cacheKey.value
+    );
+
+    console.log("blogsData:", blogsData.value);
+    
     blogsData.value && (isLoading.value = false);
   } catch (error) {
     console.error(error);
   }
 };
 
-onBeforeMount(async () => {
+
+onMounted(async () => {
   cacheKey.value = route.fullPath;
   await fetchBlogs();
   await getCategories();
@@ -69,15 +93,15 @@ onBeforeMount(async () => {
 
 onBeforeRouteUpdate(async (to, from) => {
   if (Object.keys(to.query).length !== 0) {
-    to.fullPath === "/blogs?page=1"
-      ? (cacheKey.value = "/blogs")
+    to.fullPath === "/author/posts?page=1"
+      ? (cacheKey.value = "/author/posts")
       : (cacheKey.value = to.fullPath);
 
     page.value = parseInt(to.query.page as string) || 1;
     await fetchBlogs();
   } else {
     isLoading.value = true;
-    blogsData.value = await getBlogs();
+    blogsData.value = await getAuthorBlogs();
     isLoading.value = false;
     queryParams.value = {
       searchKey: "",
@@ -100,6 +124,30 @@ watch(route, (newValue) => {
   cacheKey.value = newValue.fullPath;
 });
 
+const handlePublishStatusChange = (postId: string) => {
+  const index = blogsData.value?.blogs.findIndex((blog) => blog.id === postId);
+
+  if (index !== -1 && index !== undefined) {
+    blogsData.value?.blogs
+      ? (blogsData.value.blogs[index].is_published =
+          !blogsData.value?.blogs[index].is_published)
+      : null;
+  }
+};
+
+const handleDeletePost = (postId: string) => {
+  try {
+    const index = blogsData.value?.blogs?.findIndex(
+      (blog) => blog.id === postId
+    );
+    index !== undefined &&
+      index !== -1 &&
+      blogsData.value?.blogs?.splice(index, 1);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 useServerSeoMeta({
   title: "My Blog",
   ogTitle: "My Blog",
@@ -120,13 +168,17 @@ useHead({
 </script>
 <template>
   <main>
-    <!-- <FilterSection
+    <FilterSection
       :queryParams="queryParams"
       :postCategories="blogCategories"
       :postTags="taglist"
       @onSearch="page = 1"
-    /> -->
-    <Posts :blogs="blogsData?.blogs" :isLoading="isLoading" />
+    />
+    <AuthorPosts
+      :blogs="blogsData?.blogs"
+      @update-post-status="(id: string) => handlePublishStatusChange(id)"
+      @delete-post="(id: string) => handleDeletePost(id)"
+    />
     <h2
       v-if="blogsData?.blogs.length === 0 && !isLoading"
       class="text-center my-20"

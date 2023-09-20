@@ -1,9 +1,31 @@
+declare interface AddBlog {
+    id: string
+    title: string
+    text: string
+    created_at: string
+    updated_at: string
+    category_id: string
+    image_url: string
+    is_published: boolean
+
+}
+
+declare interface UpdateBlog {
+    title?: string
+    text?: string
+    updated_at?: string
+    category_id?: string
+    image_url?: string
+    is_published?: boolean
+}
+
 declare interface GetBlog {
     id: string
     title: string
     created_at: string
     comment_counts: number
     image_url: string
+    is_published?: boolean
 }
 
 declare interface GetBlogDetail {
@@ -13,9 +35,10 @@ declare interface GetBlogDetail {
     image_url: string
     created_at: string
     comments: { count: number }[]
-    category: string
+    category?: string
     category_id: string
-    tags: { id: string, name: string }[]
+    is_published?: boolean
+    tags: { id: string, name?: string }[]
 }
 
 // declare interface GetComment {
@@ -66,4 +89,24 @@ declare interface GetComment {
 declare interface CommentSnapshots {
     comments: GetComment[]
     comment_counts: number
+}
+
+declare interface ImageMetaData {
+    cacheControl: string;
+    contentLength: number;
+    eTag: string;
+    httpStatusCode: number;
+    lastModified: string;
+    mimetype: string;
+    size: number;
+}
+
+declare interface ImageData {
+    created_at: string;
+    id: string;
+    metadata: ImageMetaData;
+    name: string;
+    updated_at: string;
+    url?: string;
+    post?: string;
 }
