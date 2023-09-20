@@ -11,11 +11,7 @@ const page = ref<number>(parseInt(route.query.page as string) || 1);
 const cacheKey = ref<string>("");
 
 const queryParams = ref({
-<<<<<<< HEAD
-  searchKey: route.query.search_key ? (route.query.search_key as string) :  "",
-=======
   searchKey: route.query.search_key ? (route.query.search_key as string) : "",
->>>>>>> develop
   category: route.query.category_id ? (route.query.category_id as string) : "",
   tags: route.query.tags?.length ? (route.query.tags as string[]) : [],
   page: route.query ? (route.query.page as string) : "1",
@@ -41,48 +37,6 @@ const getTags = async () => {
   taglist.value = data.value;
 };
 
-<<<<<<< HEAD
-// const fetchBlogs = async () => {
-//   try {
-//     isLoading.value = true;
-//     // const { data: blogsDataCache } = useNuxtData(cacheKey.value);
-//     // if (blogsDataCache.value) {
-//     //   blogsData.value = blogsDataCache.value;
-//     // } else {
-//       blogsData.value = await getAuthorBlogs(
-//         queryParams.value.searchKey,
-//         queryParams.value.category,
-//         queryParams.value.tags,
-//         page.value,
-//         cacheKey.value
-//       );
-//     // }
-//     blogsData.value && (isLoading.value = false);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
-const fetchBlogs = async () => {
-  try {
-    isLoading.value = true;
-    console.log("searchKey:", queryParams.value.searchKey);
-    console.log("category:", queryParams.value.category);
-    console.log("tags:", queryParams.value.tags);
-    console.log("page:", page.value);
-    console.log("cacheKey:", cacheKey.value);
-
-    blogsData.value = await getAuthorBlogs(
-      queryParams.value.searchKey,
-      queryParams.value.category,
-      queryParams.value.tags,
-      page.value,
-      cacheKey.value
-    );
-
-    console.log("blogsData:", blogsData.value);
-    
-=======
 const fetchBlogs = async () => {
   try {
     isLoading.value = true;
@@ -100,22 +54,13 @@ const fetchBlogs = async () => {
 
       data ? (blogsData.value = data) : null;
     }
-<<<<<<<< HEAD:pages/blogs/index.vue
-    console.log(blogsData.value)
-========
 
->>>>>>>> develop:pages/author/posts.vue
->>>>>>> develop
     blogsData.value && (isLoading.value = false);
   } catch (error) {
     console.error(error);
   }
 };
 
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
 onMounted(async () => {
   cacheKey.value = route.fullPath;
   await fetchBlogs();
@@ -200,32 +145,17 @@ useHead({
 </script>
 <template>
   <main>
-<<<<<<< HEAD
     <FilterSection
-=======
-    <!-- <FilterSection
->>>>>>> develop
       :queryParams="queryParams"
       :postCategories="blogCategories"
       :postTags="taglist"
       @onSearch="page = 1"
-<<<<<<< HEAD
-=======
-<<<<<<<< HEAD:pages/blogs/index.vue
-    /> -->
-    <Posts :blogs="blogsData?.blogs" :isLoading="isLoading" />
-========
->>>>>>> develop
     />
     <AuthorPosts
       :blogs="blogsData?.blogs"
       @update-post-status="(id: string) => handlePublishStatusChange(id)"
       @delete-post="(id: string) => handleDeletePost(id)"
     />
-<<<<<<< HEAD
-=======
->>>>>>>> develop:pages/author/posts.vue
->>>>>>> develop
     <h2
       v-if="blogsData?.blogs.length === 0 && !isLoading"
       class="text-center my-20"
