@@ -130,7 +130,7 @@ export default eventHandler(async (event): Promise<BlogSnapshots> => {
             queryBuilder = queryBuilder.eq('category_id', query.category_id).ilike('title', `%${query.search_key}%`);
         }
 
-        const { data, count, error } = await queryBuilder.eq('is_published', true).range(from, to)
+        const { data, count, error } = await queryBuilder.eq('is_published', true).range(from,to)
 
         if (error) {
             console.error(error.message);

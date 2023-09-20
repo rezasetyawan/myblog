@@ -37,7 +37,7 @@ const signOutUser = async () => {
             <span class="ml-3">New Post</span>
           </NuxtLink>
         </li> -->
-        <li class="group">
+        <li class="group">  
           <NuxtLink
             to="/author/newpost"
             class="flex items-center p-2 font-semibold rounded-lg hover:bg-gray-100"
@@ -50,7 +50,7 @@ const signOutUser = async () => {
             <span class="flex-1 ml-3 whitespace-nowrap">New Post</span>
           </NuxtLink>
         </li>
-        <li class="group">
+        <!-- <li class="group">
           <NuxtLink
             to="/author/"
             class="flex items-center p-2 font-semibold rounded-lg hover:bg-gray-100"
@@ -66,7 +66,7 @@ const signOutUser = async () => {
             </svg>
             <span class="ml-3">Dashboard</span>
           </NuxtLink>
-        </li>
+        </li> -->
         <li class="group">
           <NuxtLink
             to="/author/posts"
