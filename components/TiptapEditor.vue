@@ -30,7 +30,7 @@ const editor = useEditor({
   editorProps: {
     attributes: {
       class:
-        "prose prose-base max-w-none prose-stone font-rubik mx-2 prose-pre:max-w-fit prose-h2:text-2xl prose-h2:font-extrabold focus:outline-none ",
+        "prose prose-base  max-w-none mx-2 text-black font-rubik my-5 prose-pre:max-w-fit prose-h2:text-xl prose-h2:font-extrabold prose-li:marker:text-black text-sm md:text-base focus:outline-none",
     },
   },
   content: props.text,
@@ -79,7 +79,7 @@ const setTextAlign = () => {
   <div class="mx-0 border-[1px] border-slate-200 rounded-md">
     <div
       v-if="editor"
-      class="border-b-[1px] p-3 border-slate-200 bg-slate-50 sticky top-[9%] z-[104] flex flex-wrap items-center"
+      class="border-b-[1px] p-3 border-slate-200 bg-slate-50 z-[104] flex flex-wrap items-center sticky top-[9%]"
     >
       <button
         @click="editor.chain().focus().toggleBold().run()"
@@ -182,7 +182,7 @@ const setTextAlign = () => {
         <span class="tooltip whitespace-nowrap">redo</span>
       </button>
 
-      <div class="max-md:inline-block max-md:ml-auto max-md:relative ">
+      <div class="max-md:inline-block max-md:ml-auto max-md:relative">
         <button
           @click="() => (showMobileMenu = !showMobileMenu)"
           class="md:hidden"
@@ -283,7 +283,6 @@ const setTextAlign = () => {
 </template>
 
 <style scoped>
-/* Basic editor styles */
 .editor-select {
   @apply px-[0.4em] py-[0.4em] border rounded-md transition-colors duration-100 ease-in-out text-sm lg:text-base font-medium;
 }
@@ -296,7 +295,6 @@ select {
   margin: 2px;
 }
 .editor-button {
-  /* @apply px-2 py-1 border rounded-md transition-colors duration-100 ease-in-out bg-white text-sm lg:text-base; */
   @apply px-[0.8em] py-[0.3em] border rounded-md transition-colors duration-100 ease-in-out bg-white text-sm lg:text-base relative;
 }
 
@@ -305,7 +303,7 @@ select {
 }
 
 .tooltip {
-  @apply hidden bg-slate-100 group-hover:inline group-hover:absolute right-0 top-10 z-20 px-[0.8em] py-[0.4em] rounded-sm;
+  @apply hidden bg-slate-100 group-hover:inline group-hover:absolute right-0 top-10 z-20 px-[0.8em] py-[0.4em] rounded-sm text-black;
 }
 
 .editor-button.is-active {
@@ -314,5 +312,10 @@ select {
 
 .editor-button:hover {
   @apply bg-blue-200;
+}
+
+.toolbar {
+  position: sticky;
+  top: 10%;
 }
 </style>

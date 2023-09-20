@@ -46,7 +46,7 @@ const deletePostHandler = async (title: string, postId: string) => {
   <div class=" border-2 rounded-lg p-1 my-2 w-full flex justify-between">
     <NuxtLink :to="`/author/post/${props.blog.id}`">
       <div class="flex gap-2">
-          <NuxtImg :src="props.blog.image_url ? props.blog.image_url : '@public/images/image-placeholder.jpg"
+          <NuxtImg :src="props.blog.image_url ? props.blog.image_url : '@public/images/image-placeholder.jpg'"
             class="min-h-[50px] max-h-[50px] sm:min-h-[70px] sm:max-h-[70px] object-cover brightness-90 transition-all rounded-sm aspect-[4/2]"
             loading="lazy" quality="50" :alt="props.blog.title" placeholder />
         <div>

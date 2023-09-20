@@ -3,7 +3,8 @@ import { SupabaseClient } from '@supabase/supabase-js';
 
 const getBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "/blogs") => {
     try {
-        const { data } = await useFetch('/api/blogs', {
+        const { data } = await useFetch('/api/author/posts', {
+            method:'GET',
             query: {
                 search_key: search_key,
                 category_id: category_id,
@@ -12,7 +13,8 @@ const getBlogs = async (search_key: string = "", category_id: string = "", tags:
             },
             key: cacheKey,
         })
-        return data.value
+        console.log(data.value)
+        return data.value as BlogSnapshots
     } catch (error) {
         console.error(error)
     }

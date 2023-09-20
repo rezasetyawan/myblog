@@ -75,13 +75,15 @@ const getPagination = (page: number = 1, size: number = 1) => {
     const limit = size ? +size : 12
     const from = page ? (page - 1) * limit : 0
     const to = page ? from + size - 1 : size - 1
+    console.log(from)
+    console.log(to)
     return { from, to }
 }
 
 export default eventHandler(async (event): Promise<BlogSnapshots> => {
     const client = await serverSupabaseClient(event);
     const query = getQuery(event);
-    const size = 1
+    const size = 12;
 
     const tags: string[] = Array.isArray(query.tags) ? query.tags : typeof query.tags === 'string' ? [query.tags] : [];
 
@@ -130,7 +132,7 @@ export default eventHandler(async (event): Promise<BlogSnapshots> => {
             queryBuilder = queryBuilder.eq('category_id', query.category_id).ilike('title', `%${query.search_key}%`);
         }
 
-        const { data, count, error } = await queryBuilder.eq('is_published', true).range(from,to)
+        const { data, count, error } = await queryBuilder.eq('is_published',true).range(from, to)
 
         if (error) {
             console.error(error.message);

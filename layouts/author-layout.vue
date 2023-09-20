@@ -31,9 +31,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-* {
-  overflow-x: hidden;
-}
+
 .tablet-and-above {
   width: 100%;
 }

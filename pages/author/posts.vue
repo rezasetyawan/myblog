@@ -11,7 +11,7 @@ const page = ref<number>(parseInt(route.query.page as string) || 1);
 const cacheKey = ref<string>("");
 
 const queryParams = ref({
-  searchKey: route.query.search_key ? (route.query.search_key as string) :  "",
+  searchKey: route.query.search_key ? (route.query.search_key as string) : "",
   category: route.query.category_id ? (route.query.category_id as string) : "",
   tags: route.query.tags?.length ? (route.query.tags as string[]) : [],
   page: route.query ? (route.query.page as string) : "1",
@@ -37,52 +37,29 @@ const getTags = async () => {
   taglist.value = data.value;
 };
 
-// const fetchBlogs = async () => {
-//   try {
-//     isLoading.value = true;
-//     // const { data: blogsDataCache } = useNuxtData(cacheKey.value);
-//     // if (blogsDataCache.value) {
-//     //   blogsData.value = blogsDataCache.value;
-//     // } else {
-//       blogsData.value = await getAuthorBlogs(
-//         queryParams.value.searchKey,
-//         queryParams.value.category,
-//         queryParams.value.tags,
-//         page.value,
-//         cacheKey.value
-//       );
-//     // }
-//     blogsData.value && (isLoading.value = false);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
 const fetchBlogs = async () => {
   try {
     isLoading.value = true;
-    console.log("searchKey:", queryParams.value.searchKey);
-    console.log("category:", queryParams.value.category);
-    console.log("tags:", queryParams.value.tags);
-    console.log("page:", page.value);
-    console.log("cacheKey:", cacheKey.value);
+    const { data: blogsDataCache } = useNuxtData(cacheKey.value);
+    if (blogsDataCache.value) {
+      blogsData.value = blogsDataCache.value;
+    } else {
+      const data = await getBlogs(
+        queryParams.value.searchKey,
+        queryParams.value.category,
+        queryParams.value.tags,
+        page.value,
+        cacheKey.value
+      );
 
-    blogsData.value = await getAuthorBlogs(
-      queryParams.value.searchKey,
-      queryParams.value.category,
-      queryParams.value.tags,
-      page.value,
-      cacheKey.value
-    );
+      data ? (blogsData.value = data) : null;
+    }
 
-    console.log("blogsData:", blogsData.value);
-    
     blogsData.value && (isLoading.value = false);
   } catch (error) {
     console.error(error);
   }
 };
-
 
 onMounted(async () => {
   cacheKey.value = route.fullPath;
