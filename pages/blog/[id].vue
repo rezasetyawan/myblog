@@ -43,9 +43,9 @@ useServerSeoMeta({
 });
 </script>
 <template>
-  <Head>
+  <!-- <Head>
     <Title>{{ blog?.title }}</Title>
-  </Head>
+  </Head> -->
   <PostDetail
     :blog="blog"
     :commentData="commentData"

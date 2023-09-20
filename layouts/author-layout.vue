@@ -27,13 +27,10 @@ onMounted(() => {
       <slot />
     </div>
   </div>
+  <ScrollToTopBtn />
 </template>
 
-<style scoped>
-* {
-  overflow-x: hidden;
-}
-.tablet-and-above {
+<style scoped>.tablet-and-above {
   width: 100%;
 }
 

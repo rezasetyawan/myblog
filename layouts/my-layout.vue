@@ -2,14 +2,16 @@
 const showNavbar = ref(false);
 </script>
 <template>
-  <div class="font-rubik">
+  <main class="font-rubik min-h-[100vh]">
     <TheNavbar
       :showNavbar="showNavbar"
       @toggleNavbar="showNavbar = !showNavbar"
     ></TheNavbar>
-    <!-- <ScrollToTopBtn/> -->
+    <ScrollToTopBtn />
     <div class="relative">
-      <slot /> 
+      <slot />
     </div>
-  </div>
+   
+  </main>
+  <TheFooter/>    
 </template>

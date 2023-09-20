@@ -13,6 +13,8 @@ interface Props {
 
 const props = defineProps<Props>();
 const emit = defineEmits(["onchange"]);
+const showMobileMenu = ref<boolean>(false);
+watch(showMobileMenu, () => console.log(showMobileMenu.value));
 
 const editor = useEditor({
   extensions: [
@@ -28,7 +30,7 @@ const editor = useEditor({
   editorProps: {
     attributes: {
       class:
-        "prose prose-base max-w-none prose-stone font-rubik mx-2 prose-pre:max-w-fit prose-h2:text-2xl prose-h2:font-extrabold focus:outline-none ",
+        "prose prose-base  max-w-none mx-2 text-black font-rubik my-5 prose-pre:max-w-fit prose-h2:text-xl prose-h2:font-extrabold prose-li:marker:text-black text-sm md:text-base focus:outline-none",
     },
   },
   content: props.text,
@@ -77,7 +79,7 @@ const setTextAlign = () => {
   <div class="mx-0 border-[1px] border-slate-200 rounded-md">
     <div
       v-if="editor"
-      class="border-b-[1px] p-3 border-slate-200 bg-slate-50 sticky top-[9%] z-[104]"
+      class="border-b-[1px] p-3 border-slate-200 bg-slate-50 z-[104] flex flex-wrap items-center sticky top-[9%]"
     >
       <button
         @click="editor.chain().focus().toggleBold().run()"
@@ -129,22 +131,10 @@ const setTextAlign = () => {
         :class="{ 'is-active': editor.isActive('code'), 'editor-button': true }"
         class="group"
       >
-        <Icon name="mingcute:code-fill" class="w-4 h-4" />
-        <span class="tooltip">code</span>
-      </button>
-
-      <button
-        @click="editor.chain().focus().setParagraph().run()"
-        :class="{
-          'is-active': editor.isActive('paragraph'),
-          'editor-button': true,
-        }"
-        class="group"
-      >
         <Icon name="mingcute:paragraph-fill" class="w-4 h-4" />
         <span class="tooltip">paragraph</span>
       </button>
-      <div class="group inline-block relative">
+      <div class="group inline-block relative leading-6">
         <select
           v-model="selectedHeadingLevel"
           @change="setHeadingLevel"
@@ -171,70 +161,6 @@ const setTextAlign = () => {
         </select>
         <span class="tooltip whitespace-nowrap">text align</span>
       </div>
-
-      <button
-        @click="editor.chain().focus().toggleBulletList().run()"
-        :class="{
-          'is-active': editor.isActive('bullet list'),
-          'editor-button': true,
-        }"
-        class="group"
-      >
-        <Icon name="fluent:text-bullet-list-24-filled" class="w-4 h-4" />
-        <span class="tooltip whitespace-nowrap">bullet list</span>
-      </button>
-      <button
-        @click="editor.chain().focus().toggleOrderedList().run()"
-        :class="{
-          'is-active': editor.isActive('ordered list'),
-          'editor-button': true,
-        }"
-        class="group"
-      >
-        <Icon name="mingcute:list-ordered-fill" class="w-4 h-4" />
-        <span class="tooltip whitespace-nowrap">ordered list</span>
-      </button>
-      <button
-        @click="editor.chain().focus().toggleCodeBlock().run()"
-        :class="{
-          'is-active': editor.isActive('code block'),
-          'editor-button': true,
-        }"
-        class="group"
-      >
-        <Icon
-          name="material-symbols:code-blocks-outline-rounded"
-          class="w-4 h-4"
-        />
-        <span class="tooltip whitespace-nowrap">code block</span>
-      </button>
-      <button
-        @click="editor.chain().focus().toggleBlockquote().run()"
-        :class="{
-          'is-active': editor.isActive('blockquote'),
-          'editor-button': true,
-        }"
-        class="group"
-      >
-        <Icon name="tabler:blockquote" class="w-4 h-4" />
-        <span class="tooltip whitespace-nowrap">blockquote</span>
-      </button>
-      <button
-        @click="editor.chain().focus().setHorizontalRule().run()"
-        :class="{ 'editor-button': true }"
-        class="group"
-      >
-        <Icon name="material-symbols:horizontal-rule-rounded" class="w-4 h-4" />
-        <span class="tooltip whitespace-nowrap">horizontal rule</span>
-      </button>
-      <button
-        @click="addImage"
-        :class="{ 'editor-button': true }"
-        class="group"
-      >
-        <Icon name="bi:image" size="24" class="w-4 h-4" />
-        <span class="tooltip whitespace-nowrap">set image</span>
-      </button>
       <button
         @click="editor.chain().undo().run()"
         :disabled="!editor.can().chain().undo().run()"
@@ -253,19 +179,106 @@ const setTextAlign = () => {
         <Icon name="material-symbols:redo" class="w-5 h-5" />
         <span class="tooltip whitespace-nowrap">redo</span>
       </button>
+
+      <div class="max-md:inline-block max-md:ml-auto max-md:relative">
+        <button
+          @click="() => (showMobileMenu = !showMobileMenu)"
+          class="md:hidden"
+        >
+          <Icon name="pepicons-pencil:dots-y" size="24" />
+        </button>
+        <div
+          class="max-md:absolute max-md:translate-x-[300px] max-md:p-3 max-md:z-20 max-md:transition-all max-md:duration-[200ms] max-md:top-9 max-md:bg-white right-0 max-md:shadow-md mobile-menu flex flex-wrap max-md:w-40"
+          :class="{ 'max-md:translate-x-[0px]': showMobileMenu }"
+        >
+          <button
+            @click="editor.chain().focus().toggleBulletList().run()"
+            :class="{
+              'is-active': editor.isActive('bullet list'),
+              'editor-button': true,
+            }"
+            class="group"
+          >
+            <Icon name="fluent:text-bullet-list-24-filled" class="w-4 h-4" />
+            <span class="tooltip whitespace-nowrap">bullet list</span>
+          </button>
+          <button
+            @click="editor.chain().focus().toggleOrderedList().run()"
+            :class="{
+              'is-active': editor.isActive('ordered list'),
+              'editor-button': true,
+            }"
+            class="group"
+          >
+            <Icon name="mingcute:list-ordered-fill" class="w-4 h-4" />
+            <span class="tooltip whitespace-nowrap">ordered list</span>
+          </button>
+          <button
+            @click="editor.chain().focus().toggleBlockquote().run()"
+            :class="{
+              'is-active': editor.isActive('blockquote'),
+              'editor-button': true,
+            }"
+            class="group"
+          >
+            <Icon name="tabler:blockquote" class="w-4 h-4" />
+            <span class="tooltip whitespace-nowrap">blockquote</span>
+          </button>
+          <button
+            @click="addImage"
+            :class="{ 'editor-button': true }"
+            class="group"
+          >
+            <Icon name="bi:image" size="24" class="w-4 h-4" />
+            <span class="tooltip whitespace-nowrap">set image</span>
+          </button>
+          <button
+            @click="editor.chain().focus().toggleCode().run()"
+            :disabled="!editor.can().chain().focus().toggleCode().run()"
+            :class="{
+              'is-active': editor.isActive('code'),
+              'editor-button': true,
+            }"
+            class="group"
+          >
+            <Icon name="mingcute:code-fill" class="w-4 h-4" />
+            <span class="tooltip">code</span>
+          </button>
+          <button
+            @click="editor.chain().focus().toggleCodeBlock().run()"
+            :class="{
+              'is-active': editor.isActive('code block'),
+              'editor-button': true,
+            }"
+            class="group"
+          >
+            <Icon
+              name="material-symbols:code-blocks-outline-rounded"
+              class="w-4 h-4"
+            />
+            <span class="tooltip whitespace-nowrap">code block</span>
+          </button>
+          <button
+            @click="editor.chain().focus().setHorizontalRule().run()"
+            :class="{ 'editor-button': true }"
+            class="group"
+          >
+            <Icon
+              name="material-symbols:horizontal-rule-rounded"
+              class="w-4 h-4"
+            />
+            <span class="tooltip whitespace-nowrap">horizontal rule</span>
+          </button>
+        </div>
+      </div>
     </div>
-    <editor-content
-      :editor="editor"
-      class="min-h-[80vh] p-4"
-      spellcheck="false"
-    />
+    <editor-content :editor="editor" spellcheck="false" />
   </div>
 </template>
 
 <style scoped>
-/* Basic editor styles */
 .editor-select {
-  @apply px-[0.4em] py-[0.3em] border rounded-md transition-colors duration-100 ease-in-out text-sm lg:text-base font-medium;
+  @apply px-[0.4em] py-[0.4em] border rounded-md transition-colors duration-100 ease-in-out text-sm lg:text-base font-medium;
 }
 .editor-select option {
   @apply px-[0.4em] py-[0.3em] border rounded-md transition-colors duration-100 ease-in-out text-sm lg:text-base font-medium;
@@ -276,12 +289,15 @@ select {
   margin: 2px;
 }
 .editor-button {
-  /* @apply px-2 py-1 border rounded-md transition-colors duration-100 ease-in-out bg-white text-sm lg:text-base; */
   @apply px-[0.8em] py-[0.3em] border rounded-md transition-colors duration-100 ease-in-out bg-white text-sm lg:text-base relative;
 }
 
+.mobile-menu .editor-button {
+  @apply max-md:block;
+}
+
 .tooltip {
-  @apply hidden bg-slate-100 group-hover:inline group-hover:absolute right-0 top-10 z-20 px-[0.8em] py-[0.4em] rounded-sm;
+  @apply hidden bg-slate-100 group-hover:inline group-hover:absolute right-0 top-10 z-20 px-[0.8em] py-[0.4em] rounded-sm text-black;
 }
 
 .editor-button.is-active {
@@ -290,5 +306,10 @@ select {
 
 .editor-button:hover {
   @apply bg-blue-200;
+}
+
+.toolbar {
+  position: sticky;
+  top: 10%;
 }
 </style>

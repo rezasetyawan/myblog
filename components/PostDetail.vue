@@ -7,9 +7,12 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <section v-if="props.blog" class="my-10 mx-3 mb-20 sm:mx-6 lg:mx-20">
-    <button class="absolute top-0 left-5" @click="() => useRouter().go(-1)">
-      <Icon name="eva:arrow-back-fill" class="w-8 h-8" />
+  <section v-if="props.blog" class="my-10 mx-3 mb-20 sm:mx-6 lg:mx-40">
+    <button
+      class="absolute -top-8 left-1 sm:top-0 sm:left-5"
+      @click="() => useRouter().go(-1)"
+    >
+      <Icon name="eva:arrow-back-fill" class="w-7 h-7 sm:w-8 sm:h-8" />
     </button>
     <div
       class="flex gap-1 flex-wrap justify-center font-rubik text-sm mx-2 sm:text-base sm:gap-3"
@@ -68,9 +71,12 @@ const props = defineProps<Props>();
       </div>
       <div
         v-html="props.blog.text"
-        class="prose prose-base max-w-none prose-stone font-rubik mx-2 prose-pre:max-w-fit prose-h2:text-2xl prose-h2:font-extrabold"
+        class="prose prose-base max-w-[75ch] mx-auto text-black font-rubik my-5 prose-pre:max-w-fit prose-h2:text-xl prose-h2:font-extrabold prose-li:marker:text-black text-sm md:text-base"
       ></div>
       <CommentSection :commentData="props.commentData" />
     </div>
   </section>
 </template>
+<style scoped>
+
+</style>

@@ -3,7 +3,6 @@ import { updateBlogById, deleteBlogByID } from '../../composables/useBlogs'
 import { deleteImage } from '../../composables/usePostImage'
 import { getFileNameFromUrl } from '../../utils/getFileName'
 import { truncateString } from "../../utils/truncateText"
-import dfd from '../../public/images/image-placeholder.jpg'
 
 const client = useSupabaseClient()
 
@@ -25,7 +24,6 @@ const updatePostPublishStatus = async () => {
   }
 }
 
-watch(showMobileMenu, () => console.log(showMobileMenu.value))
 
 const deletePostHandler = async (title: string, postId: string) => {
   const deletePost = confirm('Are you sure want to delete ' + title)
@@ -48,7 +46,7 @@ const deletePostHandler = async (title: string, postId: string) => {
   <div class=" border-2 rounded-lg p-1 my-2 w-full flex justify-between">
     <NuxtLink :to="`/author/post/${props.blog.id}`">
       <div class="flex gap-2">
-          <NuxtImg :src="props.blog.image_url ? props.blog.image_url : ''"
+          <NuxtImg :src="props.blog.image_url ? props.blog.image_url : '@public/images/image-placeholder.jpg'"
             class="min-h-[50px] max-h-[50px] sm:min-h-[70px] sm:max-h-[70px] object-cover brightness-90 transition-all rounded-sm aspect-[4/2]"
             loading="lazy" quality="50" :alt="props.blog.title" placeholder />
         <div>
@@ -110,7 +108,7 @@ const deletePostHandler = async (title: string, postId: string) => {
         <Icon name="pepicons-pencil:dots-y" size="24" />
       </button>
       <div class="absolute translate-x-[300px] p-3 z-20 transition-all duration-200 top-8 bg-white right-0 shadow-md"
-        :class="{ '-translate-x-[0px]': showMobileMenu }">
+        :class="{ 'translate-x-[0px]': showMobileMenu }">
         <button class="flex gap-2 w-32 items-center p-1 my-2 text-sm" v-if="props.blog.is_published"
           @click="updatePostPublishStatus">
           <Icon name="material-symbols:send-and-archive" class="h-6 w-6" /> Unpublish

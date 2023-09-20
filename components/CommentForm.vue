@@ -84,13 +84,13 @@ watch(
   <form class="font-rubik w-full" @submit.prevent="onSubmitHandler">
     <h2>{{ props.title ? props.title : "Leave a comment" }}</h2>
     <textarea
-      rows="5"
+      rows="7"
       class="w-full border-2 border-slate-700 p-2 text-sm"
       placeholder="Your comment here..."
       spellcheck="false"
       v-model="commentDraft.text"
     ></textarea>
-    <div class="flex items-center gap-4">
+    <div class="sm:flex items-center gap-4">
       <input
         type="text"
         placeholder="Name(required)"
@@ -103,7 +103,7 @@ watch(
         type="email"
         placeholder="Email(required)"
         required
-        class="p-2 text-sm border-2 border-slate-700 w-full"
+        class="p-2 text-sm border-2 border-slate-700 w-full mt-2 sm:mt-0"
         v-model="user.email"
       />
     </div>

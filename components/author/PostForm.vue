@@ -63,7 +63,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="font-rubik sm:mx-6 lg:mx-20">
+  <div class="font-rubik sm:mx-6 lg:mx-40">
     <h2
       class="font-bold text-xl my-3 text-center sm:text-2xl sm:my-5 lg:text-3xl"
     >

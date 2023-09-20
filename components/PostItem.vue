@@ -11,9 +11,9 @@ const props = defineProps<Props>();
 
 <template>
   <NuxtLink :to="`/blog/${props.blog.id}`">
-    <div class="group" v-if="!props.isLoading">
+    <div class="group" v-if="props.blog">
       <NuxtImg
-        :src="props.blog.image_url"
+        :src="props.blog.image_url ? props.blog.image_url : ''"
         class="min-h-[200px] max-h-[200px] sm:min-h-[250px] sm:max-h-[250px] object-cover brightness-90 group-hover:brightness-100 transition-all rounded-sm aspect-[4/2]"
         loading="lazy"
         quality="50"

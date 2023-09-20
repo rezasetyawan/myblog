@@ -5,11 +5,11 @@ const { page = 1, totalPage = 1 } = toRefs(props);
 </script>
 <template>
   <div
-    class="flex font-rubik items-center justify-center gap-5 my-10 text-sm sm:text-base"
+    class="flex font-rubik items-center justify-center gap-3 my-10 text-sm sm:text-base sm:gap-5"
   >
     <button :disabled="page === 1">
       <NuxtLink
-        class="px-[0.8em] py-[0.4em] bg-slate-300 rounded-md text-white"
+        class="px-[0.8em] py-[0.4em] bg-[#cbd5e1] rounded-md text-black"
         :to="{
           query: {
             ...route.query,
@@ -52,7 +52,7 @@ const { page = 1, totalPage = 1 } = toRefs(props);
     </NuxtLink>
     <button :disabled="page === totalPage">
       <NuxtLink
-        class="px-[0.8em] py-[0.4em] bg-slate-300 rounded-md text-white"
+        class="px-[0.8em] py-[0.4em] bg-[#cbd5e1] rounded-md text-black"
         :to="{
           query: {
             ...route.query,
