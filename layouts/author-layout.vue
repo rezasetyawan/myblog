@@ -27,6 +27,7 @@ onMounted(() => {
       <slot />
     </div>
   </div>
+  <ScrollToTopBtn />
 </template>
 
 <style scoped>

@@ -120,12 +120,12 @@ useHead({
 </script>
 <template>
   <main>
-    <!-- <FilterSection
+    <FilterSection
       :queryParams="queryParams"
       :postCategories="blogCategories"
       :postTags="taglist"
       @onSearch="page = 1"
-    /> -->
+    />
     <Posts :blogs="blogsData?.blogs" :isLoading="isLoading" />
     <h2
       v-if="blogsData?.blogs.length === 0 && !isLoading"
