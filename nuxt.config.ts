@@ -48,7 +48,7 @@ export default defineNuxtConfig({
     }
   },
   sitemap: {
-    include: ['/blogs', '/', '/blog'],
+    include: ['/', '/blog'],
     sitemaps: true,
     enabled: true,
   },
