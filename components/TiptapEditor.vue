@@ -30,7 +30,7 @@ const editor = useEditor({
   editorProps: {
     attributes: {
       class:
-        "prose prose-base  max-w-none mx-2 text-black font-rubik my-5 prose-pre:max-w-fit prose-h2:text-xl prose-h2:font-extrabold prose-li:marker:text-black text-sm md:text-base focus:outline-none",
+        "prose prose-base  max-w-none mx-2 text-black font-rubik my-5 prose-pre:max-w-fit prose-h2:text-xl prose-h2:font-extrabold prose-li:marker:text-black focus:outline-none",
     },
   },
   content: props.text,
@@ -190,8 +190,8 @@ const setTextAlign = () => {
           <Icon name="pepicons-pencil:dots-y" size="24" />
         </button>
         <div
-          class="max-md:absolute max-md:translate-x-[300px] max-md:p-3 max-md:z-20 max-md:transition-all max-md:duration-[200ms] max-md:top-9 max-md:bg-white right-0 max-md:shadow-md mobile-menu flex flex-wrap max-md:w-40"
-          :class="{ 'max-md:translate-x-[0px]': showMobileMenu }"
+          class="max-md:absolute max-md:p-3 max-md:z-20 max-md:transition-all max-md:duration-[200ms] max-md:top-9 max-md:bg-white right-0 max-md:shadow-md mobile-menu flex flex-wrap max-md:w-40"
+          :class="{ hidden: !showMobileMenu }"
         >
           <button
             @click="editor.chain().focus().toggleBulletList().run()"
@@ -303,7 +303,7 @@ select {
 }
 
 .tooltip {
-  @apply hidden bg-slate-100 group-hover:inline group-hover:absolute right-0 top-10 z-20 px-[0.8em] py-[0.4em] rounded-sm text-black;
+  @apply hidden bg-gray-200 group-hover:inline group-hover:absolute right-0 top-8 z-20 px-[0.8em] py-[0.4em] rounded-sm text-black whitespace-nowrap;
 }
 
 .editor-button.is-active {

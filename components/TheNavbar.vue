@@ -11,7 +11,7 @@ const toggleNavbar = () => emit("toggleNavbar");
     <div class="">
       <NuxtLink to="/">
         <h1
-          class="text-red-800 font-bold text-base min-[425px]:text-xl md:text-2xl border-b-[3px] border-red-900 max-w-fit"
+          class="text-red-800 font-bold text-xl border-b-[3px] border-red-900 max-w-fit md:text-2xl"
         >
           MyBlog
         </h1>
