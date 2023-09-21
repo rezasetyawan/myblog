@@ -36,10 +36,10 @@ const getAuthorBlogs = async (search_key: string = "", category_id: string = "",
     }
 }
 
-const getBlogById = async (id: string) => {
+const getBlogByTitle = async (title: string) => {
     try {
-        const { data } = await useFetch(`/api/blogs/${id}`, {
-            key: `${id}`
+        const { data } = await useFetch(`/api/blogs/${title}`, {
+            key: `${title}`
         })
         return data.value?.data as GetBlogDetail
     } catch (error) {
@@ -107,4 +107,4 @@ const updateBlogTagsById = async (client: SupabaseClient, postId: string, postTa
     }
 
 }
-export { getBlogs, getBlogById, addBlog, getAuthorBlogs, updateBlogById, getBlogData, deleteBlogByID, updateBlogTagsById }
+export { getBlogs, getBlogByTitle, addBlog, getAuthorBlogs, updateBlogById, getBlogData, deleteBlogByID, updateBlogTagsById }

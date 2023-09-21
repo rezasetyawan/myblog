@@ -6,11 +6,11 @@ interface Props {
   isLoading: boolean;
 }
 const props = defineProps<Props>();
-
+console.log(props.blog)
 </script>
 
 <template>
-  <NuxtLink :to="`/blog/${props.blog.id}`">
+  <NuxtLink :to="`/blog/${props.blog.short_title}`">
     <div class="group" v-if="props.blog">
       <NuxtImg
         :src="props.blog.image_url ? props.blog.image_url : ''"
