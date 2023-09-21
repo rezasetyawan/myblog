@@ -125,11 +125,9 @@ const setTextAlign = () => {
         <span class="tooltip">underline</span>
       </button>
       <button
-        @click="editor.chain().focus().setParagraph().run()"
-        :class="{
-          'is-active': editor.isActive('paragraph'),
-          'editor-button': true,
-        }"
+        @click="editor.chain().focus().toggleCode().run()"
+        :disabled="!editor.can().chain().focus().toggleCode().run()"
+        :class="{ 'is-active': editor.isActive('code'), 'editor-button': true }"
         class="group"
       >
         <Icon name="mingcute:paragraph-fill" class="w-4 h-4" />
@@ -273,11 +271,7 @@ const setTextAlign = () => {
         </div>
       </div>
     </div>
-    <editor-content
-      :editor="editor"
-      class="min-h-[80vh] p-4"
-      spellcheck="false"
-    />
+    <editor-content :editor="editor" spellcheck="false" />
   </div>
 </template>
 
