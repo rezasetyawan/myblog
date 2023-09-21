@@ -107,7 +107,7 @@ const handlePublishStatusChange = (postId: string) => {
   if (index !== -1 && index !== undefined) {
     blogsData.value?.blogs
       ? (blogsData.value.blogs[index].is_published =
-          !blogsData.value?.blogs[index].is_published)
+        !blogsData.value?.blogs[index].is_published)
       : null;
   }
 };
@@ -117,9 +117,7 @@ const handleDeletePost = (postId: string) => {
     const index = blogsData.value?.blogs?.findIndex(
       (blog) => blog.id === postId
     );
-    index !== undefined &&
-      index !== -1 &&
-      blogsData.value?.blogs?.splice(index, 1);
+    if (index !== undefined && index !== -1) blogsData.value?.blogs?.splice(index, 1);
   } catch (error) {
     console.log(error);
   }
@@ -145,21 +143,10 @@ useHead({
 </script>
 <template>
   <main>
-    <FilterSection
-      :queryParams="queryParams"
-      :postCategories="blogCategories"
-      :postTags="taglist"
-      @onSearch="page = 1"
-    />
-    <AuthorPosts
-      :blogs="blogsData?.blogs"
-      @update-post-status="(id: string) => handlePublishStatusChange(id)"
-      @delete-post="(id: string) => handleDeletePost(id)"
-    />
-    <h2
-      v-if="blogsData?.blogs.length === 0 && !isLoading"
-      class="text-center my-20"
-    >
+    <FilterSection :queryParams="queryParams" :postCategories="blogCategories" :postTags="taglist" @onSearch="page = 1" />
+    <AuthorPosts :blogs="blogsData?.blogs" @update-post-status="(id: string) => handlePublishStatusChange(id)"
+      @delete-post="(id: string) => handleDeletePost(id)" />
+    <h2 v-if="blogsData?.blogs.length === 0 && !isLoading" class="text-center my-20">
       Blog Not Found
     </h2>
     <Pagination :page="page" :totalPage="blogsData?.totalPage" />
