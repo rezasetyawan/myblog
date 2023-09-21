@@ -30,9 +30,7 @@ onMounted(() => {
   <ScrollToTopBtn />
 </template>
 
-<style scoped>
-
-.tablet-and-above {
+<style scoped>.tablet-and-above {
   width: 100%;
 }
 

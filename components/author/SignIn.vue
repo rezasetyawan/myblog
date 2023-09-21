@@ -27,7 +27,6 @@ const signInWithGoogle = async () => {
             access_type: "offline",
             prompt: "consent",
           },
-          redirectTo: process.env.NUXT_PUBLIC_SITE_URL + "/author/",
         },
       })
       .then(() => {
