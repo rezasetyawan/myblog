@@ -1,4 +1,7 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: 'is-admin'
+})
 const client = useSupabaseClient();
 const route = useRoute();
 
@@ -53,7 +56,6 @@ const fetchBlogs = async () => {
 
       data ? (blogsData.value = data) : null;
     }
-    console.log(blogsData.value);
     blogsData.value && (isLoading.value = false);
   } catch (error) {
     console.error(error);
@@ -65,6 +67,7 @@ onMounted(async () => {
   await fetchBlogs();
   await getCategories();
   await getTags();
+  
 });
 
 onBeforeRouteUpdate(async (to, from) => {
@@ -91,7 +94,6 @@ onBeforeRouteUpdate(async (to, from) => {
 watch(
   [route],
   async () => {
-    console.log("from watcher");
     await fetchBlogs();
   },
   { immediate: true }

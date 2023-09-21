@@ -10,30 +10,19 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             return navigateTo('/')
         }
 
-        if (!user.value || !userRole || userRole !== 'admin') {
-            console.log('not admin')
-            return navigateTo('/')
+        if (to.path === '/') {
+            return navigateTo('/author/posts')
         }
 
+        if (to.path === '/author/' || to.path === '/author') {
+            return navigateTo('/author/posts')
+        }
+
+        if (!user.value || !userRole || userRole !== 'admin') {
+            return navigateTo('/')
+        }
         return
     } catch (error) {
         console.error(error);
     }
 });
-
-// async function getUserRole(claim: string) {
-//     const supabase = useSupabaseClient();
-//     try {
-//         const { data, error } = await supabase.rpc('get_my_claim', { claim } as unknown as undefined);
-
-//         if (error) {
-//             throw new Error(error.message);
-//         }
-
-//         if (data) {
-//             return data;
-//         }
-//     } catch (error) {
-//         throw new Error(error as any);
-//     }
-// }

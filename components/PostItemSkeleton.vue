@@ -1,13 +1,8 @@
 <script setup lang="ts">
 interface Props {
   counts: number;
-  // isLoading: boolean;
 }
 const props = defineProps<Props>();
-
-// watch(props, () => {
-//   console.log(props.isLoading)
-// })
 </script>
 <template>
     <div

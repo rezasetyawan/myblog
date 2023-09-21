@@ -102,8 +102,8 @@ const deletePostHandler = async (title: string, postId: string) => {
         <button @click="() => showMobileMenu = !showMobileMenu">
           <Icon name="pepicons-pencil:dots-y" size="24" />
         </button>
-        <div class="absolute translate-x-[300px] p-3 transition-all duration-200 top-8 bg-white right-0 shadow-md"
-          :class="{ 'translate-x-[0px]': showMobileMenu }">
+        <div class="absolute p-3 transition-all duration-200 top-8 bg-white right-0 shadow-md"
+          :class="{ 'hidden': !showMobileMenu }">
           <button class="flex gap-2 w-32 items-center p-1 my-2 text-sm" v-if="props.blog.is_published"
             @click="updatePostPublishStatus">
             <Icon name="material-symbols:send-and-archive" class="h-6 w-6" /> Unpublish
