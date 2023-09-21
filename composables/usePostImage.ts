@@ -1,10 +1,10 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
 
-const addImage = async (client: SupabaseClient, postId: string, imageFile: File, supabaseUrl: string) => {
+const addImage = async (client: SupabaseClient, uniqueString: string, imageFile: File, supabaseUrl: string) => {
     try {
         console.log(imageFile)
-        const { data, error } = await client.storage.from('post-images').upload(`img-${postId}`, imageFile, {
+        const { data, error } = await client.storage.from('post-images').upload(`img-${uniqueString}`, imageFile, {
             cacheControl: '60',
             upsert: true,
         })
@@ -18,9 +18,9 @@ const addImage = async (client: SupabaseClient, postId: string, imageFile: File,
     }
 }
 
-const deleteImage = async (client: SupabaseClient, fileName: string) => {
+const deleteImage = async (client: SupabaseClient, imageName: string) => {
     try {
-        await client.storage.from('post-images').remove([fileName])
+        await client.storage.from('post-images').remove([imageName])
         return
     } catch (error) {
         console.log(error)
@@ -83,5 +83,6 @@ const getImages = async (client: SupabaseClient, imageData: ImageData[]): Promis
         console.log(error)
     }
 }
+
 
 export { addImage, updateImageById, deleteImage, getImages, listImages }
