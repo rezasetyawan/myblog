@@ -21,8 +21,8 @@ const toggleSidebar = () => {
             >
               <span class="sr-only">Open sidebar</span>
               <svg
-                class="w-6 h-6"
-                fill="currentColor"
+                class="w-6 h-6fill-red-800"
+                fill="#991b1b"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"
               >
