@@ -83,7 +83,7 @@ const getPagination = (page: number = 1, size: number = 1) => {
 export default eventHandler(async (event): Promise<BlogSnapshots> => {
     const client = await serverSupabaseClient(event);
     const query = getQuery(event);
-    const size = 5
+    const size = 12;
 
     const tags: string[] = Array.isArray(query.tags) ? query.tags : typeof query.tags === 'string' ? [query.tags] : [];
 

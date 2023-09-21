@@ -17,34 +17,6 @@ interface tag {
     name: string
 }
 
-// const fetchBlogData = async (client: SupabaseClient, blogId: string | undefined): Promise<GetBlogDetail | {}> => {
-//     try {
-//         const { data: blogs } = await client
-//             .from('posts')
-//             .select('id, title,text, image_url, created_at, category_id')
-//             .eq('id', blogId);
-
-//         const { data: categories } = await client.from('categories').select('*').eq('id', blogs?.length ? blogs[0].category_id : null);
-
-//         const { data: postTagsData } = await client.from('post_tags').select('tag_id').eq('post_id', blogId);
-
-//         const tagIds = postTagsData?.map((item: { tag_id: string }) => item.tag_id);
-
-//         const { data: tagsData } = await client.from('tags').select('*').in('id', tagIds?.length ? tagIds : []);
-
-//         const tags = tagsData || [];
-
-
-//         return {
-//             ...blogs[0],
-//             category: categories[0].name,
-//             tags: tags || [],
-//         }
-//     } catch (error: any) {
-//         throw new Error(error)
-//     }
-// };
-
 const fetchBlogData = async (client: SupabaseClient, blogId: string | undefined): Promise<GetBlogDetail | {}> => {
     try {
         const { data: blogs } = await client

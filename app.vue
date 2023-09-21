@@ -39,45 +39,23 @@ userRole.value = await getUserRole("userrole");
 const route = useRoute();
 
 userRole.value === "admin" && (layout.value = "author-layout");
-console.log(layout.value);
-
-onBeforeRouteUpdate((to, from) => {
-  console.log(to.path);
-  console.log(to.name);
-  console.log(to.matched);
-  console.log(to.hash);
-  console.log(to.fullPath);
-  console.log(to.meta);
-});
-
-// console.log(route.path);
-// console.log(route.name);
-// console.log(route.matched);
-// console.log(route.hash);
-// console.log(route.fullPath.split('/')[1] === ('auth'));
-// console.log(route.meta);
-// console.log(route);
 
 watch(
   route,
   (newValue) => {
-    console.log("change");
     if (
       newValue.fullPath.startsWith("/blogs") ||
       newValue.fullPath.startsWith("/blog") ||
       newValue.fullPath.startsWith("/")
     ) {
-      console.log('my-layout')
       layout.value = "my-layout";
     }
 
     if (newValue.fullPath.split("/")[1] === "auth") {
-      console.log("default layout");
       layout.value = "default-layout";
     }
 
     if (newValue.fullPath.split("/")[1] === "author") {
-      console.log('author layout')
       layout.value = "author-layout";
     }
   },
@@ -85,7 +63,7 @@ watch(
 );
 </script>
 <template>
-  <NuxtLayout :name="layout">
+  <NuxtLayout :name="layout as any">
     <!-- <SeoKit /> -->
     <NuxtPage></NuxtPage>
   </NuxtLayout>

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { getBlogData } from "../../../../composables/useBlogs";
-
 const route = useRoute();
 const blog = ref<GetBlogDetail | undefined>();
 const postId = ref<string>(route.params.id as string);
@@ -16,7 +14,6 @@ onMounted(async () => {
       const blogResult = await getBlogData(postId.value);
       blog.value = blogResult;
     }
-    console.log(blog.value);
     isLoading.value = false;
   } catch (error) {
     console.error(error);

@@ -13,7 +13,6 @@ const getBlogs = async (search_key: string = "", category_id: string = "", tags:
             },
             key: cacheKey,
         })
-        console.log(data.value)
         return data.value as BlogSnapshots
     } catch (error) {
         console.error(error)
@@ -79,7 +78,7 @@ const updateBlogById = async (client: SupabaseClient, postId: string, postData: 
         await client.from('posts').update(postData).eq('id', postId)
         return
     } catch (error: any) {
-        console.log(error)
+        console.error(error)
         throw new Error(error)
     }
 }

@@ -2,10 +2,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     try {
         const userRole = await getUserRole('userrole')
         if (userRole === 'admin') {
-            console.log('admin')
-            return navigateTo('/author/')
+            return navigateTo('/author/posts')
         }
-        console.log('not admin')
         return
     } catch (error) {
         throw new Error(error as any);
@@ -13,16 +11,19 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 });
 
 const getUserRole = async (claim: string) => {
+    const user = useSupabaseUser()
     const supabase = useSupabaseClient();
     try {
-        const { data, error } = await supabase.rpc('get_my_claim', { claim } as unknown as undefined);
+        if (user) {
+            const { data, error } = await supabase.rpc('get_my_claim', { claim } as unknown as undefined);
 
-        if (error) {
-            throw new Error(error.message);
-        }
+            if (error) {
+                throw new Error(error.message);
+            }
 
-        if (data) {
-            return data;
+            if (data) {
+                return data;
+            }
         }
     } catch (error) {
         throw new Error(error as any);

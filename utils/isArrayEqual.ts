@@ -10,16 +10,4 @@ const isArrayEqual = (a: [], b: []) => {
     return true
 
 }
-
-// const dfiuoduf = (a: [], b: []) => {
-//     if (a.length !== b.length) {
-//         return false
-//     } else {
-//         a.every((item, index) => {
-//             return item === b[index]
-//         })
-//     }
-
-// }
-
 export { isArrayEqual }

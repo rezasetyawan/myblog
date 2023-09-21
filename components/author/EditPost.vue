@@ -162,7 +162,6 @@ const updatePost = async () => {
     image.value !== undefined &&
     image.value !== null
   ) {
-    console.log("UPDATING IMAGE");
     await deleteImage(client, imageInitialValue.name);
     imageUrl = await updateImageById(
       client,
@@ -179,31 +178,7 @@ const updatePost = async () => {
     is_published: false,
   });
 
-  // if (
-  //   isImageChanged.value &&
-  //   image.value !== undefined &&
-  //   image.value !== null
-  // ) {
-  //   console.log(imageInitialValue?.name);
-  //   await deleteImage(client, imageInitialValue.name);
-  //   imageUrl = await updateImageById(
-  //     client,
-  //     blog.value.id,
-  //     image.value,
-  //     config.public.SUPABASE_URL as string
-  //   );
-
-  //   await updateBlogById(client, blog.value.id, {
-  //     image_url: imageUrl,
-  //   });
-
-  //   const fileKey = getFileNameFromUrl(imageUrl ? imageUrl : "", "post-images");
-
-  //   console.log(fileKey);
-  // }
-
   if (isContentChanged) {
-    console.log("UPDATING CONTENT");
     await updateBlogById(client, blog.value.id, {
       updated_at: updatedAt,
       ...contentDraft.value,
@@ -212,7 +187,6 @@ const updatePost = async () => {
   }
 
   if (isTagsChanged && contentTags.value) {
-    console.log("UPDATING TAGS");
     await updateBlogTagsById(client, blog.value.id, contentTags.value);
   }
 };
@@ -235,56 +209,6 @@ onBeforeRouteLeave(async (to, from, next) => {
 
 const onSubmitHandler = async () => {
   try {
-    // const isContentChanged: boolean = !isObjectEqual(
-    //   contentDraft.value,
-    //   initialContentDraft
-    // );
-
-    // const isTagsChanged: boolean = !isArrayEqual(
-    //   (contentTags.value as []) || [],
-    //   initialContentTags as []
-    // );
-
-    // const updatedAt = Date.now().toString();
-    // let imageUrl;
-
-    // if (
-    //   isImageChanged.value &&
-    //   image.value !== undefined &&
-    //   image.value !== null
-    // ) {
-    //   console.log(imageInitialValue?.name);
-    //   await deleteImage(client, imageInitialValue.name);
-    //   imageUrl = await updateImageById(
-    //     client,
-    //     blog.value.id,
-    //     image.value,
-    //     config.public.SUPABASE_URL as string
-    //   );
-
-    //   await updateBlogById(client, blog.value.id, {
-    //     image_url: imageUrl,
-    //   });
-
-    //   const fileKey = getFileNameFromUrl(
-    //     imageUrl ? imageUrl : "",
-    //     "post-images"
-    //   );
-
-    //   console.log(fileKey);
-    // }
-
-    // if (isContentChanged) {
-    //   await updateBlogById(client, blog.value.id, {
-    //     updated_at: updatedAt,
-    //     ...contentDraft.value,
-    //     image_url: imageUrl,
-    //   });
-    // }
-
-    // if (isTagsChanged && contentTags.value) {
-    //   await updateBlogTagsById(client, blog.value.id, contentTags.value);
-    // }
     await updatePost();
     clearNuxtData(blog.value.id);
     alert("updated");

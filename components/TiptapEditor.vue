@@ -14,7 +14,6 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits(["onchange"]);
 const showMobileMenu = ref<boolean>(false);
-watch(showMobileMenu, () => console.log(showMobileMenu.value));
 
 const editor = useEditor({
   extensions: [
@@ -79,7 +78,7 @@ const setTextAlign = () => {
   <div class="mx-0 border-[1px] border-slate-200 rounded-md">
     <div
       v-if="editor"
-      class="border-b-[1px] p-3 border-slate-200 bg-slate-50 z-[104] flex flex-wrap items-center sticky top-[9%]"
+      class="border-b-[1px] p-3 border-slate-200 bg-slate-50 z-[104] flex flex-wrap items-center sticky top-16"
     >
       <button
         @click="editor.chain().focus().toggleBold().run()"
@@ -287,7 +286,7 @@ const setTextAlign = () => {
   @apply px-[0.4em] py-[0.4em] border rounded-md transition-colors duration-100 ease-in-out text-sm lg:text-base font-medium;
 }
 .editor-select option {
-  @apply px-[0.4em] py-[0.3em] border rounded-md transition-colors duration-100 ease-in-out text-sm lg:text-base font-medium;
+  @apply px-[0.4em] py-[0.3em] border rounded-md transition-colors duration-100 ease-in-out text-sm lg:text-base font-medium bg-white;
 }
 
 button,

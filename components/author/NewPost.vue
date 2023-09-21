@@ -89,7 +89,6 @@ const savePost = async (isPublish: boolean) => {
       config.public.SUPABASE_URL as string
     );
     imgUrl && (imageUrl = imgUrl);
-    console.log(imageUrl);
   }
 
   const postData: AddBlog = {

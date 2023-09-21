@@ -16,7 +16,7 @@ const handleDeleteImage = (imageid: string) => {
     );
     if (index !== undefined && index !== -1) images.value?.splice(index, 1);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -42,8 +42,6 @@ const onUploadImageHandler = async () => {
     alert(error)
   }
 }
-
-watch(imageFile, () => console.log(imageFile.value))
 </script>
 <template>
   <h2 class="font-rubik font-bold text-2xl my-5 text-center sm:my-8 lg:text-3xl lg:my-10">Images</h2>
