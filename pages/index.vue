@@ -118,6 +118,10 @@ useHead({
       name: "description",
       content: "Blog Website that talk about technology and daily life",
     },
+    {
+      name: 'google-site-verification',
+      content: 'isXAGr5a6Hby5euUgrk9eeLnRKlA2hfeQrUmC1jk_y0'
+    }
   ],
 });
 </script>
