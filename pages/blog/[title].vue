@@ -10,8 +10,14 @@ const commentData = ref<CommentSnapshots | null | undefined>();
 const postTitle = ref<string>(route.params.title as string);
 const isLoading = ref<boolean>(true);
 
-onMounted(async () => {
+async function fetchDataRecursively(attempt: number = 1) {
   try {
+    if (attempt > 3) {
+      console.log("Reached the maximum number of recursive attempts.");
+      isLoading.value = false;
+      return;
+    }
+
     const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
@@ -19,15 +25,27 @@ onMounted(async () => {
       blog.value = cacheBlog.value.data;
       commentData.value = cacheComments.value;
     } else {
-      const blogResult = await getBlogByTitle(postTitle.value);
-      const commentResults = await getComments(postTitle.value);
-      blog.value = blogResult;
-      commentData.value = commentResults;
+      const data = await getBlogByTitle(postTitle.value);
+      const commentSnapshots = await getComments(postTitle.value);
+
+      if (data && commentSnapshots) {
+        blog.value = data;
+        commentData.value = commentSnapshots;
+      } else {
+        await fetchDataRecursively(attempt + 1);
+      }
     }
+    console.log(blog.value);
     isLoading.value = false;
   } catch (error) {
     console.error(error);
   }
+}
+
+
+
+onMounted(async () => {
+  await fetchDataRecursively()
 });
 
 useHead({

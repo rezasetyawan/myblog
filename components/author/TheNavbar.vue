@@ -33,7 +33,7 @@ const toggleSidebar = () => {
                 ></path>
               </svg>
             </button>
-            <NuxtLink to="/author/" class="flex ml-2 md:mr-24">
+            <NuxtLink to="/author/posts/" class="flex ml-2 md:mr-24">
               <h1
                 class="text-red-800 font-bold text-base min-[425px]:text-xl md:text-2xl border-b-[3px] border-red-900 max-w-fit"
               >

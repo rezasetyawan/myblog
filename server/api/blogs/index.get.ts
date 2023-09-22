@@ -88,7 +88,7 @@ export default eventHandler(async (event): Promise<BlogSnapshots> => {
     const { from, to } = getPagination(query.page ? parseInt(query.page as string) : 0, size)
 
     try {
-        let queryBuilder = client.from('posts').select('id, title, created_at, image_url, short_title', { count: 'exact' }).order('created_at', { ascending: false });
+        let queryBuilder = client.from('posts').select('id, title, created_at, image_url, url_param', { count: 'exact' }).order('created_at', { ascending: false });
 
         if (tags.length > 0 || query.category_id || query.search_key) {
             if (tags.length > 0) {

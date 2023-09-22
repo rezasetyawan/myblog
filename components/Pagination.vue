@@ -51,6 +51,7 @@ const { page = 1, totalPage = 1 } = toRefs(props);
 
 .disable {
   background-color: #991b1b;
+  color: white;
 }
 
 /* .disable {

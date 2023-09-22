@@ -125,6 +125,10 @@ useHead({
     }
   ],
 });
+
+definePageMeta({
+  middleware: 'is-admin'
+})
 </script>
 <template>
   <main>

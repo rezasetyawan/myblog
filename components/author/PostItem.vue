@@ -43,14 +43,14 @@ const deletePostHandler = async (title: string, postId: string) => {
 }
 </script>
 <template>
-  <div class="border-2 rounded-lg p-1 my-2">
-    <NuxtImg :src="props.blog.image_url ? props.blog.image_url : '@public/images/image-placeholder.jpg'"
-      class="max-sm:w-full min-h-[50px] sm:min-h-[70px] object-cover brightness-90 transition-all rounded-sm aspect-[4/2] block"
+  <div class="rounded-lg p-2 my-2 shadow-md w-full">
+    <NuxtImg :src="props.blog.image_url ? props.blog.image_url : ''"
+      class="max-sm:w-full min-h-[50px] sm:min-h-[70px] object-cover brightness-90 transition-all rounded-sm aspect-[4/2] block mx-auto"
       loading="lazy" quality="50" :alt="props.blog.title" placeholder />
 
-    <div class="flex justify-between mt-1">
+    <div class="flex justify-between mt-1 items-start">
       <div>
-        <NuxtLink :to="`/author/post/${props.blog.short_title}`">
+        <NuxtLink :to="`/author/post/${props.blog.url_param}`">
           <h3 class="text-left font-medium py-1 font-rubik text-base sm:hidden sm:text-lg lg:text-xl">
             {{ truncateString(props.blog.title, 18) }}
           </h3>
@@ -75,8 +75,8 @@ const deletePostHandler = async (title: string, postId: string) => {
           </div>
         </div>
       </div>
-      <div class="z-10 flex-col justify-center gap-6 mr-4 hidden sm:flex">
-        <div class="flex items-center gap-2">
+      
+        <div class="items-center justify-end gap-2 hidden sm:flex">
           <button v-if="props.blog.is_published" @click="updatePostPublishStatus" class="group relative">
             <Icon name="material-symbols:send-and-archive" class="h-6 w-6" />
             <span class="tooltip">unpublish</span>
@@ -98,7 +98,7 @@ const deletePostHandler = async (title: string, postId: string) => {
             <span class="tooltip">delete</span>
           </button>
         </div>
-      </div>
+      
       <div class="relative sm:hidden  z-[2000]">
         <button @click="() => showMobileMenu = !showMobileMenu">
           <Icon name="pepicons-pencil:dots-y" size="24" />

@@ -3,6 +3,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const user = useSupabaseUser();
 
     try {
+        console.log('author middleware')
+        console.log(user.value)
         const { data: userRole, error } = await supabase.rpc('get_my_claim', { claim: 'userrole' } as unknown as undefined);
 
         if (error) {

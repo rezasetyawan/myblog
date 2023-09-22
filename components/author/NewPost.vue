@@ -49,7 +49,6 @@ const getTags = async () => {
 onMounted(async () => {
   await getCategories();
   await getTags();
-  postId = `post-${nanoid(10)}`;
 });
 
 const onTagsUpdateHandler = (tagId: string) => {
@@ -68,40 +67,48 @@ const onFileChangeHandler = (event: Event) => {
 };
 
 const savePost = async (isPublish: boolean) => {
-  if (!contentDraft.value.title) {
-    return alert("mohon sertakan judul");
-  }
-  if (!contentDraft.value.category_id.length) {
-    return alert("mohon sertakan category");
-  }
+  try {
+    postId = `post-${nanoid(10)}`;
 
-  if (!contentTags.value.length) {
-    return alert("mohon sertakan tag");
+    if (!contentDraft.value.title) {
+      return alert("mohon sertakan judul");
+    }
+    if (!contentDraft.value.category_id.length) {
+      return alert("mohon sertakan category");
+    }
+
+    if (!contentTags.value.length) {
+      return alert("mohon sertakan tag");
+    }
+
+    const timestamp = Date.now().toString();
+    let imageUrl = "";
+    if (image.value) {
+      const imgUrl = await addImage(
+        client,
+        postId,
+        image.value,
+        config.public.SUPABASE_URL as string
+      );
+      imgUrl && (imageUrl = imgUrl);
+    }
+
+    const postData: AddBlog = {
+      id: postId,
+      created_at: timestamp,
+      updated_at: timestamp,
+      image_url: imageUrl,
+      ...contentDraft.value,
+      is_published: isPublish,
+      url_param: contentDraft.value.title.toLowerCase().replaceAll(' ', '-')
+    };
+
+    await addBlog(client, postId, postData, contentTags.value);
+    isPublish ? alert("uploaded") : alert("saved to draft");
+  } catch (error: any) {
+    console.error(error)
+    alert(error.message)
   }
-
-  const timestamp = Date.now().toString();
-  let imageUrl = "";
-  if (image.value) {
-    const imgUrl = await addImage(
-      client,
-      postId,
-      image.value,
-      config.public.SUPABASE_URL as string
-    );
-    imgUrl && (imageUrl = imgUrl);
-  }
-
-  const postData: AddBlog = {
-    id: postId,
-    created_at: timestamp,
-    updated_at: timestamp,
-    image_url: imageUrl,
-    ...contentDraft.value,
-    is_published: isPublish,
-  };
-
-  await addBlog(client, postId, postData, contentTags.value);
-  isPublish ? alert("uploaded") : alert("saved to draft");
 };
 
 const onSaveDraftHandler = async () => {
@@ -109,12 +116,9 @@ const onSaveDraftHandler = async () => {
 };
 
 const onSubmitHandler = async () => {
-  try {
-    await savePost(true);
-  } catch (error: any) {
-    console.error(error.message);
-  }
+  await savePost(true);
 };
+
 </script>
 <template>
   <button class="absolute top-5 left-5" @click="() => useRouter().go(-1)">
@@ -122,19 +126,10 @@ const onSubmitHandler = async () => {
   </button>
   <button class="absolute top-5 right-5 group" @click="onSaveDraftHandler">
     <Icon name="material-symbols:save" class="w-8 h-8" /><span
-      class="hidden bg-slate-100 group-hover:inline whitespace-nowrap group-hover:absolute right-0 top-8 z-20 px-[0.8em] py-[0.4em] rounded-sm"
-      >save to draft</span
-    >
+      class="hidden bg-slate-100 group-hover:inline whitespace-nowrap group-hover:absolute right-0 top-8 z-20 px-[0.8em] py-[0.4em] rounded-sm">save
+      to draft</span>
   </button>
-  <AuthorPostForm
-    :contentDraft="contentDraft"
-    :contentTags="contentTags"
-    :categories="blogCategories"
-    :tags="taglist"
-    :image="image"
-    @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
-    @onfilechange="(event: Event) => onFileChangeHandler(event)"
-    @onsubmit="onSubmitHandler"
-    class="mb-16"
-  />
+  <AuthorPostForm :contentDraft="contentDraft" :contentTags="contentTags" :categories="blogCategories" :tags="taglist"
+    :image="image" @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
+    @onfilechange="(event: Event) => onFileChangeHandler(event)" @onsubmit="onSubmitHandler" class="mb-16" />
 </template>
