@@ -7,7 +7,7 @@ declare interface AddBlog {
     category_id: string
     image_url: string
     is_published: boolean
-    short_title: string
+    // short_title: string
 }
 
 declare interface UpdateBlog {
@@ -17,7 +17,7 @@ declare interface UpdateBlog {
     category_id?: string
     image_url?: string
     is_published?: boolean
-    short_title: string
+    short_title?: string
 }
 
 declare interface GetBlog {

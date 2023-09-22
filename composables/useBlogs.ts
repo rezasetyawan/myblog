@@ -1,9 +1,9 @@
 import { nanoid } from "nanoid"
 import { SupabaseClient } from '@supabase/supabase-js';
 
-const getBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "/blogs") => {
+const getBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "") => {
     try {
-        const { data } = await useFetch('/api/author/posts', {
+        const { data } = await useFetch('/api/blogs', {
             method:'GET',
             query: {
                 search_key: search_key,
@@ -40,17 +40,6 @@ const getBlogByTitle = async (title: string) => {
     try {
         const { data } = await useFetch(`/api/blogs/${title}`, {
             key: `${title}`
-        })
-        return data.value?.data as GetBlogDetail
-    } catch (error) {
-        console.error(error)
-    }
-}
-
-const getBlogData = async (id: string) => {
-    try {
-        const { data } = await useFetch(`/api/author/posts/${id}`, {
-            key: `${id}`
         })
         return data.value?.data as GetBlogDetail
     } catch (error) {
@@ -107,4 +96,4 @@ const updateBlogTagsById = async (client: SupabaseClient, postId: string, postTa
     }
 
 }
-export { getBlogs, getBlogByTitle, addBlog, getAuthorBlogs, updateBlogById, getBlogData, deleteBlogByID, updateBlogTagsById }
+export { getBlogs, getBlogByTitle, addBlog, getAuthorBlogs, updateBlogById, deleteBlogByID, updateBlogTagsById }

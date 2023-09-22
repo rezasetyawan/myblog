@@ -50,14 +50,15 @@ const deletePostHandler = async (title: string, postId: string) => {
 
     <div class="flex justify-between mt-1">
       <div>
-        <NuxtLink :to="`/author/post/${props.blog.id}`">
+        <NuxtLink :to="`/author/post/${props.blog.short_title}`">
           <h3 class="text-left font-medium py-1 font-rubik text-base sm:hidden sm:text-lg lg:text-xl">
             {{ truncateString(props.blog.title, 18) }}
           </h3>
+          <h3 class="text-left font-medium py-1 font-rubik text-base hidden sm:block sm:text-lg lg:text-xl">
+            {{ truncateString(props.blog.title, 20) }}
+          </h3>
         </NuxtLink>
-        <h3 class="text-left font-medium py-1 font-rubik text-base hidden sm:block sm:text-lg lg:text-xl">
-          {{ truncateString(props.blog.title, 20) }}
-        </h3>
+
         <div class="flex gap-3 items-center justify-start font-medium text-xs sm:text-sm">
           <p v-if="props.blog.is_published">Published</p>
           <p v-else class=" text-orange-600">Draft</p>

@@ -42,10 +42,10 @@ const getTags = async () => {
 const fetchBlogs = async () => {
   try {
     isLoading.value = true;
-    // const { data: blogsDataCache } = useNuxtData(cacheKey.value);
-    // if (blogsDataCache.value) {
-    //   blogsData.value = blogsDataCache.value;
-    // } else {
+    const { data: blogsDataCache } = useNuxtData(cacheKey.value);
+    if (blogsDataCache.value) {
+      blogsData.value = blogsDataCache.value;
+    } else {
       const data = await getBlogs(
         queryParams.value.searchKey,
         queryParams.value.category,
@@ -56,7 +56,7 @@ const fetchBlogs = async () => {
 
       console.log(blogsData.value?.blogs)
       data ? (blogsData.value = data) : null;
-    // }
+    }
     blogsData.value && (isLoading.value = false);
   } catch (error) {
     console.error(error);
@@ -112,8 +112,8 @@ useServerSeoMeta({
 });
 
 useHead({
-  title: "My Blogs",
-  titleTemplate: "My Blogs",
+  title: "My Blog",
+  titleTemplate: "My Blog",
   meta: [
     {
       name: "description",

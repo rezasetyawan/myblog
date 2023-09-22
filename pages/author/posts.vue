@@ -44,7 +44,7 @@ const fetchBlogs = async () => {
     if (blogsDataCache.value) {
       blogsData.value = blogsDataCache.value;
     } else {
-      const data = await getBlogs(
+      const data = await getAuthorBlogs(
         queryParams.value.searchKey,
         queryParams.value.category,
         queryParams.value.tags,
@@ -131,8 +131,8 @@ useServerSeoMeta({
 });
 
 useHead({
-  title: "My Blogs",
-  titleTemplate: "My Blogs",
+  title: "My Blog",
+  titleTemplate: "My Blog",
   meta: [
     {
       name: "description",

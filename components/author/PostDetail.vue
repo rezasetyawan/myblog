@@ -56,7 +56,7 @@ const props = defineProps<Props>();
       >
     </div>
     <div class="my-3">
-      <h2 class="text-xl text-center font-rubik font-bold">
+      <h2 class="text-xl text-center font-rubik font-bold lg:text-3xl">
         {{ props.blog.title }}
       </h2>
       <div class="flex justify-center py-4">

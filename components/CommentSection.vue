@@ -21,7 +21,7 @@ const hasActiveCommentForm = computed(() => {
 });
 </script>
 <template>
-  <article class="my-20">
+  <article class="my-20 max-w-[75ch] mx-auto">
     <h3 class="my-6 font-medium">Comments</h3>
     <div class="">
       <CommentList

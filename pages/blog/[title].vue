@@ -31,7 +31,7 @@ onMounted(async () => {
 });
 
 useHead({
-  title: blog.value?.title,
+  title: `My Blog | ${blog.value?.title}`,
   titleTemplate: blog.value?.title,
 });
 
@@ -41,12 +41,9 @@ useServerSeoMeta({
   description: blog.value?.text,
   ogDescription: blog.value?.text,
 });
+
 </script>
 <template>
-  <PostDetail
-    :blog="blog"
-    :commentData="commentData"
-    v-if="blog && commentData"
-  />
+  <PostDetail :blog="blog" :commentData="commentData" v-if="blog && commentData" />
   <Loading v-if="isLoading" />
 </template>

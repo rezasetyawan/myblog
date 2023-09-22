@@ -1,13 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  // nitro: {
-  //   prerender: {
-  //     crawlLinks: true,
-  //     routes: [
-  //       '/',
-  //     ]
-  //   }
-  // },
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: [
+        '/',
+      ]
+    }
+  },
   devtools: { enabled: true },
   css: ['~/assets/styles/main.css'],
   postcss: {
@@ -17,7 +17,8 @@ export default defineNuxtConfig({
     },
   },
   routeRules: {
-    '/blogs': { ssr: false }
+    '/auth/**': { ssr: false },
+    '/author/**': { ssr: false, index: false },
   },
   modules: ['@nuxtjs/supabase', 'nuxt-icon', ['@nuxtjs/google-fonts', {
     families: {
@@ -41,19 +42,19 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       SUPABASE_URL: process.env.SUPABASE_URL as string,
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL,
-      siteName: process.env.SITE_NAME,
-      siteDescription: process.env.SITE_DESC,
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL as string,
+      siteName: process.env.SITE_NAME as string,
+      siteDescription: process.env.SITE_DESC as string,
       language: 'id'
     }
   },
   sitemap: {
-    include: ['/', '/blog'],
     sitemaps: true,
     enabled: true,
+    autoLastmod: false,
   },
   robots: {
     enabled: true,
     allow: []
-  }
+  },
 })

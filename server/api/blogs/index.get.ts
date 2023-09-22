@@ -137,11 +137,8 @@ export default eventHandler(async (event): Promise<BlogSnapshots> => {
             throw new Error(error.message);
         }
 
-        console.log(data)
-
         const blogs = await Promise.all(data.map(async (blog) => {
             const counts = await getCommentCounts(client, blog.id);
-            console.log({ ...blog, comment_counts: counts })
             return { ...blog, comment_counts: counts };
         }));
 
