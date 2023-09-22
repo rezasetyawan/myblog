@@ -4,7 +4,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 const getBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "") => {
     try {
         const { data } = await useFetch('/api/blogs', {
-            method:'GET',
+            method: 'GET',
             query: {
                 search_key: search_key,
                 category_id: category_id,
@@ -49,7 +49,11 @@ const getBlogByTitle = async (title: string) => {
 
 const addBlog = async (client: SupabaseClient, postId: string, postData: AddBlog, postTags: string[]) => {
     try {
-        await client.from('posts').insert(postData as never).select('id')
+        const { data, error } = await client.from('posts').insert(postData as never).select('id')
+
+        if (error) {
+            throw new Error(error.message)
+        }
 
         const tagArrayPromises = postTags.map((tagId) => {
             const id = `post_tag-${nanoid(5)}`
@@ -59,6 +63,7 @@ const addBlog = async (client: SupabaseClient, postId: string, postData: AddBlog
 
     } catch (error) {
         console.error(error)
+        throw new Error(error as any)
     }
 }
 

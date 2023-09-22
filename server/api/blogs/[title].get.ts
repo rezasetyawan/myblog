@@ -21,8 +21,8 @@ const fetchBlogData = async (client: SupabaseClient, title: string | undefined):
     try {
         const { data: blogs } = await client
             .from('posts')
-            .select('id, title,text, image_url, created_at, category_id, short_title')
-            .eq('short_title', title);
+            .select('id, title,text, image_url, created_at, category_id, url_param')
+            .eq('url_param', title);
 
         if (!blogs || blogs.length === 0) {
             throw new Error('Blog not found');

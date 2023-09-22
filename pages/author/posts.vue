@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { getAuthorBlogs } from "../../composables/useBlogs";
 const client = useSupabaseClient();
 const route = useRoute();
 
 const blogsData = ref<BlogSnapshots | null | undefined>();
 const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
 const taglist = ref<Array<{ id: string; name: string }> | null>(null);
-const isLoading = ref<boolean>(true);
+const isLoading = ref<boolean>(false);
 const page = ref<number>(parseInt(route.query.page as string) || 1);
 const cacheKey = ref<string>("");
 
@@ -140,11 +139,15 @@ useHead({
     },
   ],
 });
+
+definePageMeta({
+  middleware: 'author'
+})
 </script>
 <template>
   <main>
     <FilterSection :queryParams="queryParams" :postCategories="blogCategories" :postTags="taglist" @onSearch="page = 1" />
-    <AuthorPosts :blogs="blogsData?.blogs" @update-post-status="(id: string) => handlePublishStatusChange(id)"
+    <AuthorPosts :blogs="blogsData?.blogs" :isLoading="isLoading" @update-post-status="(id: string) => handlePublishStatusChange(id)"
       @delete-post="(id: string) => handleDeletePost(id)" />
     <h2 v-if="blogsData?.blogs.length === 0 && !isLoading" class="text-center my-20">
       Blog Not Found

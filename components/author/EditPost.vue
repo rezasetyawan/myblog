@@ -176,6 +176,7 @@ const updatePost = async () => {
     ...contentDraft.value,
     image_url: imageUrl,
     is_published: false,
+    url_param: contentDraft.value.title.toLowerCase().replaceAll(' ', '-')
   });
 
   if (isContentChanged) {
@@ -222,17 +223,8 @@ const onSubmitHandler = async () => {
     <button class="absolute top-5 left-5" @click="() => useRouter().go(-1)">
       <Icon name="eva:arrow-back-fill" class="w-8 h-8" />
     </button>
-    <AuthorPostForm
-      :contentDraft="contentDraft"
-      :contentTags="contentTags"
-      :categories="blogCategories"
-      :tags="taglist"
-      :image="image"
-      :isEdit="true"
-      @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
-      @onfilechange="(event: Event) => onFileChangeHandler(event)"
-      @onsubmit="onSubmitHandler"
-      class="mb-16"
-    />
+    <AuthorPostForm :contentDraft="contentDraft" :contentTags="contentTags" :categories="blogCategories" :tags="taglist"
+      :image="image" :isEdit="true" @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
+      @onfilechange="(event: Event) => onFileChangeHandler(event)" @onsubmit="onSubmitHandler" class="mb-16" />
   </div>
 </template>

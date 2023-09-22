@@ -19,6 +19,10 @@ onMounted(async () => {
     console.error(error);
   }
 });
+
+definePageMeta({
+  middleware: 'author'
+})
 </script>
 <template>
   <Head>

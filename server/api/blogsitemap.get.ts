@@ -8,7 +8,7 @@ export default eventHandler(async (event): Promise<BlogSitemap[]> => {
     const config = useRuntimeConfig()
     const client = await serverSupabaseClient(event);
     try {
-        let queryBuilder = client.from('posts').select('short_title, updated_at').order('created_at', { ascending: false });
+        let queryBuilder = client.from('posts').select('url_param, updated_at').order('created_at', { ascending: false });
 
         const { data: blogs, error } = await queryBuilder.eq('is_published', true)
 
@@ -18,7 +18,7 @@ export default eventHandler(async (event): Promise<BlogSitemap[]> => {
         }
 
         const data = blogs.map((blog) => {
-            return { url: `${config.public.siteUrl}/${blog.short_title}`, updated_at: blog.updated_at }
+            return { url: `${config.public.siteUrl}/blog/${blog.url_param}`, updated_at: blog.updated_at }
         })
 
         return data

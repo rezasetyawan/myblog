@@ -29,6 +29,10 @@ useHead({
   title: blog.value?.title,
   titleTemplate: blog.value?.title
 })
+
+definePageMeta({
+  middleware: 'author'
+})
 </script>
 <template>
   <AuthorPostDetail :blog="blog" :commentData="commentData" v-if="blog && commentData" />
