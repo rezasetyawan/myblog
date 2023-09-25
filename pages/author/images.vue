@@ -80,7 +80,7 @@ definePageMeta({
       file:text-sm file:font-semibold " id="file_input" type="file" accept="image/png, image/jpeg, image/jpg" required
         @change="(event: Event) => onFileChangeHandler(event)">
 
-      <button class="px-[4em] py-[0.4em] bg-gray-200 rounded-md mt-2">Upload Image</button>
+      <button class="px-[4em] py-[0.4em] bg-slate-100 rounded-md mt-2">Upload Image</button>
     </form>
   </section>
   <AuthorImages :images="images" :isLoading="isLoading" @deleteimage="(id: string) => handleDeleteImage(id)" />

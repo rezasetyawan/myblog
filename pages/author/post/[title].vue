@@ -19,10 +19,10 @@ const fetchBlogData = async () => {
       blog.value = blogResult;
       commentData.value = commentResults;
     }
-    isLoading.value = false;
   } catch (error: any) {
-    isLoading.value = false
     showErrorToast(error.message)
+  } finally {
+    isLoading.value = false
   }
 }
 

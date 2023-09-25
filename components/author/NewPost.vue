@@ -7,10 +7,11 @@ import { getTags } from '../../composables/useTags';
 import { getCategories } from '../../composables/useCategories'
 
 const client = useSupabaseClient();
+const config = useRuntimeConfig();
 const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
 const blogTags = ref<Array<{ id: string; name: string }> | null>(null);
 const image = ref<File | null>(null);
-const config = useRuntimeConfig();
+const showConfirmationModal = ref<boolean>(false)
 let postId: string;
 
 interface ContentDraft {
@@ -68,14 +69,14 @@ const onTagsUpdateHandler = (tagId: string) => {
 };
 
 const onFileChangeHandler = (event: Event) => {
-  
+
   try {
     const target = event.target as HTMLInputElement;
     // !!target.files && (image.value = target.files[0]);
     if (target.files) image.value = target.files[0]
-    
+
   } catch (error) {
-    
+
   }
 };
 
@@ -160,4 +161,7 @@ onBeforeRouteLeave(async (to, from, next) => {
   <AuthorPostForm :contentDraft="contentDraft" :contentTags="contentTags" :categories="blogCategories" :tags="blogTags"
     :image="image" @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
     @onfilechange="(event: Event) => onFileChangeHandler(event)" @onsubmit="onSubmitHandler" class="mb-16" />
+  <!-- <ConfirmationModal :showConfirmationModal="showConfirmationModal" :actionFunction="() => { }" :type="'positive'"
+    @closeModal="() => showConfirmationModal = false">You changed the post content, do you want save it as draft?"
+  </ConfirmationModal> -->
 </template>

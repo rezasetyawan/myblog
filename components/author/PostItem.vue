@@ -14,6 +14,7 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits(["updatePublishStatus", "deletePost"])
 const showMobileMenu = ref<boolean>(false)
+const showDeleteModal = ref<boolean>(false)
 
 const updatePostPublishStatus = async () => {
   try {
@@ -26,20 +27,16 @@ const updatePostPublishStatus = async () => {
 }
 
 
-const deletePostHandler = async (title: string, postId: string) => {
-  const deletePost = confirm('Are you sure want to delete ' + title)
+const deletePostHandler = async (postId: string) => {
+  try {
+    await deleteBlogByID(client, postId)
 
-  if (deletePost) {
-    try {
-      await deleteBlogByID(client, postId)
-
-      const fileKey = getFileNameFromUrl(props.blog.image_url, 'post-images')
-      await deleteImage(client, fileKey ? fileKey : '')
-      emit('deletePost', props.blog.id)
-    }
-    catch (error: any) {
-      showErrorToast(error.message)
-    }
+    const fileKey = getFileNameFromUrl(props.blog.image_url, 'post-images')
+    await deleteImage(client, fileKey ? fileKey : '')
+    emit('deletePost', props.blog.id)
+  }
+  catch (error: any) {
+    showErrorToast(error.message)
   }
 }
 </script>
@@ -94,7 +91,7 @@ const deletePostHandler = async (title: string, postId: string) => {
             post</span>
         </NuxtLink>
 
-        <button @click="() => deletePostHandler(blog.title, blog.id)" class="group relative">
+        <button @click="() => showDeleteModal = true" class="group relative">
           <Icon name="mdi:trash" class="h-6 w-6" />
           <span class="tooltip">delete</span>
         </button>
@@ -121,8 +118,7 @@ const deletePostHandler = async (title: string, postId: string) => {
             Edit
           </NuxtLink>
 
-          <button class="flex gap-2 w-git items-center p-1 my-2 text-sm"
-            @click="() => deletePostHandler(blog.title, blog.id)">
+          <button class="flex gap-2 w-git items-center p-1 my-2 text-sm" @click="() => showDeleteModal = true">
             <Icon name="mdi:trash" class="h-6 w-6" />
             Delete
           </button>
@@ -132,6 +128,9 @@ const deletePostHandler = async (title: string, postId: string) => {
     </div>
 
   </div>
+  <ConfirmationModal :showConfirmationModal="showDeleteModal" :actionFunction="() => deletePostHandler(props.blog.id)"
+    :type="'negative'" @closeModal="() => showDeleteModal = false">Are you want to delete {{ props.blog.title }}
+  </ConfirmationModal>
 </template>
 <style scoped>
 .tooltip {
