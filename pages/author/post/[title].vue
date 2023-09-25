@@ -5,7 +5,7 @@ const commentData = ref<CommentSnapshots | null | undefined>();
 const postTitle = ref<string>(route.params.title as string);
 const isLoading = ref<boolean>(true);
 
-onMounted(async () => {
+const fetchBlogData = async () => {
   try {
     const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
     const { data: cacheBlog } = useNuxtData(postTitle.value);
@@ -20,15 +20,20 @@ onMounted(async () => {
       commentData.value = commentResults;
     }
     isLoading.value = false;
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    isLoading.value = false
+    showErrorToast(error.message)
   }
-});
+}
 
-useHead({
-  title: blog.value?.title,
-  titleTemplate: blog.value?.title
-})
+onMounted(async () => {
+  await fetchBlogData()
+
+  useHead({
+    title: blog.value?.title,
+    titleTemplate: blog.value?.title
+  })
+});
 
 definePageMeta({
   middleware: 'author'

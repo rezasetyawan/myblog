@@ -7,9 +7,11 @@ const addImage = async (client: SupabaseClient, uniqueString: string, imageFile:
             cacheControl: '60',
             upsert: true,
         })
+
         if (error) {
-            console.error(error)
+            throw new Error (error.message)
         }
+
         const url = supabaseUrl + '/storage/v1/object/public/post-images/' + data?.path
         return url
     } catch (error) {
@@ -19,10 +21,14 @@ const addImage = async (client: SupabaseClient, uniqueString: string, imageFile:
 
 const deleteImage = async (client: SupabaseClient, imageName: string) => {
     try {
-        await client.storage.from('post-images').remove([imageName])
+        const { data, error } = await client.storage.from('post-images').remove([imageName])
+
+        if (error) {
+            throw new Error(error.message)
+        }
+
         return
     } catch (error) {
-        console.error(error)
         throw new Error(error as any)
     }
 }
@@ -35,7 +41,7 @@ const updateImageById = async (client: SupabaseClient, postId: string, imageFile
         })
 
         if (error) {
-            console.error(error)
+            throw new Error(error.message)
         }
         const url = supabaseUrl + '/storage/v1/object/public/post-images/' + data?.path
         return url
@@ -47,6 +53,7 @@ const updateImageById = async (client: SupabaseClient, postId: string, imageFile
 
 const listImages = async (client: SupabaseClient) => {
     try {
+
         const { data, error } = await client.storage.from('post-images').list('', {
             limit: 100,
             offset: 0,
@@ -54,7 +61,6 @@ const listImages = async (client: SupabaseClient) => {
         })
 
         if (error) {
-            console.error(error.message)
             throw new Error(error.message)
         }
 
@@ -62,8 +68,8 @@ const listImages = async (client: SupabaseClient) => {
             return { ...imageData } as unknown as ImageData
         })
 
-    } catch (error) {
-        console.error(error)
+    } catch (error: any) {
+        throw new Error(error.message)
     }
 }
 
@@ -75,9 +81,10 @@ const getImages = async (client: SupabaseClient, imageData: ImageData[]): Promis
             return { ...data, url: result.data.publicUrl, post: post?.title }
         })
         const data = await Promise.all(imageArrayPromise)
+
         return data.reverse()
-    } catch (error) {
-        console.error(error)
+    } catch (error: any) {
+        throw new Error(error.message)
     }
 }
 

@@ -3,10 +3,12 @@ import { nanoid } from "nanoid";
 import { addBlog } from "../../composables/useBlogs";
 import { addImage } from "../../composables/usePostImage";
 import { showSuccessToast, showErrorToast } from '../../utils/toast'
+import { getTags } from '../../composables/useTags';
+import { getCategories } from '../../composables/useCategories'
 
 const client = useSupabaseClient();
 const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
-const taglist = ref<Array<{ id: string; name: string }> | null>(null);
+const blogTags = ref<Array<{ id: string; name: string }> | null>(null);
 const image = ref<File | null>(null);
 const config = useRuntimeConfig();
 let postId: string;
@@ -27,29 +29,32 @@ const contentDraft = ref<ContentDraft>({
 
 const contentTags = ref<string[]>([]);
 
-const getCategories = async () => {
-  const { data: categories } = await useAsyncData("categories", async () => {
-    const { data } = (await client.from("categories").select("id, name")) as {
-      data: Array<{ id: string; name: string }>;
-    };
-    return data;
-  });
-  blogCategories.value = categories.value;
+const fetchBlogCategories = async () => {
+  const categories = await getCategories(client)
+  blogCategories.value = categories
 };
 
-const getTags = async () => {
-  const { data } = await useAsyncData("categories", async () => {
-    const { data } = (await client.from("tags").select("id, name")) as {
-      data: Array<{ id: string; name: string }>;
-    };
-    return data;
-  });
-  taglist.value = data.value;
-};
+const fetchBlogTags = async () => {
+  const tags = await getTags(client)
+  blogTags.value = tags
+}
+
+
+const resetPostForm = () => {
+  contentDraft.value = {
+    title: "",
+    text: `<h2>Hi there,</h2>`,
+    category_id: "",
+    is_published: false,
+  }
+
+  contentTags.value = []
+  image.value = null
+}
 
 onMounted(async () => {
-  await getCategories();
-  await getTags();
+  await fetchBlogCategories();
+  await fetchBlogTags();
 });
 
 const onTagsUpdateHandler = (tagId: string) => {
@@ -63,8 +68,15 @@ const onTagsUpdateHandler = (tagId: string) => {
 };
 
 const onFileChangeHandler = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  !!target.files && (image.value = target.files[0]);
+  
+  try {
+    const target = event.target as HTMLInputElement;
+    // !!target.files && (image.value = target.files[0]);
+    if (target.files) image.value = target.files[0]
+    
+  } catch (error) {
+    
+  }
 };
 
 const savePost = async (isPublish: boolean) => {
@@ -117,6 +129,7 @@ const onSaveDraftHandler = async () => {
 
 const onSubmitHandler = async () => {
   await savePost(true);
+  resetPostForm()
 };
 
 onBeforeRouteLeave(async (to, from, next) => {
@@ -144,7 +157,7 @@ onBeforeRouteLeave(async (to, from, next) => {
       class="hidden bg-slate-100 group-hover:inline whitespace-nowrap group-hover:absolute right-0 top-8 z-20 px-[0.8em] py-[0.4em] rounded-sm">save
       to draft</span>
   </button>
-  <AuthorPostForm :contentDraft="contentDraft" :contentTags="contentTags" :categories="blogCategories" :tags="taglist"
+  <AuthorPostForm :contentDraft="contentDraft" :contentTags="contentTags" :categories="blogCategories" :tags="blogTags"
     :image="image" @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
     @onfilechange="(event: Event) => onFileChangeHandler(event)" @onsubmit="onSubmitHandler" class="mb-16" />
 </template>

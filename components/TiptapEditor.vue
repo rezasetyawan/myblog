@@ -296,7 +296,7 @@ select {
 }
 
 .tooltip {
-  @apply hidden bg-gray-200 group-hover:inline group-hover:absolute right-0 top-8 z-20 px-[0.8em] py-[0.4em] rounded-sm text-black whitespace-nowrap;
+  @apply hidden bg-gray-200 group-hover:inline group-hover:absolute right-0 top-10 z-20 px-[0.8em] py-[0.4em] rounded-sm text-black whitespace-nowrap;
 }
 
 .editor-button.is-active {

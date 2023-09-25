@@ -53,6 +53,7 @@ const getBlogByTitle = async (title: string) => {
         if (error.value) {
             throw new Error(error.value?.message)
         }
+
         return data.value?.data as GetBlogDetail
     } catch (error) {
         throw new Error(error as any)
@@ -83,7 +84,6 @@ const updateBlogById = async (client: SupabaseClient, postId: string, postData: 
     try {
 
         const { error } = await client.from('posts').update(postData).eq('id', postId)
-
 
         if (error) {
             throw new Error(error.message)

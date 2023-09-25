@@ -23,16 +23,16 @@ useServerSeoMeta({
   description: "Blog Website that talk about technology and daily life",
   ogDescription: "Blog Website that talk about technology and daily life",
 });
-useHead({
-  title: "My Blog",
-  titleTemplate: "My Blogs",
-  meta: [
-    {
-      name: "description",
-      content: "Blog Website that talk about technology and daily life",
-    },
-  ],
-});
+// useHead({
+//   title: "My Blog",
+//   titleTemplate: "My Blog",
+//   meta: [
+//     {
+//       name: "description",
+//       content: "Blog Website that talk about technology and daily life",
+//     },
+//   ],
+// });
 
 const userRole = ref("");
 userRole.value = await getUserRole("userrole");

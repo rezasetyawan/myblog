@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { getTags } from '../composables/useTags';
+import { getCategories } from '../composables/useCategories'
+
 definePageMeta({
   middleware: 'is-admin'
 })
@@ -7,7 +10,7 @@ const route = useRoute();
 
 const blogsData = ref<BlogSnapshots | null | undefined>();
 const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
-const taglist = ref<Array<{ id: string; name: string }> | null>(null);
+const blogTags = ref<Array<{ id: string; name: string }> | null>(null);
 const isLoading = ref<boolean>(true);
 const page = ref<number>(parseInt(route.query.page as string) || 1);
 const cacheKey = ref<string>("");
@@ -19,25 +22,15 @@ const queryParams = ref({
   page: route.query.page ? (route.query.page as string) : "1",
 });
 
-const getCategories = async () => {
-  const { data: categories } = await useAsyncData("categories", async () => {
-    const { data } = (await client.from("categories").select("id, name")) as {
-      data: Array<{ id: string; name: string }>;
-    };
-    return data;
-  });
-  blogCategories.value = categories.value;
+const fetchBlogCategories = async () => {
+  const categories = await getCategories(client)
+  blogCategories.value = categories
 };
 
-const getTags = async () => {
-  const { data } = await useAsyncData("categories", async () => {
-    const { data } = (await client.from("tags").select("id, name")) as {
-      data: Array<{ id: string; name: string }>;
-    };
-    return data;
-  });
-  taglist.value = data.value;
-};
+const fetchBlogTags = async () => {
+  const tags = await getTags(client)
+  blogTags.value = tags
+}
 
 const fetchBlogs = async () => {
   try {
@@ -54,21 +47,20 @@ const fetchBlogs = async () => {
         cacheKey.value
       );
 
-      console.log(blogsData.value?.blogs)
       data ? (blogsData.value = data) : null;
     }
     blogsData.value && (isLoading.value = false);
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    showErrorToast(error.message)
   }
 };
 
 onMounted(async () => {
   cacheKey.value = route.fullPath;
   await fetchBlogs();
-  await getCategories();
-  await getTags();
-  
+  await fetchBlogCategories();
+  await fetchBlogTags();
+
 });
 
 onBeforeRouteUpdate(async (to, from) => {
@@ -80,9 +72,7 @@ onBeforeRouteUpdate(async (to, from) => {
     page.value = parseInt(to.query.page as string) || 1;
     await fetchBlogs();
   } else {
-    isLoading.value = true;
     await fetchBlogs();
-    isLoading.value = false;
     queryParams.value = {
       searchKey: "",
       category: "",
@@ -132,17 +122,10 @@ definePageMeta({
 </script>
 <template>
   <main>
-    <FilterSection
-      :queryParams="queryParams"
-      :postCategories="blogCategories"
-      :postTags="taglist"
-      @onSearch="page = 1"
-    />
+    <FilterSection :queryParams="queryParams" :postCategories="blogCategories" :postTags="blogTags"
+      @onSearch="page = 1" />
     <Posts :blogs="blogsData?.blogs" :isLoading="isLoading" />
-    <h2
-      v-if="blogsData?.blogs.length === 0 && !isLoading"
-      class="text-center my-20"
-    >
+    <h2 v-if="blogsData?.blogs.length === 0 && !isLoading" class="text-center my-20">
       Blog Not Found
     </h2>
     <Pagination :page="page" :totalPage="blogsData?.totalPage" />

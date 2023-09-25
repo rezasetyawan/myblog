@@ -17,7 +17,7 @@ const copyToClipboard = () => {
             navigator.clipboard.writeText(copyText.value);
         }
     } catch (error) {
-        alert('failed to copy url')
+       showErrorToast('failed to copy url')
     }
 }
 

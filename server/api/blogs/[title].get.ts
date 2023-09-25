@@ -19,12 +19,12 @@ interface tag {
 
 const fetchBlogData = async (client: SupabaseClient, title: string | undefined): Promise<GetBlogDetail | {}> => {
     try {
-        const { data: blogs } = await client
+        const { data: blogs, error } = await client
             .from('posts')
             .select('id, title,text, image_url, created_at, category_id, url_param')
             .eq('url_param', title);
 
-        if (!blogs || blogs.length === 0) {
+        if (error || !blogs || blogs.length === 0) {
             throw new Error('Blog not found');
         }
 
