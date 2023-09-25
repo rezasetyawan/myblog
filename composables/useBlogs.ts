@@ -3,7 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 
 const getBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "") => {
     try {
-        const { data } = await useFetch('/api/blogs', {
+        const { data, error } = await useFetch('/api/blogs', {
             method: 'GET',
             query: {
                 search_key: search_key,
@@ -13,15 +13,19 @@ const getBlogs = async (search_key: string = "", category_id: string = "", tags:
             },
             key: cacheKey,
         })
+
+        if (error.value) {
+            throw new Error(error.value?.message)
+        }
         return data.value as BlogSnapshots
     } catch (error) {
-        console.error(error)
+        throw new Error(error as any)
     }
 }
 
 const getAuthorBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "/blogs") => {
     try {
-        const { data } = await useFetch('/api/author/posts', {
+        const { data, error } = await useFetch('/api/author/posts', {
             query: {
                 search_key: search_key,
                 category_id: category_id,
@@ -30,20 +34,28 @@ const getAuthorBlogs = async (search_key: string = "", category_id: string = "",
             },
             key: cacheKey,
         })
+
+        if (error.value) {
+            throw new Error(error.value?.message)
+        }
         return data.value
     } catch (error) {
-        console.error(error)
+        throw new Error(error as any)
     }
 }
 
 const getBlogByTitle = async (title: string) => {
     try {
-        const { data } = await useFetch(`/api/blogs/${title}`, {
+        const { data, error } = await useFetch(`/api/blogs/${title}`, {
             key: `${title}`
         })
+
+        if (error.value) {
+            throw new Error(error.value?.message)
+        }
         return data.value?.data as GetBlogDetail
     } catch (error) {
-        console.error(error)
+        throw new Error(error as any)
     }
 }
 
@@ -69,26 +81,39 @@ const addBlog = async (client: SupabaseClient, postId: string, postData: AddBlog
 
 const updateBlogById = async (client: SupabaseClient, postId: string, postData: UpdateBlog) => {
     try {
-        await client.from('posts').update(postData).eq('id', postId)
+
+        const { error } = await client.from('posts').update(postData).eq('id', postId)
+
+
+        if (error) {
+            throw new Error(error.message)
+        }
         return
-    } catch (error: any) {
-        console.error(error)
-        throw new Error(error)
+    } catch (error) {
+        throw new Error(error as any)
     }
 }
 
 const deleteBlogByID = async (client: SupabaseClient, postId: string) => {
     try {
-        await client.from('posts').delete().eq('id', postId)
+        const { error } = await client.from('posts').delete().eq('id', postId)
+
+        if (error) {
+            throw new Error(error.message)
+        }
         return
     } catch (error) {
-        console.error(error)
+        throw new Error(error as any)
     }
 }
 
 const updateBlogTagsById = async (client: SupabaseClient, postId: string, postTags: string[]) => {
     try {
-        await client.from('post_tags').delete().eq('post_id', postId)
+        const { error } = await client.from('post_tags').delete().eq('post_id', postId)
+
+        if (error) {
+            throw new Error(error.message)
+        }
 
         const tagArrayPromises = postTags.map((tagId) => {
             const id = `post_tag-${nanoid(5)}`
@@ -97,7 +122,7 @@ const updateBlogTagsById = async (client: SupabaseClient, postId: string, postTa
         await Promise.all(tagArrayPromises)
     }
     catch (error) {
-        console.error(error)
+        throw new Error(error as any)
     }
 
 }

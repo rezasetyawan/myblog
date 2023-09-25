@@ -271,7 +271,7 @@ const setTextAlign = () => {
         </div>
       </div>
     </div>
-    <editor-content :editor="editor" spellcheck="false" />
+    <editor-content :editor="editor" spellcheck="false" class="min-h-[80vh]" />
   </div>
 </template>
 

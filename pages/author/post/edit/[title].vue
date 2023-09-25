@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const route = useRoute();
 const blog = ref<GetBlogDetail | undefined>();
-const postTitle = ref<string>(route.params.id as string);
+const postTitle = ref<string>(route.params.title as string);
 const isLoading = ref<boolean>(true);
 
 onMounted(async () => {

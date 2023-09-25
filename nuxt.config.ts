@@ -19,6 +19,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/auth/**': { ssr: false },
     '/author/**': { ssr: false, index: false },
+    '/author/': {redirect: '/author/posts'}
   },
   modules: ['@nuxtjs/supabase', 'nuxt-icon', ['@nuxtjs/google-fonts', {
     families: {

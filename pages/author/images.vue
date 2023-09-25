@@ -3,14 +3,18 @@ const client = useSupabaseClient();
 const config = useRuntimeConfig();
 const images = ref<ImageData[]>();
 const imageFile = ref<File | null>(null)
-const isLoading= ref<boolean>(false)
+const isLoading = ref<boolean>(false)
 
-onMounted(async () => {
+const fetchImages = async () => {
   isLoading.value = true
   const imageData = await listImages(client);
   const data = await getImages(client, imageData?.length ? imageData : []);
   images.value = data;
   isLoading.value = false
+}
+
+onMounted(async () => {
+  await fetchImages()
 });
 
 const handleDeleteImage = (imageid: string) => {
@@ -19,8 +23,9 @@ const handleDeleteImage = (imageid: string) => {
       (image) => image.id === imageid
     );
     if (index !== undefined && index !== -1) images.value?.splice(index, 1);
-  } catch (error) {
-    console.error(error);
+    showSuccessToast('image deleted')
+  } catch (error: any) {
+    showErrorToast(error.message)
   }
 };
 
@@ -40,10 +45,11 @@ const onUploadImageHandler = async () => {
   try {
     if (imageFile.value) {
       await addImage(client, imageFile.value.name.split('.')[0], imageFile.value, config.public.SUPABASE_URL)
-      useRouter().go(0)
+      showSuccessToast('image uploaded')
+      await fetchImages()
     }
-  } catch (error) {
-    alert(error)
+  } catch (error: any) {
+    showErrorToast(error.message)
   }
 }
 

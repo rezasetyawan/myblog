@@ -2,6 +2,7 @@
 import { nanoid } from "nanoid";
 import { addBlog } from "../../composables/useBlogs";
 import { addImage } from "../../composables/usePostImage";
+import { showSuccessToast, showErrorToast } from '../../utils/toast'
 
 const client = useSupabaseClient();
 const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
@@ -71,14 +72,14 @@ const savePost = async (isPublish: boolean) => {
     postId = `post-${nanoid(10)}`;
 
     if (!contentDraft.value.title) {
-      return alert("mohon sertakan judul");
+      return showErrorToast('please provide posts title')
     }
     if (!contentDraft.value.category_id.length) {
-      return alert("mohon sertakan category");
+      return showErrorToast('please provide post category')
     }
 
     if (!contentTags.value.length) {
-      return alert("mohon sertakan tag");
+      return showErrorToast('please provide post tag')
     }
 
     const timestamp = Date.now().toString();
@@ -104,10 +105,9 @@ const savePost = async (isPublish: boolean) => {
     };
 
     await addBlog(client, postId, postData, contentTags.value);
-    isPublish ? alert("uploaded") : alert("saved to draft");
+    isPublish ? showSuccessToast('post added') : showSuccessToast('saved to draft');
   } catch (error: any) {
-    console.error(error)
-    alert(error.message)
+    showErrorToast(error.message)
   }
 };
 
@@ -118,6 +118,21 @@ const onSaveDraftHandler = async () => {
 const onSubmitHandler = async () => {
   await savePost(true);
 };
+
+onBeforeRouteLeave(async (to, from, next) => {
+  if (contentDraft.value.title && contentDraft.value.category_id && contentDraft.value && contentTags.value && contentDraft.value.text) {
+    if (
+      confirm("You changed the post content, do you want save it as draft?")
+    ) {
+      await savePost(false);
+      next();
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 </script>
 <template>

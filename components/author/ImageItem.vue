@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { showErrorToast } from "../../utils/toast"
 interface Props {
     image: ImageData
 }
@@ -27,8 +28,8 @@ const deleteImageHandler = async () => {
             await deleteImage(client, props.image.name)
             emit('deleteimage', props.image.id)
         }
-    } catch (error) {
-        alert('failed to delete image')
+    } catch (error: any) {
+        showErrorToast(error.message)
     }
 }
 

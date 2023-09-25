@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { showSuccessToast } from '../../utils/toast'
 const client = useSupabaseClient();
 const route = useRoute();
 
@@ -117,6 +118,7 @@ const handleDeletePost = (postId: string) => {
       (blog) => blog.id === postId
     );
     if (index !== undefined && index !== -1) blogsData.value?.blogs?.splice(index, 1);
+    showSuccessToast('post deleted')
   } catch (error) {
     console.log(error);
   }
@@ -147,7 +149,8 @@ definePageMeta({
 <template>
   <main>
     <FilterSection :queryParams="queryParams" :postCategories="blogCategories" :postTags="taglist" @onSearch="page = 1" />
-    <AuthorPosts :blogs="blogsData?.blogs" :isLoading="isLoading" @update-post-status="(id: string) => handlePublishStatusChange(id)"
+    <AuthorPosts :blogs="blogsData?.blogs" :isLoading="isLoading"
+      @update-post-status="(id: string) => handlePublishStatusChange(id)"
       @delete-post="(id: string) => handleDeletePost(id)" />
     <h2 v-if="blogsData?.blogs.length === 0 && !isLoading" class="text-center my-20">
       Blog Not Found
