@@ -110,8 +110,8 @@ const handleDeletePost = (postId: string) => {
     );
     if (index !== undefined && index !== -1) blogsData.value?.blogs?.splice(index, 1);
     showSuccessToast('post deleted')
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    showErrorToast(error.message)
   }
 };
 
@@ -142,7 +142,7 @@ definePageMeta({
   <AuthorPosts :blogs="blogsData?.blogs" :isLoading="isLoading"
     @update-post-status="(id: string) => handlePublishStatusChange(id)"
     @delete-post="(id: string) => handleDeletePost(id)" />
-  <h2 v-if="blogsData?.blogs.length === 0 && !isLoading" class="text-center my-20">
+  <h2 v-if="blogsData?.blogs.length === 0 && !isLoading" class="text-center mb-40">
     Blog Not Found
   </h2>
   <Pagination :page="page" :totalPage="blogsData?.totalPage" />

@@ -18,17 +18,15 @@ const props = defineProps<Props>();
                             <div class="bg-gray-300 w-[30%] h-5 rounded-md"></div>
                             <div class="bg-gray-300 w-[50%] h-5 rounded-md"></div>
                             <div class="bg-gray-300 w-[12%] h-5 rounded-md"></div>
-
                         </div>
-
                     </div>
                 </div>
-                <div class="items-center justify-end gap-1 w-full my-3 hidden sm:flex" >
+                <div class="items-center justify-end gap-1 w-full my-3 hidden sm:flex">
                     <div class="bg-gray-300 w-[12%] h-5 rounded-md"></div>
                     <div class="bg-gray-300 w-[12%] h-5 rounded-md"></div>
                     <div class="bg-gray-300 w-[12%] h-5 rounded-md"></div>
                 </div>
-                <div class="flex flex-col items-end justify-center gap-1 w-full my-3 sm:hidden" >
+                <div class="flex flex-col items-end justify-center gap-1 w-full my-3 sm:hidden">
                     <div class="bg-gray-300 w-[3px] h-[3px] rounded-full"></div>
                     <div class="bg-gray-300 w-[3px] h-[3px] rounded-full"></div>
                     <div class="bg-gray-300 w-[3px] h-[3px] rounded-full"></div>

@@ -8,7 +8,7 @@ const errorMessage = ref<string>("");
 
 const signInWithGoogle = async () => {
   try {
-    await supabase.auth
+    const { error } = await supabase.auth
       .signInWithOAuth({
         provider: "google",
         options: {
@@ -18,11 +18,14 @@ const signInWithGoogle = async () => {
           },
         },
       })
-      .then(() => {
-        useRouter().push("/author/");
-      });
-  } catch (error) {
-    console.error(error);
+
+    if (error) {
+      throw new Error(error.message)
+    }
+
+    useRouter().push("/author/posts");
+  } catch (error: any) {
+    showErrorToast(error.messge)
   }
 };
 
@@ -42,12 +45,10 @@ const onSubmitHandler = async () => {
     errorMessage.value = error.message;
   }
 };
-
-watch(user, () => console.log(user.value))
 </script>
 
 <template>
-  <section class="font-rubik flex justify-center items-center h-screen w-full bg-gray-100">
+  <section class="font-rubik flex justify-center items-center h-screen w-full p-3 bg-gray-100">
     <form class="min-w-[90%] sm:min-w-[60%] lg:min-w-[30%] relative" @submit.prevent="onSubmitHandler">
       <h2 class="text-3xl font-bold mb-16 text-center">Login</h2>
       <p class="absolute top-[20%] text-sm text-red-600 font-medium text-left">
@@ -72,14 +73,14 @@ watch(user, () => console.log(user.value))
         </span>
       </div>
 
-      <button type="submit" class="text-lg bg-slate-50 font-medium text-black shadow-lg px-4 py-3 rounded-md w-full"
+      <button type="submit" class="bg-slate-50 font-medium text-black shadow-lg px-4 py-3 rounded-md w-full"
         :style="{ cursor: isLoading ? 'progress' : 'pointer' }" :disabled="isLoading">
         SignIn
       </button>
       <button type="button"
-        class="flex gap-6 justify-center items-center bg-slate-50 rounded-md my-4 shadow-lg w-full mx-auto p-3 px-20"
+        class="flex gap-6 justify-center items-center bg-slate-50 rounded-md my-4 shadow-lg w-full mx-auto p-3"
         @click="signInWithGoogle">
-        <Icon name="flat-color-icons:google" size="40"></Icon>
+        <Icon name="flat-color-icons:google" class="w-6 h-6"></Icon>
         <p class="font-medium">Sign In With Google</p>
       </button>
     </form>

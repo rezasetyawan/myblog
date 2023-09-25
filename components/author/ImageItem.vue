@@ -80,7 +80,8 @@ const deleteImageHandler = async () => {
         </div>
     </div>
     <ConfirmationModal :showConfirmationModal="showDeleteModal" :actionFunction="deleteImageHandler" :type="'negative'"
-        @closeModal="() => showDeleteModal = false">Are you want to delete {{ props.image.name }}.{{ image.metadata.mimetype.split('/')[1] }}
+        @closeModal="() => showDeleteModal = false">Are you want to delete {{ props.image.name }}.{{
+            image.metadata.mimetype.split('/')[1] }}
     </ConfirmationModal>
 </template>
 <style scoped>
