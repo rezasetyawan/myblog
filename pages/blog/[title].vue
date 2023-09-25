@@ -15,14 +15,15 @@ async function fetchBlogData() {
       blog.value = cacheBlog.value.data;
       commentData.value = cacheComments.value;
     } else {
-      const data = await getBlogByTitle(postTitle.value);
-      const commentSnapshots = await getComments(postTitle.value);
+      const blogResult = await getBlogByTitle(postTitle.value);
 
-      if (data && commentSnapshots) {
-        blog.value = data;
+      if (blogResult) {
+        const commentSnapshots = await getComments(blogResult.id);
+
+        blog.value = blogResult;
         commentData.value = commentSnapshots;
         isLoading.value = false;
-        return
+        return;
       } else {
         await fetchBlogData();
       }

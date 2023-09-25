@@ -53,7 +53,7 @@ const props = defineProps<Props>();
       <div id="post-content" v-html="props.blog.text"
         class="prose prose-base max-w-[75ch] mx-auto text-black font-rubik my-5 prose-pre:max-w-fit prose-h2:text-xl prose-h2:font-extrabold prose-li:marker:text-black">
       </div>
-      <CommentSection :commentData="props.commentData" />
+      <CommentSection :commentData="props.commentData" :postId="props.blog.id" />
     </div>
   </section>
 </template>

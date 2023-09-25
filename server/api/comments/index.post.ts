@@ -2,6 +2,7 @@ import { serverSupabaseClient } from '#supabase/server'
 import { nanoid } from 'nanoid'
 
 interface ReqBody {
+    uuid?: string
     parent_id: string
     name: string
     email: string
@@ -14,12 +15,12 @@ export default eventHandler(async (event) => {
     const client = await serverSupabaseClient(event)
 
     try {
-        const { parent_id, name, email, text, post_id }: ReqBody = await readBody(event)
+        const { uuid, parent_id, name, email, text, post_id }: ReqBody = await readBody(event)
         const { data: users } = await client.from("public_users").select("id, name").eq("email", email)
         let userID: string
 
         if (!users?.length) {
-            userID = nanoid(16)
+            userID = uuid ? uuid : nanoid(16)
             const userData = { id: userID, email: email, name: name }
             const commentData: PostComment = { id: nanoid(16), text: text, user_id: userID, post_id: post_id, time: Date.now().toString(), parent_id: parent_id }
 

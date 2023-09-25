@@ -15,9 +15,13 @@ const fetchBlogData = async () => {
       commentData.value = cacheComments.value;
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
-      const commentResults = await getComments(postTitle.value);
-      blog.value = blogResult;
-      commentData.value = commentResults;
+      if (blogResult) {
+        const commentResults = await getComments(blogResult.id);
+        blog.value = blogResult;
+        commentData.value = commentResults;
+      } else {
+        await fetchBlogData()
+      }
     }
   } catch (error: any) {
     showErrorToast(error.message)

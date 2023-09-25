@@ -14,6 +14,7 @@ interface User {
 
 const props = defineProps<Props>();
 const emit = defineEmits(["commentAdded"]);
+const supabaseUser = useSupabaseUser()
 
 const isLocalStorageAvailable = () => {
   return typeof Storage !== undefined;
@@ -41,6 +42,7 @@ const setUserInLocalStorage = (userData: User) => {
 const user = ref<User>({ name: "", email: "" });
 
 const commentDraft = ref<CommentDraf>({
+  uuid: supabaseUser.value?.id ? supabaseUser.value.id : '',
   parent_id: props.parent_id ? props.parent_id : null,
   name: user.value.name,
   email: user.value.email,
@@ -64,11 +66,16 @@ onMounted(() => {
 });
 
 const onSubmitHandler = async () => {
-  user.value && setUserInLocalStorage(user.value);
-  await addComment(commentDraft.value).then(() => {
-    resetCommentDraft();
-  });
-  emit("commentAdded");
+  try {
+    user.value && setUserInLocalStorage(user.value);
+    console.log(commentDraft.value)
+    await addComment(commentDraft.value).then(() => {
+      resetCommentDraft();
+    });
+    emit("commentAdded");
+  } catch (error: any) {
+    showErrorToast(error.message)
+  }
 };
 
 watch(
@@ -83,35 +90,16 @@ watch(
 <template>
   <form class="font-rubik w-full" @submit.prevent="onSubmitHandler">
     <h2>{{ props.title ? props.title : "Leave a comment" }}</h2>
-    <textarea
-      rows="7"
-      class="w-full border-2 border-slate-700 p-2 text-sm"
-      placeholder="Your comment here..."
-      spellcheck="false"
-      v-model="commentDraft.text"
-    ></textarea>
+    <textarea rows="7" class="w-full border-2 border-slate-700 p-2 text-sm" placeholder="Your comment here..."
+      spellcheck="false" v-model="commentDraft.text"></textarea>
     <div class="sm:flex items-center gap-4">
-      <input
-        type="text"
-        placeholder="Name(required)"
-        required
-        minlength="3"
-        class="p-2 text-sm border-2 border-slate-700 w-full"
-        v-model="user.name"
-      />
-      <input
-        type="email"
-        placeholder="Email(required)"
-        required
-        class="p-2 text-sm border-2 border-slate-700 w-full mt-2 sm:mt-0"
-        v-model="user.email"
-      />
+      <input type="text" placeholder="Name(required)" required minlength="3"
+        class="p-2 text-sm border-2 border-slate-700 w-full" v-model="user.name" />
+      <input type="email" placeholder="Email(required)" required
+        class="p-2 text-sm border-2 border-slate-700 w-full mt-2 sm:mt-0" v-model="user.email" />
     </div>
     <div class="flex justify-end">
-      <button
-        type="submit"
-        class="text-base leading-tight font-bold text-white bg-red-800 px-3 py-1.5 my-2"
-      >
+      <button type="submit" class="text-base leading-tight font-bold text-white bg-red-800 px-3 py-1.5 my-2">
         POST COMMENT
       </button>
     </div>
