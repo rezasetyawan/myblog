@@ -24,6 +24,11 @@ const getBlogInitalData = async () => {
 onMounted(async () => {
   try {
     await getBlogInitalData()
+    
+    useHead({
+      title: `Edit ${blog.value?.title}`,
+      titleTemplate: `Edit ${blog.value?.title}`
+    })
   } catch (error: any) {
     showErrorToast(error.message)
   }
@@ -34,8 +39,6 @@ definePageMeta({
 })
 </script>
 <template>
-  <Head>
-    <Title>{{ blog?.title }}</Title>
-  </Head>
   <AuthorEditPost :blog="blog" v-if="blog" />
+  <Loading v-if="isLoading" />
 </template>

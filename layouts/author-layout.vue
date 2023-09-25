@@ -30,10 +30,4 @@ definePageMeta({
 .tablet-and-above {
   width: 100%;
 }
-
-/* @media (min-width: 640px) {
-  .tablet-and-above {
-    width: calc(100% - var(--sidebar-width));
-  }
-} */
 </style>

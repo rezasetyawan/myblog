@@ -161,7 +161,4 @@ onBeforeRouteLeave(async (to, from, next) => {
   <AuthorPostForm :contentDraft="contentDraft" :contentTags="contentTags" :categories="blogCategories" :tags="blogTags"
     :image="image" @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
     @onfilechange="(event: Event) => onFileChangeHandler(event)" @onsubmit="onSubmitHandler" class="mb-16" />
-  <!-- <ConfirmationModal :showConfirmationModal="showConfirmationModal" :actionFunction="() => { }" :type="'positive'"
-    @closeModal="() => showConfirmationModal = false">You changed the post content, do you want save it as draft?"
-  </ConfirmationModal> -->
 </template>

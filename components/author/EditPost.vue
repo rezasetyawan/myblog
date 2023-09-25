@@ -232,7 +232,6 @@ onBeforeRouteLeave(async (to, from, next) => {
 
 const onSubmitHandler = async () => {
   await updatePost();
-  console.log(isPostUpdated.value)
   clearNuxtData(blog.value.id);
 };
 </script>

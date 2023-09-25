@@ -36,6 +36,5 @@ const hasActiveCommentForm = computed(() => {
       :postId="props.postId"
     />
     </div>
-    
   </article>
 </template>

@@ -121,13 +121,11 @@ definePageMeta({
 })
 </script>
 <template>
-  <main>
     <FilterSection :queryParams="queryParams" :postCategories="blogCategories" :postTags="blogTags"
       @onSearch="page = 1" />
-    <Posts :blogs="blogsData?.blogs" :isLoading="isLoading" />
-    <h2 v-if="blogsData?.blogs.length === 0 && !isLoading" class="text-center my-20">
+    <Posts :blogs="blogsData?.blogs" :isLoading="isLoading"/>
+    <h2 v-if="blogsData?.blogs.length === 0 && !isLoading" class="text-center mb-40">
       Blog Not Found
     </h2>
-    <Pagination :page="page" :totalPage="blogsData?.totalPage" />
-  </main>
+    <Pagination :page="page" :totalPage="blogsData?.totalPage"/>
 </template>
