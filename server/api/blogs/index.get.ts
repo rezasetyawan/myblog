@@ -14,7 +14,6 @@ const getCommentCounts = async (client: SupabaseClient, postId: string) => {
             const { data, error } = await client.from("comments").select('id').eq("parent_id", parentCommentId)
 
             if (error) {
-                console.error(error)
                 return []
             }
 
@@ -31,7 +30,7 @@ const getCommentCounts = async (client: SupabaseClient, postId: string) => {
 
             return replies
         } catch (error: any) {
-            throw new Error(error)
+            throw new Error(error.message)
         }
     }
 
@@ -44,7 +43,6 @@ const getCommentCounts = async (client: SupabaseClient, postId: string) => {
                 .is('parent_id', null);
 
             if (error) {
-                console.error(error);
                 return { comments: [], totalCount: 0 };
             }
 
@@ -63,7 +61,7 @@ const getCommentCounts = async (client: SupabaseClient, postId: string) => {
 
             return
         } catch (error: any) {
-            throw new Error(error);
+            throw new Error(error.message);
         }
     }
 
@@ -133,7 +131,6 @@ export default eventHandler(async (event): Promise<BlogSnapshots> => {
         const { data, count, error } = await queryBuilder.eq('is_published',true).range(from, to)
 
         if (error) {
-            console.error(error.message);
             throw new Error(error.message);
         }
 
@@ -145,7 +142,7 @@ export default eventHandler(async (event): Promise<BlogSnapshots> => {
         return { blogs: blogs, totalPage: count ? Math.ceil(count / size) : 1 }
 
     } catch (error: any) {
-        throw new Error(error);
+        throw new Error(error.message);
     }
 });
 

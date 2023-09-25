@@ -3,6 +3,7 @@ import { updateBlogById, deleteBlogByID } from '../../composables/useBlogs'
 import { deleteImage } from '../../composables/usePostImage'
 import { getFileNameFromUrl } from '../../utils/getFileName'
 import { truncateString } from "../../utils/truncateText"
+import { showErrorToast } from "../../utils/toast"
 
 const client = useSupabaseClient()
 
@@ -13,39 +14,36 @@ interface Props {
 const props = defineProps<Props>();
 const emit = defineEmits(["updatePublishStatus", "deletePost"])
 const showMobileMenu = ref<boolean>(false)
+const showDeleteModal = ref<boolean>(false)
 
 const updatePostPublishStatus = async () => {
   try {
     await updateBlogById(client, props.blog.id, { is_published: !props.blog.is_published })
     emit('updatePublishStatus', props.blog.id)
 
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    showErrorToast(error.message)
   }
 }
 
 
-const deletePostHandler = async (title: string, postId: string) => {
-  const deletePost = confirm('Are you sure want to delete ' + title)
+const deletePostHandler = async (postId: string) => {
+  try {
+    await deleteBlogByID(client, postId)
 
-  if (deletePost) {
-    try {
-      await deleteBlogByID(client, postId)
-
-      const fileKey = getFileNameFromUrl(props.blog.image_url, 'post-images')
-      await deleteImage(client, fileKey ? fileKey : '')
-      emit('deletePost', props.blog.id)
-    }
-    catch (error) {
-      console.error(error)
-    }
+    const fileKey = getFileNameFromUrl(props.blog.image_url, 'post-images')
+    await deleteImage(client, fileKey ? fileKey : '')
+    emit('deletePost', props.blog.id)
+  }
+  catch (error: any) {
+    showErrorToast(error.message)
   }
 }
 </script>
 <template>
   <div class="rounded-lg p-2 my-2 shadow-md w-full">
     <NuxtImg :src="props.blog.image_url ? props.blog.image_url : ''"
-      class="max-sm:w-full min-h-[50px] sm:min-h-[70px] object-cover brightness-90 transition-all rounded-sm aspect-[4/2] block mx-auto"
+      class="object-cover brightness-90 group-hover:brightness-100 transition-all w-full rounded-sm aspect-[4/2]"
       loading="lazy" quality="50" :alt="props.blog.title" placeholder />
 
     <div class="flex justify-between mt-1 items-start">
@@ -75,30 +73,30 @@ const deletePostHandler = async (title: string, postId: string) => {
           </div>
         </div>
       </div>
-      
-        <div class="items-center justify-end gap-2 hidden sm:flex">
-          <button v-if="props.blog.is_published" @click="updatePostPublishStatus" class="group relative">
-            <Icon name="material-symbols:send-and-archive" class="h-6 w-6" />
-            <span class="tooltip">unpublish</span>
-          </button>
 
-          <button v-else @click="updatePostPublishStatus" class="group relative">
-            <Icon name="material-symbols:send" class="h-6 w-6" />
-            <span class="tooltip">publish</span>
-          </button>
+      <div class="items-center justify-end gap-2 hidden sm:flex">
+        <button v-if="props.blog.is_published" @click="updatePostPublishStatus" class="group relative">
+          <Icon name="material-symbols:send-and-archive" class="h-6 w-6" />
+          <span class="tooltip">unpublish</span>
+        </button>
 
-          <NuxtLink :to="`/author/post/edit/${props.blog.id}`" class="group relative">
-            <Icon name="material-symbols:edit" class="h-6 w-6" />
-            <span class="tooltip">edit
-              post</span>
-          </NuxtLink>
+        <button v-else @click="updatePostPublishStatus" class="group relative">
+          <Icon name="material-symbols:send" class="h-6 w-6" />
+          <span class="tooltip">publish</span>
+        </button>
 
-          <button @click="() => deletePostHandler(blog.title, blog.id)" class="group relative">
-            <Icon name="mdi:trash" class="h-6 w-6" />
-            <span class="tooltip">delete</span>
-          </button>
-        </div>
-      
+        <NuxtLink :to="`/author/post/edit/${props.blog.url_param}`" class="group relative">
+          <Icon name="material-symbols:edit" class="h-6 w-6" />
+          <span class="tooltip">edit
+            post</span>
+        </NuxtLink>
+
+        <button @click="() => showDeleteModal = true" class="group relative">
+          <Icon name="mdi:trash" class="h-6 w-6" />
+          <span class="tooltip">delete</span>
+        </button>
+      </div>
+
       <div class="relative sm:hidden  z-[2000]">
         <button @click="() => showMobileMenu = !showMobileMenu">
           <Icon name="pepicons-pencil:dots-y" size="24" />
@@ -114,13 +112,13 @@ const deletePostHandler = async (title: string, postId: string) => {
             Publish
           </button>
 
-          <NuxtLink :to="`/author/post/edit/${props.blog.id}`" class="flex gap-2 w-32 items-center p-1 my-2 text-sm">
+          <NuxtLink :to="`/author/post/edit/${props.blog.url_param}`"
+            class="flex gap-2 w-32 items-center p-1 my-2 text-sm">
             <Icon name="material-symbols:edit" class="h-6 w-6" />
             Edit
           </NuxtLink>
 
-          <button class="flex gap-2 w-git items-center p-1 my-2 text-sm"
-            @click="() => deletePostHandler(blog.title, blog.id)">
+          <button class="flex gap-2 w-git items-center p-1 my-2 text-sm" @click="() => showDeleteModal = true">
             <Icon name="mdi:trash" class="h-6 w-6" />
             Delete
           </button>
@@ -130,6 +128,9 @@ const deletePostHandler = async (title: string, postId: string) => {
     </div>
 
   </div>
+  <ConfirmationModal :showConfirmationModal="showDeleteModal" :actionFunction="() => deletePostHandler(props.blog.id)"
+    :type="'negative'" @closeModal="() => showDeleteModal = false">Are you want to delete {{ props.blog.title }}
+  </ConfirmationModal>
 </template>
 <style scoped>
 .tooltip {

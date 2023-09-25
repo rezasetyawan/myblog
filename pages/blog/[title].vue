@@ -1,23 +1,13 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, onMounted } from "vue";
-import { getBlogByTitle } from "../../composables/useBlogs";
-import { getComments } from "../../composables/useComments";
-import { useRoute } from "vue-router";
-
 const route = useRoute();
+
 const blog = ref<GetBlogDetail | undefined>();
 const commentData = ref<CommentSnapshots | null | undefined>();
 const postTitle = ref<string>(route.params.title as string);
 const isLoading = ref<boolean>(true);
 
-async function fetchDataRecursively(attempt: number = 1) {
+async function fetchBlogData() {
   try {
-    if (attempt > 3) {
-      console.log("Reached the maximum number of recursive attempts.");
-      isLoading.value = false;
-      return;
-    }
-
     const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
@@ -25,41 +15,42 @@ async function fetchDataRecursively(attempt: number = 1) {
       blog.value = cacheBlog.value.data;
       commentData.value = cacheComments.value;
     } else {
-      const data = await getBlogByTitle(postTitle.value);
-      const commentSnapshots = await getComments(postTitle.value);
+      const blogResult = await getBlogByTitle(postTitle.value);
 
-      if (data && commentSnapshots) {
-        blog.value = data;
+      if (blogResult) {
+        const commentSnapshots = await getComments(blogResult.id);
+
+        blog.value = blogResult;
         commentData.value = commentSnapshots;
+        isLoading.value = false;
+        return;
       } else {
-        await fetchDataRecursively(attempt + 1);
+        await fetchBlogData();
       }
     }
-    console.log(blog.value);
+  } catch (error: any) {
+    showErrorToast(error.message)
+  } finally {
     isLoading.value = false;
-  } catch (error) {
-    console.error(error);
   }
 }
 
-
-
 onMounted(async () => {
-  await fetchDataRecursively()
-});
+  await fetchBlogData()
 
-useHead({
-  title: `My Blog | ${blog.value?.title}`,
-  titleTemplate: blog.value?.title,
-});
+  useHead({
+    title: `My Blog | ${blog.value?.title}`,
+    titleTemplate: blog.value?.title,
+  });
 
-useServerSeoMeta({
-  title: blog.value?.title,
-  ogTitle: blog.value?.title,
-  description: blog.value?.text,
-  ogDescription: blog.value?.text,
+  useServerSeoMeta({
+    title: `My Blog | ${blog.value?.title}`,
+    ogTitle: `My Blog | ${blog.value?.title}`,
+    description: blog.value?.text,
+    ogDescription: blog.value?.text,
+    ogImage: blog.value?.image_url,
+  });
 });
-
 </script>
 <template>
   <PostDetail :blog="blog" :commentData="commentData" v-if="blog && commentData" />

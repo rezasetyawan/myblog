@@ -62,6 +62,7 @@ declare interface BlogSnapshot {
 }
 
 declare interface CommentDraf {
+    uuid?: string
     parent_id: any;
     name?: string;
     email?: string;
@@ -82,7 +83,7 @@ declare interface GetComment {
     id: string
     parent_id: string | null
     post_id: string
-    public_users: { name: string, avatar_url: string | null }
+    public_users: { name: string, avatar_url: string | null, user_role: string }
     replies: GetComment[]
     text: string
     time: string

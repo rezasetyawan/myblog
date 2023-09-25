@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { showErrorToast } from "../../utils/toast"
 interface Props {
     image: ImageData
 }
@@ -6,6 +7,7 @@ interface Props {
 const client = useSupabaseClient()
 const props = defineProps<Props>()
 const emit = defineEmits(['deleteimage'])
+const showDeleteModal = ref<boolean>(false)
 
 const copyToClipboard = () => {
     try {
@@ -16,19 +18,16 @@ const copyToClipboard = () => {
             navigator.clipboard.writeText(copyText.value);
         }
     } catch (error) {
-        alert('failed to copy url')
+        showErrorToast('failed to copy url')
     }
 }
 
 const deleteImageHandler = async () => {
-    const isdeleteImage = confirm('are you want to delete ' + props.image.name)
     try {
-        if (isdeleteImage) {
-            await deleteImage(client, props.image.name)
-            emit('deleteimage', props.image.id)
-        }
-    } catch (error) {
-        alert('failed to delete image')
+        await deleteImage(client, props.image.name)
+        emit('deleteimage', props.image.id)
+    } catch (error: any) {
+        showErrorToast(error.message)
     }
 }
 
@@ -43,7 +42,7 @@ const deleteImageHandler = async () => {
             <h3 class="text-left font-medium text-lg py-1 font-rubik">
                 <Icon name="material-symbols:post-outline-rounded" size="20" /> {{ props.image.post || '-' }}
             </h3>
-            <button @click="deleteImageHandler">
+            <button @click="() => showDeleteModal = true">
                 <Icon name="mdi:trash" class="h-6 w-6" />
             </button>
         </div>
@@ -80,6 +79,9 @@ const deleteImageHandler = async () => {
 
         </div>
     </div>
+    <ConfirmationModal :showConfirmationModal="showDeleteModal" :actionFunction="deleteImageHandler" :type="'negative'"
+        @closeModal="() => showDeleteModal = false">Are you want to delete {{ props.image.name }}.{{ image.metadata.mimetype.split('/')[1] }}
+    </ConfirmationModal>
 </template>
 <style scoped>
 .tooltip {

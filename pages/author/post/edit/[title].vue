@@ -1,10 +1,10 @@
 <script setup lang="ts">
 const route = useRoute();
 const blog = ref<GetBlogDetail | undefined>();
-const postTitle = ref<string>(route.params.id as string);
+const postTitle = ref<string>(route.params.title as string);
 const isLoading = ref<boolean>(true);
 
-onMounted(async () => {
+const getBlogInitalData = async () => {
   try {
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
@@ -14,9 +14,18 @@ onMounted(async () => {
       const blogResult = await getBlogByTitle(postTitle.value);
       blog.value = blogResult;
     }
+  } catch (error: any) {
+    showErrorToast(error.message)
+  } finally {
     isLoading.value = false;
-  } catch (error) {
-    console.error(error);
+  }
+}
+
+onMounted(async () => {
+  try {
+    await getBlogInitalData()
+  } catch (error: any) {
+    showErrorToast(error.message)
   }
 });
 

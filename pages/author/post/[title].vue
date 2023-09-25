@@ -5,7 +5,7 @@ const commentData = ref<CommentSnapshots | null | undefined>();
 const postTitle = ref<string>(route.params.title as string);
 const isLoading = ref<boolean>(true);
 
-onMounted(async () => {
+const fetchBlogData = async () => {
   try {
     const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
     const { data: cacheBlog } = useNuxtData(postTitle.value);
@@ -15,19 +15,32 @@ onMounted(async () => {
       commentData.value = cacheComments.value;
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
-      const commentResults = await getComments(postTitle.value);
-      blog.value = blogResult;
-      commentData.value = commentResults;
+      if (blogResult) {
+        const commentResults = await getComments(blogResult.id);
+        blog.value = blogResult;
+        commentData.value = commentResults;
+      } else {
+        await fetchBlogData()
+      }
     }
-    isLoading.value = false;
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    showErrorToast(error.message)
+  } finally {
+    isLoading.value = false
   }
+}
+
+onMounted(async () => {
+  await fetchBlogData()
+
+  useHead({
+    title: blog.value?.title,
+    titleTemplate: blog.value?.title
+  })
 });
 
-useHead({
-  title: blog.value?.title,
-  titleTemplate: blog.value?.title
+definePageMeta({
+  middleware: 'author'
 })
 
 definePageMeta({

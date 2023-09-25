@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { updateBlogById, updateBlogTagsById } from "../../composables/useBlogs";
-import { deleteImage } from "../../composables/usePostImage";
-import { isObjectEqual } from "../../utils/isObjectEqual";
-import { isArrayEqual } from "../../utils/isArrayEqual";
-import { getFileNameFromUrl } from "../../utils/getFileName";
+// import { updateBlogById, updateBlogTagsById } from "../../composables/useBlogs";
+// import { deleteImage } from "../../composables/usePostImage";
+// import { isObjectEqual } from "../../utils/isObjectEqual";
+// import { isArrayEqual } from "../../utils/isArrayEqual";
+// import { getFileNameFromUrl } from "../../utils/getFileName";
+// import { showSuccessToast, showErrorToast } from '../../utils/toast'
 
 const config = useRuntimeConfig();
 
@@ -26,6 +27,7 @@ const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
 const taglist = ref<Array<{ id: string; name: string }> | null>(null);
 const image = ref<File>();
 const isImageChanged = ref<boolean>(false);
+const isPostUpdated = ref<boolean>(false);
 
 const contentDraft = ref<ContentDraft>({
   title: "",
@@ -125,7 +127,7 @@ const onFileChangeHandler = (event: Event) => {
   !!target.files && (image.value = target.files[0]);
 };
 
-const checkIsPostChanged = () => {
+const checkIsPostUpdated = () => {
   const isContentChanged: boolean = !isObjectEqual(
     contentDraft.value,
     initialContentDraft
@@ -144,56 +146,76 @@ const checkIsPostChanged = () => {
 };
 
 const updatePost = async () => {
-  const isContentChanged: boolean = !isObjectEqual(
-    contentDraft.value,
-    initialContentDraft
-  );
+  try {
 
-  const isTagsChanged: boolean = !isArrayEqual(
-    (contentTags.value as []) || [],
-    initialContentTags as []
-  );
+    if (!contentDraft.value.title) {
+      return showErrorToast('please provide post title')
+    }
+    if (!contentDraft.value.category_id.length) {
+      return showErrorToast('please provide post category')
+    }
 
-  const updatedAt = Date.now().toString();
-  let imageUrl;
+    if (!contentTags.value?.length) {
+      return showErrorToast('please provide post tag')
+    }
 
-  if (
-    isImageChanged.value &&
-    image.value !== undefined &&
-    image.value !== null
-  ) {
-    await deleteImage(client, imageInitialValue.name);
-    imageUrl = await updateImageById(
-      client,
-      blog.value.id,
-      image.value,
-      config.public.SUPABASE_URL as string
+    const isContentChanged: boolean = !isObjectEqual(
+      contentDraft.value,
+      initialContentDraft
     );
-  }
 
-  await updateBlogById(client, blog.value.id, {
-    updated_at: updatedAt,
-    ...contentDraft.value,
-    image_url: imageUrl,
-    is_published: false,
-    url_param: contentDraft.value.title.toLowerCase().replaceAll(' ', '-')
-  });
+    const isTagsChanged: boolean = !isArrayEqual(
+      (contentTags.value as []) || [],
+      initialContentTags as []
+    );
 
-  if (isContentChanged) {
+    const updatedAt = Date.now().toString();
+    let imageUrl;
+
+    if (
+      isImageChanged.value &&
+      image.value !== undefined &&
+      image.value !== null
+    ) {
+      await deleteImage(client, imageInitialValue.name);
+      imageUrl = await updateImageById(
+        client,
+        blog.value.id,
+        image.value,
+        config.public.SUPABASE_URL as string
+      );
+    }
+
     await updateBlogById(client, blog.value.id, {
       updated_at: updatedAt,
       ...contentDraft.value,
       image_url: imageUrl,
+      is_published: false,
+      url_param: contentDraft.value.title.toLowerCase().replaceAll(' ', '-')
     });
-  }
 
-  if (isTagsChanged && contentTags.value) {
-    await updateBlogTagsById(client, blog.value.id, contentTags.value);
+    if (isContentChanged) {
+      await updateBlogById(client, blog.value.id, {
+        updated_at: updatedAt,
+        ...contentDraft.value,
+        image_url: imageUrl,
+      });
+    }
+
+    if (isTagsChanged && contentTags.value) {
+      await updateBlogTagsById(client, blog.value.id, contentTags.value);
+    }
+
+    isPostUpdated.value = true;
+    showSuccessToast('post updated')
+  } catch (error: any) {
+    showErrorToast(error.message)
   }
 };
 
 onBeforeRouteLeave(async (to, from, next) => {
-  if (checkIsPostChanged()) {
+  const isPostChanged = checkIsPostUpdated()
+  if (isPostChanged && !isPostUpdated.value) {
     if (
       confirm("You changed the post content, do you want save it as draft?")
     ) {
@@ -209,13 +231,8 @@ onBeforeRouteLeave(async (to, from, next) => {
 });
 
 const onSubmitHandler = async () => {
-  try {
-    await updatePost();
-    clearNuxtData(blog.value.id);
-    alert("updated");
-  } catch (error: any) {
-    console.error(error.message);
-  }
+  await updatePost();
+  clearNuxtData(blog.value.id);
 };
 </script>
 <template>
