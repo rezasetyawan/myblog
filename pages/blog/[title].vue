@@ -53,6 +53,8 @@ onMounted(async () => {
 });
 </script>
 <template>
+  <HeadMetaData :title="blog?.title" :ogDescription="blog?.title" :ogImageUrl="blog?.image_url"
+    :pathname="'/' + blog?.url_param" />
   <PostDetail :blog="blog" :commentData="commentData" v-if="blog && commentData" />
   <Loading v-if="isLoading" />
 </template>

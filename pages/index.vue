@@ -102,13 +102,7 @@ useServerSeoMeta({
 });
 
 useHead({
-  title: "My Blog",
-  titleTemplate: "My Blog",
   meta: [
-    {
-      name: "description",
-      content: "Blog Website that talk about technology and daily life",
-    },
     {
       name: 'google-site-verification',
       content: 'isXAGr5a6Hby5euUgrk9eeLnRKlA2hfeQrUmC1jk_y0'
@@ -121,11 +115,11 @@ definePageMeta({
 })
 </script>
 <template>
-    <FilterSection :queryParams="queryParams" :postCategories="blogCategories" :postTags="blogTags"
-      @onSearch="page = 1" />
-    <Posts :blogs="blogsData?.blogs" :isLoading="isLoading"/>
-    <h2 v-if="blogsData?.blogs.length === 0 && !isLoading" class="text-center mb-40">
-      Blog Not Found
-    </h2>
-    <Pagination :page="page" :totalPage="blogsData?.totalPage"/>
+  <HeadMetaData :metaDescription="'Blog Website that talk about technology and daily life'" />
+  <FilterSection :queryParams="queryParams" :postCategories="blogCategories" :postTags="blogTags" @onSearch="page = 1" />
+  <Posts :blogs="blogsData?.blogs" :isLoading="isLoading" />
+  <h2 v-if="blogsData?.blogs.length === 0 && !isLoading" class="text-center mb-40">
+    Blog Not Found
+  </h2>
+  <Pagination :page="page" :totalPage="blogsData?.totalPage" />
 </template>
