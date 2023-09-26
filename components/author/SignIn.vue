@@ -23,7 +23,7 @@ const signInWithGoogle = async () => {
       throw new Error(error.message)
     }
 
-    useRouter().push("/author/posts");
+    useRouter().push("/");
   } catch (error: any) {
     showErrorToast(error.messge)
   }
@@ -39,7 +39,7 @@ const onSubmitHandler = async () => {
       errorMessage.value = error.message
       return
     }
-    router.push('/author/posts')
+    router.push('/')
   } catch (error: any) {
     isLoading.value = false;
     errorMessage.value = error.message;

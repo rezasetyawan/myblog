@@ -6,16 +6,18 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         const userRole = await getUserRole('userrole')
         if (userRole === 'admin') {
             setLayout('author-layout')
-            console.log(layout.value)
+            await nextTick()
             return navigateTo('/author/posts')
         }
 
         if (to.path ===  '/auth/login') {
             setLayout('default-layout')
+            await nextTick()
             return
         }
+
         setLayout('my-layout')
-        console.log(layout.value)
+        await nextTick()
         return
     } catch (error) {
         throw new Error(error as any);
