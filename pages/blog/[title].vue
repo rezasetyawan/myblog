@@ -18,9 +18,10 @@ async function fetchBlogData() {
       if (blog.value && !cacheComments.value) {
         const commentSnapshots = await getComments(blog.value.id);
         commentData.value = commentSnapshots;
+        isLoading.value = false;
         return
       }
-      isLoading.value = false;
+      
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
       blog.value = blogResult;
