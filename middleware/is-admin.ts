@@ -1,9 +1,21 @@
+import useLayout from "~/stores/useLayout";
+
 export default defineNuxtRouteMiddleware(async (to, from) => {
+    const {layout, setLayout} = useLayout()
     try {
         const userRole = await getUserRole('userrole')
         if (userRole === 'admin') {
+            setLayout('author-layout')
+            console.log(layout.value)
             return navigateTo('/author/posts')
         }
+
+        if (to.path ===  '/auth/login') {
+            setLayout('default-layout')
+            return
+        }
+        setLayout('my-layout')
+        console.log(layout.value)
         return
     } catch (error) {
         throw new Error(error as any);
