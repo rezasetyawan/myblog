@@ -23,12 +23,12 @@ const fetchBlogData = async () => {
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
       blog.value = blogResult;
-      isLoading.value = false
 
       if (blogResult) {
         const commentResults = await getComments(blogResult.id);
         blog.value = blogResult;
         commentData.value = commentResults;
+        isLoading.value = false
       } else {
         await fetchBlogData()
       }

@@ -10,9 +10,11 @@ const getBlogInitalData = async () => {
 
     if (cacheBlog.value) {
       blog.value = cacheBlog.value.data;
+      return
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
       blog.value = blogResult;
+      return
     }
   } catch (error: any) {
     showErrorToast(error.message)
