@@ -10,9 +10,11 @@ const getBlogInitalData = async () => {
 
     if (cacheBlog.value) {
       blog.value = cacheBlog.value.data;
+      return
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
       blog.value = blogResult;
+      return
     }
   } catch (error: any) {
     showErrorToast(error.message)
@@ -26,8 +28,8 @@ onMounted(async () => {
     await getBlogInitalData()
     
     useHead({
-      title: `Edit ${blog.value?.title}`,
-      titleTemplate: `Edit ${blog.value?.title}`
+      title: `Edit Post |  ${blog.value?.title}`,
+      titleTemplate: `Edit Post | ${blog.value?.title}`
     })
   } catch (error: any) {
     showErrorToast(error.message)

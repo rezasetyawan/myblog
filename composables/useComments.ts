@@ -8,10 +8,10 @@ const addComment = async (commentDraf: CommentDraf) => {
 }
 
 
-const getComments = async (postId: string) => {
+const getComments = async (title: string) => {
     try {
-        const { data } = await useFetch(`/api/comments/${postId}`, {
-            key: `comments-${postId}`
+        const { data } = await useFetch(`/api/comments/${title}`, {
+            key: `comments-${title}`
         })
         return data.value as CommentSnapshots
     } catch (error) {
