@@ -55,7 +55,7 @@ onMounted(async () => {
 
   useHead({
     title: `My Blog | ${blog.value?.title}`,
-    titleTemplate: blog.value?.title,
+    titleTemplate: `My Blog | ${blog.value?.title}`
   });
 
   useServerSeoMeta({
