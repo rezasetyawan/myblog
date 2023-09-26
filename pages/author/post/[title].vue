@@ -42,6 +42,10 @@ onMounted(async () => {
 definePageMeta({
   middleware: 'author'
 })
+
+definePageMeta({
+  middleware: 'author'
+})
 </script>
 <template>
   <AuthorPostDetail :blog="blog" :commentData="commentData" v-if="blog && commentData" />

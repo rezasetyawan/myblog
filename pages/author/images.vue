@@ -67,7 +67,6 @@ useHead({
 definePageMeta({
   middleware: 'author'
 })
-
 </script>
 <template>
   <h2 class="font-rubik font-bold text-2xl my-5 text-center sm:my-8 lg:text-3xl lg:my-10">Images</h2>

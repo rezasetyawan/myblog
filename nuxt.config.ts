@@ -54,6 +54,7 @@ export default defineNuxtConfig({
     sitemaps: true,
     enabled: true,
     autoLastmod: false,
+    exclude:['/author/**', '/auth/**'],
   },
   robots: {
     enabled: true,
