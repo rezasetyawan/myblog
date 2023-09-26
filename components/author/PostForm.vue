@@ -102,14 +102,11 @@ onMounted(() => {
       <div class="my-5 w-fit">
         <label class="font-medium">Image</label>
         <img v-if="image" :src="getImageUrl()" alt="Selected Image" class="max-w-[150px] mt-3" />
-        <div class="flex items-center w-fit gap-2 relative">
-          <div class="bg-slate-200 p-1 w-fit rounded-md absolute -z-10">
-            <Icon name="octicon:plus-16" size="24" class="w-6 h-6 font-semibold" />
-          </div>
+      
           <input id="inputImage" type="file" @change="(event) => emit('onfilechange', event)"
-            accept="image/png, image/jpeg, image/jpg" required
-            class="block max-w-fit file:hidden pb-3 py-4 my-3 pl-12 font-normal hover:cursor-pointer" />
-        </div>
+            accept="image/png, image/jpeg, image/jpg" required class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:border-none file:p-2 file:mr-4 file:py-2 file:px-4
+      file:text-sm file:font-semibold my-2" />
+        
       </div>
     </section>
     <div class="my-5">

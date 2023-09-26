@@ -11,26 +11,22 @@ const fetchBlogData = async () => {
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
     if (cacheBlog.value) {
-      console.log('if cache blog true')
       blog.value = cacheBlog.value.data;
       commentData.value = cacheComments.value;
 
       if (blog.value && cacheComments.value) {
-        console.log('if cache blog & comment true')
         commentData.value = cacheComments.value
         isLoading.value = false;
         return
       }
-      
+
       if (blog.value && !cacheComments.value) {
-        console.log('if cache blog true & comment false')
         const commentSnapshots = await getComments(blog.value.id);
         commentData.value = commentSnapshots;
         isLoading.value = false;
         return
       }
     } else {
-      console.log('nggak ada cache coeg')
       const blogResult = await getBlogByTitle(postTitle.value);
       blog.value = blogResult;
 
@@ -54,8 +50,8 @@ onMounted(async () => {
   await fetchBlogData()
 
   useHead({
-    title: blog.value?.title,
-    titleTemplate: blog.value?.title
+    title: `My Blog | ${blog.value?.title}`,
+    titleTemplate: `My Blog | ${blog.value?.title}`
   })
 });
 

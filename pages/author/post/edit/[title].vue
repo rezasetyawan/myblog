@@ -28,8 +28,8 @@ onMounted(async () => {
     await getBlogInitalData()
     
     useHead({
-      title: `Edit ${blog.value?.title}`,
-      titleTemplate: `Edit ${blog.value?.title}`
+      title: `Edit Post |  ${blog.value?.title}`,
+      titleTemplate: `Edit Post | ${blog.value?.title}`
     })
   } catch (error: any) {
     showErrorToast(error.message)

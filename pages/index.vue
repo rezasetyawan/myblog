@@ -37,10 +37,8 @@ const fetchBlogs = async () => {
     isLoading.value = true;
     const { data: blogsDataCache } = useNuxtData(cacheKey.value);
     if (blogsDataCache.value) {
-      console.log('list blog dari cache')
       blogsData.value = blogsDataCache.value;
     } else {
-      console.log('list blog bukan dari cache')
       const data = await getBlogs(
         queryParams.value.searchKey,
         queryParams.value.category,
@@ -100,6 +98,10 @@ useServerSeoMeta({
   ogTitle: "My Blog",
   description: "Blog Website that talk about technology and daily life",
   ogDescription: "Blog Website that talk about technology and daily life",
+  titleTemplate: 'My Blog',
+  ogImage: "https://cdn.discordapp.com/attachments/1156055860448067637/1156066554115526687/My_Blog.png?ex=65139e61&is=65124ce1&hm=d15e9c052fc59964e765f28f2655f67506ab61ef1b08c13ca3a7e4ceb996148f&",
+  ogImageUrl: "https://cdn.discordapp.com/attachments/1156055860448067637/1156066554115526687/My_Blog.png?ex=65139e61&is=65124ce1&hm=d15e9c052fc59964e765f28f2655f67506ab61ef1b08c13ca3a7e4ceb996148f&",
+  twitterTitle: 'My Blog',
 });
 
 useHead({
