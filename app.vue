@@ -1,21 +1,24 @@
 <script setup lang="ts">
-const supabase = useSupabaseClient();
-const layout = ref("my-layout");
-const getUserRole = async (claim: string) => {
-  try {
-    const { data, error } = await supabase.rpc("get_my_claim", {
-      claim,
-    } as unknown as undefined);
+import useLayout from './stores/useLayout'
 
-    if (error) {
-      throw new Error(error.message);
-    }
+const { layout } = useLayout()
+// const supabase = useSupabaseClient();
+// // const layout = ref("my-layout");
+// const getUserRole = async (claim: string) => {
+//   try {
+//     const { data, error } = await supabase.rpc("get_my_claim", {
+//       claim,
+//     } as unknown as undefined);
 
-    return data;
-  } catch (error) {
-    throw new Error(error as string);
-  }
-};
+//     if (error) {
+//       throw new Error(error.message);
+//     }
+
+//     return data;
+//   } catch (error) {
+//     throw new Error(error as string);
+//   }
+// };
 
 useServerSeoMeta({
   title: "My Blog",
@@ -24,37 +27,36 @@ useServerSeoMeta({
   ogDescription: "Blog Website that talk about technology and daily life",
 });
 
-const userRole = ref("");
-userRole.value = await getUserRole("userrole");
-const route = useRoute();
+// const userRole = ref("");
+// userRole.value = await getUserRole("userrole");
+// const route = useRoute();
 
-userRole.value === "admin" && (layout.value = "author-layout");
+// userRole.value === "admin" && (layout.value = "author-layout");
 
-watch(
-  route,
-  (newValue) => {
-    if (
-      newValue.fullPath.startsWith("/blogs") ||
-      newValue.fullPath.startsWith("/blog") ||
-      newValue.fullPath.startsWith("/")
-    ) {
-      layout.value = "my-layout";
-    }
+// watch(
+//   route,
+//   (newValue) => {
+//     if (
+//       newValue.fullPath.startsWith("/blogs") ||
+//       newValue.fullPath.startsWith("/blog") ||
+//       newValue.fullPath.startsWith("/")
+//     ) {
+//       layout.value = "my-layout";
+//     }
 
-    if (newValue.fullPath.split("/")[1] === "auth") {
-      layout.value = "default-layout";
-    }
+//     if (newValue.fullPath.split("/")[1] === "auth") {
+//       layout.value = "default-layout";
+//     }
 
-    if (newValue.fullPath.split("/")[1] === "author") {
-      layout.value = "author-layout";
-    }
-  },
-  { immediate: true, deep: true }
-);
+//     if (newValue.fullPath.split("/")[1] === "author") {
+//       layout.value = "author-layout";
+//     }
+//   },
+//   { immediate: true, deep: true }
+// );
 </script>
 <template>
   <NuxtLayout :name="layout as any">
-    <!-- <SeoKit /> -->
     <NuxtPage></NuxtPage>
   </NuxtLayout>
 </template>

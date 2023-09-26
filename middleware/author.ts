@@ -1,4 +1,7 @@
+import useLayout from "~/stores/useLayout";
+
 export default defineNuxtRouteMiddleware(async (to, from) => {
+    const { layout, setLayout } = useLayout()
     const supabase = useSupabaseClient();
     const user = useSupabaseUser();
 
@@ -9,17 +12,17 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             return navigateTo('/')
         }
 
-        if (to.path === '/') {
-            return navigateTo('/author/posts')
-        }
-
-        if (to.path === '/author/' || to.path === '/author') {
+        if (to.path === '/author/' || to.path === '/author' || to.path === '/author/') {
+            setLayout('author-layout')
             return navigateTo('/author/posts')
         }
 
         if (!user.value || !userRole || userRole !== 'admin') {
             return navigateTo('/')
         }
+
+        setLayout('author-layout')
+        await nextTick()
         return
     } catch (error) {
         console.error(error);

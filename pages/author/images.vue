@@ -76,7 +76,7 @@ definePageMeta({
       <img v-if="imageFile" :src="getImageUrl()" alt="Selected Image" class="max-h-[150px] my-3" />
 
       <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:border-none file:p-2 file:mr-4 file:py-2 file:px-4
-      file:text-sm file:font-semibold " id="file_input" type="file" accept="image/png, image/jpeg, image/jpg" required
+      file:text-sm file:font-semibold" id="file_input" type="file" accept="image/png, image/jpeg, image/jpg" required
         @change="(event: Event) => onFileChangeHandler(event)">
 
       <button class="px-[4em] py-[0.4em] bg-slate-100 rounded-md mt-2">Upload Image</button>
