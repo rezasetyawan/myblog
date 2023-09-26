@@ -37,8 +37,10 @@ const fetchBlogs = async () => {
     isLoading.value = true;
     const { data: blogsDataCache } = useNuxtData(cacheKey.value);
     if (blogsDataCache.value) {
+      console.log('list blog dari cache')
       blogsData.value = blogsDataCache.value;
     } else {
+      console.log('list blog bukan dari cache')
       const data = await getBlogs(
         queryParams.value.searchKey,
         queryParams.value.category,
@@ -57,9 +59,11 @@ const fetchBlogs = async () => {
 
 onMounted(async () => {
   cacheKey.value = route.fullPath;
+  console.log(cacheKey.value)
   await fetchBlogs();
   await fetchBlogCategories();
   await fetchBlogTags();
+  console.log(cacheKey.value)
 
 });
 

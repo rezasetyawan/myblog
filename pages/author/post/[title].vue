@@ -10,11 +10,21 @@ const fetchBlogData = async () => {
     const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
-    if (cacheBlog.value && cacheComments.value) {
+    if (cacheBlog.value) {
       blog.value = cacheBlog.value.data;
       commentData.value = cacheComments.value;
+      
+      if (blog.value && !cacheComments.value) {
+        const commentSnapshots = await getComments(blog.value.id);
+        commentData.value = commentSnapshots;
+        return
+      }
+      isLoading.value = false;
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
+      blog.value = blogResult;
+      isLoading.value = false
+
       if (blogResult) {
         const commentResults = await getComments(blogResult.id);
         blog.value = blogResult;

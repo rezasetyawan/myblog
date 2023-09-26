@@ -11,22 +11,29 @@ async function fetchBlogData() {
     const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
-    if (cacheBlog.value && cacheComments.value) {
+    if (cacheBlog.value) {
       blog.value = cacheBlog.value.data;
       commentData.value = cacheComments.value;
+
+      if (blog.value && !cacheComments.value) {
+        const commentSnapshots = await getComments(blog.value.id);
+        commentData.value = commentSnapshots;
+        return
+      }
+      isLoading.value = false;
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
+      blog.value = blogResult;
+      isLoading.value = false;
 
       if (blogResult) {
         const commentSnapshots = await getComments(blogResult.id);
-
-        blog.value = blogResult;
         commentData.value = commentSnapshots;
-        isLoading.value = false;
         return;
       } else {
         await fetchBlogData();
       }
+
     }
   } catch (error: any) {
     showErrorToast(error.message)
@@ -36,6 +43,7 @@ async function fetchBlogData() {
 }
 
 onMounted(async () => {
+  postTitle.value = route.params.title as string
   await fetchBlogData()
 
   useHead({
