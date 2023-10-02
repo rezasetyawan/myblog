@@ -4,6 +4,7 @@ import { getCategories } from "../composables/useCategories";
 
 definePageMeta({
   middleware: "is-admin",
+  layout: "my-layout",
 });
 const client = useSupabaseClient();
 const route = useRoute();
