@@ -20,13 +20,6 @@ const { layout } = useLayout()
 //   }
 // };
 
-useServerSeoMeta({
-  title: "My Blog",
-  ogTitle: "My Blog",
-  description: "Blog Website that talk about technology and daily life",
-  ogDescription: "Blog Website that talk about technology and daily life",
-});
-
 useHead({
   htmlAttrs: { lang: 'id' }
 })
