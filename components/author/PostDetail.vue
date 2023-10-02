@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface Props {
   blog: GetBlogDetail;
-  commentData: CommentSnapshots;
+  commentData: CommentSnapshots | null | undefined;
 }
 const props = defineProps<Props>();
 </script>
@@ -22,7 +22,7 @@ const props = defineProps<Props>();
       </p>
       <p class="flex items-center gap-1">
         <Icon name="basil:chat-outline" size="24" />{{
-          props.commentData.comment_counts
+          props.commentData ? props.commentData.comment_counts : '-'
         }}
         comments
       </p>
@@ -72,7 +72,7 @@ const props = defineProps<Props>();
       <div
         v-html="props.blog.text"
         class="prose prose-base max-w-[75ch] mx-auto text-black font-rubik my-5 prose-pre:max-w-fit prose-h1:text-xl prose-h2:text-xl prose-h2:font-extrabold prose-li:marker:text-black"></div>
-      <CommentSection :commentData="props.commentData" :postId="props.blog.id" />
+      <CommentSection :commentData="props.commentData" :postId="props.blog.id"  v-if="props.commentData" />
     </div>
   </section>
 </template>

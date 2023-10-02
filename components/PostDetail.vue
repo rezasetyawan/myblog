@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface Props {
   blog: GetBlogDetail;
-  commentData: CommentSnapshots;
+  commentData: CommentSnapshots | null | undefined;
 }
 const props = defineProps<Props>();
 </script>
@@ -17,13 +17,13 @@ const props = defineProps<Props>();
       </p>
       <p class="flex items-center gap-1">
         <Icon name="basil:chat-outline" size="24" />{{
-          props.commentData.comment_counts
+          props.commentData ? props.commentData.comment_counts : '-'
         }}
         comments
       </p>
       <p class="flex items-center gap-1">
         <NuxtLink :to="{
-              path: '/blogs',
+              path: '/',
               query: {
                 category_id: props.blog.category_id,
               },
@@ -36,7 +36,7 @@ const props = defineProps<Props>();
     </div>
     <div class="my-2">
       <NuxtLink v-for="tag in props.blog.tags" :key="tag.id" class="m-2 underline rounded-md text-sm sm:text-base" :to="{
-        path: '/blogs',
+        path: '/',
         query: {
           tags: [tag.id],
         },
@@ -53,7 +53,7 @@ const props = defineProps<Props>();
       <div id="post-content" v-html="props.blog.text"
         class="prose prose-base max-w-[75ch] mx-auto text-black font-rubik my-5 prose-pre:max-w-fit prose-h2:text-xl prose-h2:font-extrabold prose-li:marker:text-black">
       </div>
-      <CommentSection :commentData="props.commentData" :postId="props.blog.id" />
+      <CommentSection :commentData="props.commentData" :postId="props.blog.id" v-if="props.commentData" />
     </div>
   </section>
 </template>

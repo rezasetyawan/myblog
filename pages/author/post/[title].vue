@@ -47,8 +47,46 @@ const fetchBlogData = async () => {
   }
 }
 
+const fetchBlogContent = async () => {
+  try {
+    const { data: cacheBlog } = useNuxtData(postTitle.value);
+
+    if (cacheBlog.value) {
+      isLoading.value = false
+      return cacheBlog.value
+    } else {
+      const blogResult = await getBlogByTitle(postTitle.value);
+      isLoading.value = false
+      return blogResult
+    }
+  } catch (error: any) {
+    showErrorToast(error.message)
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+const fetchBlogComments = async () => {
+  try {
+    const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
+
+    if (cacheComments.value) {
+      return commentData.value = cacheComments.value
+    } else if (blog.value) {
+      const commentResult = await getComments(blog.value.id)
+      return commentData.value = commentResult
+    } else {
+      await fetchBlogComments()
+    }
+  } catch (error: any) {
+    showErrorToast(error.message)
+  }
+}
+
 onMounted(async () => {
-  await fetchBlogData()
+  postTitle.value = route.params.title as string
+  blog.value = await fetchBlogContent()
+  await fetchBlogComments()
 
   useHead({
     title: `My Blog | ${blog.value?.title}`,
@@ -65,6 +103,6 @@ definePageMeta({
 })
 </script>
 <template>
-  <AuthorPostDetail :blog="blog" :commentData="commentData" v-if="blog && commentData" />
+  <AuthorPostDetail :blog="blog" :commentData="commentData" v-if="blog" />
   <Loading v-if="isLoading" />
 </template>

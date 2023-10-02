@@ -9,12 +9,12 @@ const getBlogInitalData = async () => {
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
     if (cacheBlog.value) {
-      blog.value = cacheBlog.value.data;
-      return
+      isLoading.value = false
+      return cacheBlog.value
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
-      blog.value = blogResult;
-      return
+      isLoading.value = false
+      return blogResult
     }
   } catch (error: any) {
     showErrorToast(error.message)

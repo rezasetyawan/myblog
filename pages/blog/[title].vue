@@ -10,43 +10,19 @@ definePageMeta({
   layout: 'my-layout'
 })
 
-async function fetchBlogData() {
+const fetchBlogContent = async () => {
   try {
-    console.log('test')
-    const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
     if (cacheBlog.value) {
-      blog.value = cacheBlog.value.data;
-      commentData.value = cacheComments.value;
-
-      if (blog.value && cacheComments.value) {
-        commentData.value = cacheComments.value
-        isLoading.value = false
-        return
-      }
-
-      if (blog.value && !cacheComments.value) {
-        const commentSnapshots = await getComments(blog.value.id);
-        commentData.value = commentSnapshots;
-        isLoading.value = false;
-        return
-      }
-
+      isLoading.value = false
+      console.log(cacheBlog.value)
+      return cacheBlog.value
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
-      blog.value = blogResult;
-      
-      if (blogResult) {
-        const commentSnapshots = await getComments(blogResult.id);
-        commentData.value = commentSnapshots;
-        isLoading.value = false;
-        return;
-      } else {
-        await fetchBlogData();
-        isLoading.value = false;
-      }
-
+      console.log(blogResult)
+      isLoading.value = false
+      return blogResult
     }
   } catch (error: any) {
     showErrorToast(error.message)
@@ -55,9 +31,25 @@ async function fetchBlogData() {
   }
 }
 
+const fetchBlogComments = async () => {
+  try {
+    const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
+
+    if (cacheComments.value) {
+      return commentData.value = cacheComments.value
+    } else if (blog.value) {
+      const commentResult = await getComments(blog.value.id)
+      return commentData.value = commentResult
+    } 
+  } catch (error: any) {
+    showErrorToast(error.message)
+  }
+}
+
 onMounted(async () => {
   postTitle.value = route.params.title as string
-  await fetchBlogData()
+  blog.value = await fetchBlogContent()
+  await fetchBlogComments()
 
   useHead({
     title: `My Blog | ${blog.value?.title}`,
@@ -71,13 +63,13 @@ onMounted(async () => {
     description: blog.value?.text,
     ogDescription: blog.value?.text,
     ogImage: blog.value?.image_url,
-    ogImageUrl:  blog.value?.image_url,
+    ogImageUrl: blog.value?.image_url,
   });
 });
 </script>
 <template>
   <HeadMetaData :title="blog?.title" :ogDescription="blog?.title" :ogImageUrl="blog?.image_url"
     :pathname="'/' + blog?.url_param" />
-  <PostDetail :blog="blog" :commentData="commentData" v-if="blog && commentData" />
+  <PostDetail :blog="blog" :commentData="commentData" v-if="blog" />
   <Loading v-if="isLoading" />
 </template>
