@@ -134,8 +134,9 @@ useHead({
 });
 
 definePageMeta({
-  middleware: 'author'
-})
+  middleware: "author",
+  layout: 'author-layout'
+});
 </script>
 <template>
   <FilterSection :queryParams="queryParams" :postCategories="blogCategories" :postTags="blogTags" @onSearch="page = 1" />

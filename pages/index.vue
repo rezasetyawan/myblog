@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { getTags } from '../composables/useTags';
-import { getCategories } from '../composables/useCategories'
+import { getTags } from "../composables/useTags";
+import { getCategories } from "../composables/useCategories";
 
 definePageMeta({
-  middleware: 'is-admin'
-})
+  middleware: "is-admin",
+});
 const client = useSupabaseClient();
 const route = useRoute();
 
@@ -23,14 +23,14 @@ const queryParams = ref({
 });
 
 const fetchBlogCategories = async () => {
-  const categories = await getCategories(client)
-  blogCategories.value = categories
+  const categories = await getCategories(client);
+  blogCategories.value = categories;
 };
 
 const fetchBlogTags = async () => {
-  const tags = await getTags(client)
-  blogTags.value = tags
-}
+  const tags = await getTags(client);
+  blogTags.value = tags;
+};
 
 const fetchBlogs = async () => {
   try {
@@ -51,7 +51,7 @@ const fetchBlogs = async () => {
     }
     blogsData.value && (isLoading.value = false);
   } catch (error: any) {
-    showErrorToast(error.message)
+    showErrorToast(error.message);
   }
 };
 
@@ -93,35 +93,46 @@ watch(route, (newValue) => {
   cacheKey.value = newValue.fullPath;
 });
 
-useServerSeoMeta({
-  title: "My Blog",
-  ogTitle: "My Blog",
-  description: "Blog Website that talk about technology and daily life",
-  ogDescription: "Blog Website that talk about technology and daily life",
-  titleTemplate: 'My Blog',
-  ogImage: "https://cdn.discordapp.com/attachments/1156055860448067637/1156066554115526687/My_Blog.png?ex=65139e61&is=65124ce1&hm=d15e9c052fc59964e765f28f2655f67506ab61ef1b08c13ca3a7e4ceb996148f&",
-  ogImageUrl: "https://cdn.discordapp.com/attachments/1156055860448067637/1156066554115526687/My_Blog.png?ex=65139e61&is=65124ce1&hm=d15e9c052fc59964e765f28f2655f67506ab61ef1b08c13ca3a7e4ceb996148f&",
-  twitterTitle: 'My Blog',
-});
+// useServerSeoMeta({
+//   title: "My Blog",
+//   ogTitle: "My Blog",
+//   description: "Blog Website that talk about technology and daily life",
+//   ogDescription: "Blog Website that talk about technology and daily life",
+//   titleTemplate: "My Blog",
+//   ogImage:
+//     "https://cdn.discordapp.com/attachments/1156055860448067637/1156066554115526687/My_Blog.png?ex=65139e61&is=65124ce1&hm=d15e9c052fc59964e765f28f2655f67506ab61ef1b08c13ca3a7e4ceb996148f&",
+//   ogImageUrl:
+//     "https://cdn.discordapp.com/attachments/1156055860448067637/1156066554115526687/My_Blog.png?ex=65139e61&is=65124ce1&hm=d15e9c052fc59964e765f28f2655f67506ab61ef1b08c13ca3a7e4ceb996148f&",
+//   twitterTitle: "My Blog",
+//   twitterDescription: "Blog Website that talk about technology and daily life",
+//   twitterImage:
+//     "https://cdn.discordapp.com/attachments/1156055860448067637/1156066554115526687/My_Blog.png?ex=65139e61&is=65124ce1&hm=d15e9c052fc59964e765f28f2655f67506ab61ef1b08c13ca3a7e4ceb996148f&",
+// });
 
 useHead({
   meta: [
     {
-      name: 'google-site-verification',
-      content: 'isXAGr5a6Hby5euUgrk9eeLnRKlA2hfeQrUmC1jk_y0'
-    }
+      name: "google-site-verification",
+      content: "isXAGr5a6Hby5euUgrk9eeLnRKlA2hfeQrUmC1jk_y0",
+    },
   ],
 });
-
-definePageMeta({
-  middleware: 'is-admin'
-})
 </script>
 <template>
-  <HeadMetaData :metaDescription="'Blog Website that talk about technology and daily life'" />
-  <FilterSection :queryParams="queryParams" :postCategories="blogCategories" :postTags="blogTags" @onSearch="page = 1" />
+  <HeadMetaData
+    :metaDescription="'Blog Website that talk about technology and daily life'"
+  />
+  <FilterSection
+    :queryParams="queryParams"
+    :postCategories="blogCategories"
+    :postTags="blogTags"
+    @onSearch="page = 1"
+  />
   <Posts :blogs="blogsData?.blogs" :isLoading="isLoading" />
-  <h2 v-if="blogsData?.blogs.length === 0 && !isLoading" class="text-center mb-40">
+  <h2
+    v-if="blogsData?.blogs.length === 0 && !isLoading"
+    class="text-center mb-40"
+  >
     Blog Not Found
   </h2>
   <Pagination :page="page" :totalPage="blogsData?.totalPage" />
