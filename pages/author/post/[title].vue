@@ -56,6 +56,8 @@ const fetchBlogContent = async () => {
       return (blog.value = cacheBlog.value);
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
+      blog.value = blogResult;
+
       if (blogResult) {
         isLoading.value = false;
         return (blog.value = blogResult);
@@ -100,6 +102,7 @@ definePageMeta({
   middleware: "author",
   layout: 'author-layout'
 });
+
 </script>
 <template>
   <AuthorPostDetail :blog="blog" :commentData="commentData" v-if="blog" />
