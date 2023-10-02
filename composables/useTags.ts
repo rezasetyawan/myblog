@@ -10,4 +10,5 @@ const getTags = async (client: SupabaseClient) => {
     return tags.value;
 };
 
+
 export { getTags }

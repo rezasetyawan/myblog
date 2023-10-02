@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid"
 import { SupabaseClient } from '@supabase/supabase-js';
 
-const getBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "") => {
+const getBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "/") => {
     try {
         const { data, error } = await useFetch('/api/blogs', {
             method: 'GET',

@@ -37,6 +37,7 @@ const fetchBlogData = async () => {
         isLoading.value = false
       } else {
         await fetchBlogData()
+        isLoading.value = false
       }
     }
   } catch (error: any) {

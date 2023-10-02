@@ -26,7 +26,6 @@ const getBlogInitalData = async () => {
 onMounted(async () => {
   try {
     await getBlogInitalData()
-    
     useHead({
       title: `Edit Post |  ${blog.value?.title}`,
       titleTemplate: `Edit Post | ${blog.value?.title}`

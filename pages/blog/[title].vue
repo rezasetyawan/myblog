@@ -6,8 +6,13 @@ const commentData = ref<CommentSnapshots | null | undefined>();
 const postTitle = ref<string>(route.params.title as string);
 const isLoading = ref<boolean>(true);
 
+definePageMeta({
+  layout: 'my-layout'
+})
+
 async function fetchBlogData() {
   try {
+    console.log('test')
     const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
@@ -31,14 +36,15 @@ async function fetchBlogData() {
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
       blog.value = blogResult;
-      isLoading.value = false;
-
+      
       if (blogResult) {
         const commentSnapshots = await getComments(blogResult.id);
         commentData.value = commentSnapshots;
+        isLoading.value = false;
         return;
       } else {
         await fetchBlogData();
+        isLoading.value = false;
       }
 
     }
