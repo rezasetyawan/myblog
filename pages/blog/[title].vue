@@ -6,56 +6,57 @@ const commentData = ref<CommentSnapshots | null | undefined>();
 const postTitle = ref<string>(route.params.title as string);
 const isLoading = ref<boolean>(true);
 
-async function fetchBlogData() {
+definePageMeta({
+  layout: "my-layout",
+});
+
+const fetchBlogContent = async () => {
   try {
-    const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
     if (cacheBlog.value) {
-      blog.value = cacheBlog.value.data;
-      commentData.value = cacheComments.value;
-
-      if (blog.value && cacheComments.value) {
-        commentData.value = cacheComments.value
-        isLoading.value = false
-        return
-      }
-
-      if (blog.value && !cacheComments.value) {
-        const commentSnapshots = await getComments(blog.value.id);
-        commentData.value = commentSnapshots;
-        isLoading.value = false;
-        return
-      }
-
+      isLoading.value = false;
+      return (blog.value = cacheBlog.value.data);
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
-      blog.value = blogResult;
-      isLoading.value = false;
-
       if (blogResult) {
-        const commentSnapshots = await getComments(blogResult.id);
-        commentData.value = commentSnapshots;
-        return;
+        isLoading.value = false;
+        return (blog.value = blogResult);
       } else {
-        await fetchBlogData();
+        await fetchBlogContent();
       }
 
     }
   } catch (error: any) {
-    showErrorToast(error.message)
+    showErrorToast(error.message);
   } finally {
     isLoading.value = false;
   }
-}
+};
+
+const fetchBlogComments = async () => {
+  try {
+    const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
+
+    if (cacheComments.value) {
+      return (commentData.value = cacheComments.value);
+    } else if (blog.value) {
+      const commentResult = await getComments(blog.value.id);
+      return (commentData.value = commentResult);
+    }
+  } catch (error: any) {
+    showErrorToast(error.message);
+  }
+};
 
 onMounted(async () => {
-  postTitle.value = route.params.title as string
-  await fetchBlogData()
+  postTitle.value = route.params.title as string;
+  await fetchBlogContent();
+  await fetchBlogComments();
 
   useHead({
     title: `My Blog | ${blog.value?.title}`,
-    titleTemplate: `My Blog | ${blog.value?.title}`
+    titleTemplate: `My Blog | ${blog.value?.title}`,
   });
 
   useServerSeoMeta({
@@ -65,13 +66,18 @@ onMounted(async () => {
     description: blog.value?.text,
     ogDescription: blog.value?.text,
     ogImage: blog.value?.image_url,
-    ogImageUrl:  blog.value?.image_url,
+    ogImageUrl: blog.value?.image_url,
   });
 });
 </script>
 <template>
-  <HeadMetaData :title="blog?.title" :ogDescription="blog?.title" :ogImageUrl="blog?.image_url"
-    :pathname="'/' + blog?.url_param" />
-  <PostDetail :blog="blog" :commentData="commentData" v-if="blog && commentData" />
+  <HeadMetaData
+    v-if="blog"
+    :title="blog?.title"
+    :ogDescription="blog?.title"
+    :ogImageUrl="blog?.image_url"
+    :pathname="'/' + blog?.url_param"
+  />
+  <PostDetail :blog="blog" :commentData="commentData" v-if="blog" />
   <Loading v-if="isLoading" />
 </template>

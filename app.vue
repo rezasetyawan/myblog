@@ -27,6 +27,11 @@ useServerSeoMeta({
   ogDescription: "Blog Website that talk about technology and daily life",
 });
 
+
+useHead({
+  htmlAttrs: { lang: 'id' }
+})
+
 // const userRole = ref("");
 // userRole.value = await getUserRole("userrole");
 // const route = useRoute();

@@ -13,7 +13,7 @@ const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
 const blogTags = ref<Array<{ id: string; name: string }> | null>(null);
 const isLoading = ref<boolean>(true);
 const page = ref<number>(parseInt(route.query.page as string) || 1);
-const cacheKey = ref<string>("");
+const cacheKey = ref<string>("/");
 
 const queryParams = ref({
   searchKey: route.query.search_key ? (route.query.search_key as string) : "",
@@ -65,7 +65,7 @@ onMounted(async () => {
 onBeforeRouteUpdate(async (to, from) => {
   if (Object.keys(to.query).length !== 0) {
     to.fullPath === "/?page=1"
-      ? (cacheKey.value = "/blogs")
+      ? (cacheKey.value = "/")
       : (cacheKey.value = to.fullPath);
 
     page.value = parseInt(to.query.page as string) || 1;

@@ -8,7 +8,8 @@ const props = defineProps<Props>();
 <template>
   <h2 class="font-rubik font-bold text-3xl my-10 text-center">BLOG</h2>
   <section
-    class="sm:grid grid-cols-1 gap-4 justify-items-center relative sm:grid-cols-2 sm:mx-5 xl:grid-cols-3 lg:mx-10 overflow-hidden pb-32">
+    class="sm:grid grid-cols-1 gap-4 justify-items-center relative sm:grid-cols-2 sm:mx-5 xl:grid-cols-3 lg:mx-10 overflow-hidden"
+    v-if="!props.isLoading">
     <PostItem v-for="blog in props.blogs" :key="blog.id" :blog="blog" :isLoading="props.isLoading" />
   </section>
   <section v-if="props.isLoading"

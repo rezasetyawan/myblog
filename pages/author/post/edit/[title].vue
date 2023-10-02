@@ -9,36 +9,39 @@ const getBlogInitalData = async () => {
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
     if (cacheBlog.value) {
-      blog.value = cacheBlog.value.data;
-      return
+      isLoading.value = false;
+      return (blog.value = cacheBlog.value);
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
-      blog.value = blogResult;
-      return
+      if (blogResult) {      
+        isLoading.value = false;
+        return (blog.value = blogResult);
+      } else {
+        await getBlogInitalData();
+      }
     }
   } catch (error: any) {
-    showErrorToast(error.message)
+    showErrorToast(error.message);
   } finally {
     isLoading.value = false;
   }
-}
+};
 
 onMounted(async () => {
   try {
-    await getBlogInitalData()
-    
+    await getBlogInitalData();
     useHead({
       title: `Edit Post |  ${blog.value?.title}`,
-      titleTemplate: `Edit Post | ${blog.value?.title}`
-    })
+      titleTemplate: `Edit Post | ${blog.value?.title}`,
+    });
   } catch (error: any) {
-    showErrorToast(error.message)
+    showErrorToast(error.message);
   }
 });
 
 definePageMeta({
-  middleware: 'author'
-})
+  middleware: "author",
+});
 </script>
 <template>
   <AuthorEditPost :blog="blog" v-if="blog" />
