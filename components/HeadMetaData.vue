@@ -16,7 +16,6 @@ const props = withDefaults(defineProps<Props>(), {
   pathname: "/",
 });
 
-console.log(props)
 const { title, metaDescription, ogImageUrl, pathname } = toRefs(props);
 
 const defaultTitle = "My Blog";
@@ -48,4 +47,3 @@ useHead({
   ],
 });
 </script>
-<template></template>
