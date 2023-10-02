@@ -13,8 +13,7 @@ const getBlogInitalData = async () => {
       return (blog.value = cacheBlog.value);
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
-      if (blogResult) {
-        console.log(blogResult);
+      if (blogResult) {      
         isLoading.value = false;
         return (blog.value = blogResult);
       } else {

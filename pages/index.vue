@@ -35,13 +35,10 @@ const fetchBlogTags = async () => {
 const fetchBlogs = async () => {
   try {
     isLoading.value = true;
-    console.log(cacheKey.value)
     const { data: blogsDataCache } = useNuxtData(cacheKey.value);
     if (blogsDataCache.value) {
-      console.log('dari cache')
       blogsData.value = blogsDataCache.value;
     } else {
-      console.log('bukan dari cache')
       const data = await getBlogs(
         queryParams.value.searchKey,
         queryParams.value.category,
@@ -60,7 +57,6 @@ const fetchBlogs = async () => {
 
 onMounted(async () => {
   cacheKey.value = route.fullPath;
-  console.log(cacheKey.value)
   await fetchBlogs();
   await fetchBlogCategories();
   await fetchBlogTags();
@@ -68,12 +64,10 @@ onMounted(async () => {
 
 onBeforeRouteUpdate(async (to, from) => {
   if (Object.keys(to.query).length !== 0) {
-    console.log(to.fullPath)
     to.fullPath === "/?page=1"
       ? (cacheKey.value = "/")
       : (cacheKey.value = to.fullPath);
 
-      console.log(cacheKey.value)
     page.value = parseInt(to.query.page as string) || 1;
     await fetchBlogs();
   } else {
