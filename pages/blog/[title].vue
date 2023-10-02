@@ -25,6 +25,7 @@ const fetchBlogContent = async () => {
       } else {
         await fetchBlogContent();
       }
+
     }
   } catch (error: any) {
     showErrorToast(error.message);

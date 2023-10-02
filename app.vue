@@ -27,6 +27,7 @@ useServerSeoMeta({
   ogDescription: "Blog Website that talk about technology and daily life",
 });
 
+
 useHead({
   htmlAttrs: { lang: 'id' }
 })

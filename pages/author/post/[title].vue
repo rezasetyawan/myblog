@@ -56,6 +56,8 @@ const fetchBlogContent = async () => {
       return (blog.value = cacheBlog.value);
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
+      blog.value = blogResult;
+
       if (blogResult) {
         isLoading.value = false;
         return (blog.value = blogResult);
