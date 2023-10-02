@@ -11,7 +11,7 @@ const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
 const blogTags = ref<Array<{ id: string; name: string }> | null>(null);
 const isLoading = ref<boolean>(false);
 const page = ref<number>(parseInt(route.query.page as string) || 1);
-const cacheKey = ref<string>("");
+const cacheKey = ref<string>("/author/posts");
 
 const queryParams = ref({
   searchKey: route.query.search_key ? (route.query.search_key as string) : "",
