@@ -102,7 +102,6 @@ definePageMeta({
   middleware: "author",
   layout: 'author-layout'
 });
-
 </script>
 <template>
   <AuthorPostDetail :blog="blog" :commentData="commentData" v-if="blog" />

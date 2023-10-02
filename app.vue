@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import useLayout from './stores/useLayout'
+import useLayout from "./stores/useLayout";
 
-const { layout } = useLayout()
+const { layout } = useLayout();
 // const supabase = useSupabaseClient();
 // // const layout = ref("my-layout");
 // const getUserRole = async (claim: string) => {
@@ -21,8 +21,8 @@ const { layout } = useLayout()
 // };
 
 useHead({
-  htmlAttrs: { lang: 'id' }
-})
+  htmlAttrs: { lang: "id" },
+});
 
 // const userRole = ref("");
 // userRole.value = await getUserRole("userrole");
@@ -53,7 +53,7 @@ useHead({
 // );
 </script>
 <template>
-  <NuxtLayout :name="layout as any">
+  <NuxtLayout :name="(layout as any)">
     <NuxtPage></NuxtPage>
   </NuxtLayout>
 </template>

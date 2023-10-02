@@ -48,10 +48,8 @@ const fetchBlogComments = async () => {
   }
 };
 
-onBeforeMount(() => {
-  definePageMeta({
-    layout: "my-layout",
-  });
+definePageMeta({
+  middleware: 'is-admin',
 });
 
 onMounted(async () => {
