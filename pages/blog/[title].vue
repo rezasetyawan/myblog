@@ -6,18 +6,16 @@ const commentData = ref<CommentSnapshots | null | undefined>();
 const postTitle = ref<string>(route.params.title as string);
 const isLoading = ref<boolean>(true);
 
-definePageMeta({
-  layout: "my-layout",
-});
-
 const fetchBlogContent = async () => {
   try {
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
     if (cacheBlog.value) {
+      console.log('dari cache (konten)')
       isLoading.value = false;
       return (blog.value = cacheBlog.value.data);
     } else {
+      console.log('bukan dari cache (konten)')
       const blogResult = await getBlogByTitle(postTitle.value);
       if (blogResult) {
         isLoading.value = false;
@@ -35,11 +33,13 @@ const fetchBlogContent = async () => {
 
 const fetchBlogComments = async () => {
   try {
-    const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
+    const { data: cacheComments } = useNuxtData(`comments-${blog.value?.id}`);
 
     if (cacheComments.value) {
+      console.log('dari cache (komen)')
       return (commentData.value = cacheComments.value);
     } else if (blog.value) {
+      console.log('bukan dari cache (komen)')
       const commentResult = await getComments(blog.value.id);
       return (commentData.value = commentResult);
     }
@@ -47,6 +47,12 @@ const fetchBlogComments = async () => {
     showErrorToast(error.message);
   }
 };
+
+onBeforeMount(() => {
+  definePageMeta({
+    layout: "my-layout",
+  });
+});
 
 onMounted(async () => {
   postTitle.value = route.params.title as string;

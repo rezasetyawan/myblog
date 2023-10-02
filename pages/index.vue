@@ -112,10 +112,6 @@ useHead({
     }
   ],
 });
-
-definePageMeta({
-  middleware: 'is-admin'
-})
 </script>
 <template>
   <HeadMetaData :metaDescription="'Blog Website that talk about technology and daily life'" />

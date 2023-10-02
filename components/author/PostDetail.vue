@@ -10,7 +10,7 @@ const props = defineProps<Props>();
   <section v-if="props.blog" class="my-10 mx-3 mb-20 sm:mx-6 lg:mx-40">
     <button
       class="absolute -top-1 left-1 sm:top-0 sm:left-5"
-      @click="() => useRouter().go(-1)"
+      @click="() => useRouter().push('/author/posts')"
     >
       <Icon name="eva:arrow-back-fill" class="w-8 h-8" />
     </button>

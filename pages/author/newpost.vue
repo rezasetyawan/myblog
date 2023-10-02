@@ -4,8 +4,9 @@ useHead({
 })
 
 definePageMeta({
-  middleware: 'author'
-})
+  middleware: "author",
+  layout: 'author-layout'
+});
 </script>
 <template>
     <AuthorNewPost />

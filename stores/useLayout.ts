@@ -1,5 +1,5 @@
 const useLayout = () => {
-    const layout = useState('layout', () => 'default-layout')
+    const layout = useState('layout', () => 'my-layout')
 
     const setLayout = (layoutName: string) => {
         return layout.value = layoutName

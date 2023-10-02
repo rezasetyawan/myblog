@@ -72,7 +72,7 @@ const fetchBlogContent = async () => {
 
 const fetchBlogComments = async () => {
   try {
-    const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
+    const { data: cacheComments } = useNuxtData(`comments-${blog.value?.id}`);
 
     if (cacheComments.value) {
       return (commentData.value = cacheComments.value);
@@ -98,10 +98,7 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "author",
-});
-
-definePageMeta({
-  middleware: "author",
+  layout: 'author-layout'
 });
 </script>
 <template>

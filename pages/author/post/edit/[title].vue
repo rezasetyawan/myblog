@@ -41,6 +41,7 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "author",
+  layout: 'author-layout'
 });
 </script>
 <template>
