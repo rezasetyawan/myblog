@@ -3,6 +3,7 @@ interface Props {
   blog: GetBlogDetail;
   commentData: CommentSnapshots | null | undefined;
 }
+
 const props = defineProps<Props>();
 </script>
 

@@ -7,53 +7,56 @@ const postTitle = ref<string>(route.params.title as string);
 const isLoading = ref<boolean>(true);
 
 definePageMeta({
-  layout: 'my-layout'
-})
+  layout: "my-layout",
+});
 
 const fetchBlogContent = async () => {
   try {
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
     if (cacheBlog.value) {
-      isLoading.value = false
-      console.log(cacheBlog.value)
-      return cacheBlog.value
+      isLoading.value = false;
+      return (blog.value = cacheBlog.value.data);
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
-      console.log(blogResult)
-      isLoading.value = false
-      return blogResult
+      if (blogResult) {
+        console.log(blogResult);
+        isLoading.value = false;
+        return (blog.value = blogResult);
+      } else {
+        await fetchBlogContent();
+      }
     }
   } catch (error: any) {
-    showErrorToast(error.message)
+    showErrorToast(error.message);
   } finally {
     isLoading.value = false;
   }
-}
+};
 
 const fetchBlogComments = async () => {
   try {
     const { data: cacheComments } = useNuxtData(`comments-${postTitle.value}`);
 
     if (cacheComments.value) {
-      return commentData.value = cacheComments.value
+      return (commentData.value = cacheComments.value);
     } else if (blog.value) {
-      const commentResult = await getComments(blog.value.id)
-      return commentData.value = commentResult
-    } 
+      const commentResult = await getComments(blog.value.id);
+      return (commentData.value = commentResult);
+    }
   } catch (error: any) {
-    showErrorToast(error.message)
+    showErrorToast(error.message);
   }
-}
+};
 
 onMounted(async () => {
-  postTitle.value = route.params.title as string
-  blog.value = await fetchBlogContent()
-  await fetchBlogComments()
+  postTitle.value = route.params.title as string;
+  await fetchBlogContent();
+  await fetchBlogComments();
 
   useHead({
     title: `My Blog | ${blog.value?.title}`,
-    titleTemplate: `My Blog | ${blog.value?.title}`
+    titleTemplate: `My Blog | ${blog.value?.title}`,
   });
 
   useServerSeoMeta({
@@ -68,8 +71,13 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <HeadMetaData :title="blog?.title" :ogDescription="blog?.title" :ogImageUrl="blog?.image_url"
-    :pathname="'/' + blog?.url_param" />
+  <HeadMetaData
+    v-if="blog"
+    :title="blog?.title"
+    :ogDescription="blog?.title"
+    :ogImageUrl="blog?.image_url"
+    :pathname="'/' + blog?.url_param"
+  />
   <PostDetail :blog="blog" :commentData="commentData" v-if="blog" />
   <Loading v-if="isLoading" />
 </template>
