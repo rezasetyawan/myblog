@@ -13,7 +13,6 @@ onMounted(async () => {
   id.value = route.params.id as string;
   const data = await getCategoryById(client, id.value);
   category.value = data;
-  console.log(category.value);
 });
 
 const onSubmitHandler = async () => {

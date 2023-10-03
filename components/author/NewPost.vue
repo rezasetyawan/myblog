@@ -2,16 +2,15 @@
 import { nanoid } from "nanoid";
 import { addBlog } from "../../composables/useBlogs";
 import { addImage } from "../../composables/usePostImage";
-import { showSuccessToast, showErrorToast } from '../../utils/toast'
-import { getTags } from '../../composables/useTags';
-import { getCategories } from '../../composables/useCategories'
+import { showSuccessToast, showErrorToast } from "../../utils/toast";
+import { getTags } from "../../composables/useTags";
+import { getCategories } from "../../composables/useCategories";
 
 const client = useSupabaseClient();
 const config = useRuntimeConfig();
 const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
 const blogTags = ref<Array<{ id: string; name: string }> | null>(null);
 const image = ref<File | null>(null);
-const showConfirmationModal = ref<boolean>(false)
 let postId: string;
 
 interface ContentDraft {
@@ -31,15 +30,14 @@ const contentDraft = ref<ContentDraft>({
 const contentTags = ref<string[]>([]);
 
 const fetchBlogCategories = async () => {
-  const categories = await getCategories(client)
-  blogCategories.value = categories
+  const categories = await getCategories(client);
+  blogCategories.value = categories;
 };
 
 const fetchBlogTags = async () => {
-  const tags = await getTags(client)
-  blogTags.value = tags
-}
-
+  const tags = await getTags(client);
+  blogTags.value = tags;
+};
 
 const resetPostForm = () => {
   contentDraft.value = {
@@ -47,11 +45,11 @@ const resetPostForm = () => {
     text: `<h2>Hi there,</h2>`,
     category_id: "",
     is_published: false,
-  }
+  };
 
-  contentTags.value = []
-  image.value = null
-}
+  contentTags.value = [];
+  image.value = null;
+};
 
 onMounted(async () => {
   await fetchBlogCategories();
@@ -69,15 +67,11 @@ const onTagsUpdateHandler = (tagId: string) => {
 };
 
 const onFileChangeHandler = (event: Event) => {
-
   try {
     const target = event.target as HTMLInputElement;
     // !!target.files && (image.value = target.files[0]);
-    if (target.files) image.value = target.files[0]
-
-  } catch (error) {
-
-  }
+    if (target.files) image.value = target.files[0];
+  } catch (error) {}
 };
 
 const savePost = async (isPublish: boolean) => {
@@ -85,14 +79,14 @@ const savePost = async (isPublish: boolean) => {
     postId = `post-${nanoid(10)}`;
 
     if (!contentDraft.value.title) {
-      return showErrorToast('please provide posts title')
+      return showErrorToast("please provide posts title");
     }
     if (!contentDraft.value.category_id.length) {
-      return showErrorToast('please provide post category')
+      return showErrorToast("please provide post category");
     }
 
     if (!contentTags.value.length) {
-      return showErrorToast('please provide post tag')
+      return showErrorToast("please provide post tag");
     }
 
     const timestamp = Date.now().toString();
@@ -114,13 +108,15 @@ const savePost = async (isPublish: boolean) => {
       image_url: imageUrl,
       ...contentDraft.value,
       is_published: isPublish,
-      url_param: contentDraft.value.title.toLowerCase().replaceAll(' ', '-')
+      url_param: contentDraft.value.title.toLowerCase().replaceAll(" ", "-"),
     };
 
     await addBlog(client, postId, postData, contentTags.value);
-    isPublish ? showSuccessToast('post added') : showSuccessToast('saved to draft');
+    isPublish
+      ? showSuccessToast("post added")
+      : showSuccessToast("saved to draft");
   } catch (error: any) {
-    showErrorToast(error.message)
+    showErrorToast(error.message);
   }
 };
 
@@ -130,11 +126,17 @@ const onSaveDraftHandler = async () => {
 
 const onSubmitHandler = async () => {
   await savePost(true);
-  resetPostForm()
+  resetPostForm();
 };
 
 onBeforeRouteLeave(async (to, from, next) => {
-  if (contentDraft.value.title && contentDraft.value.category_id && contentDraft.value && contentTags.value && contentDraft.value.text) {
+  if (
+    contentDraft.value.title &&
+    contentDraft.value.category_id &&
+    contentDraft.value &&
+    contentTags.value &&
+    contentDraft.value.text
+  ) {
     if (
       confirm("You changed the post content, do you want save it as draft?")
     ) {
@@ -147,7 +149,6 @@ onBeforeRouteLeave(async (to, from, next) => {
     next();
   }
 });
-
 </script>
 <template>
   <button class="absolute top-5 left-5" @click="() => useRouter().go(-1)">
@@ -155,10 +156,28 @@ onBeforeRouteLeave(async (to, from, next) => {
   </button>
   <button class="absolute top-5 right-5 group" @click="onSaveDraftHandler">
     <Icon name="material-symbols:save" class="w-8 h-8" /><span
-      class="hidden bg-slate-100 group-hover:inline whitespace-nowrap group-hover:absolute right-0 top-8 z-20 px-[0.8em] py-[0.4em] rounded-sm">save
-      to draft</span>
+      class="hidden bg-slate-100 group-hover:inline whitespace-nowrap group-hover:absolute right-0 top-8 z-20 px-[0.8em] py-[0.4em] rounded-sm"
+      >save to draft</span
+    >
   </button>
-  <AuthorPostForm :contentDraft="contentDraft" :contentTags="contentTags" :categories="blogCategories" :tags="blogTags"
-    :image="image" @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
-    @onfilechange="(event: Event) => onFileChangeHandler(event)" @onsubmit="onSubmitHandler" class="mb-16" />
+  <AuthorPostForm
+    :contentDraft="contentDraft"
+    :contentTags="contentTags"
+    :categories="blogCategories"
+    :tags="blogTags"
+    :image="image"
+    @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
+    @onfilechange="(event: Event) => onFileChangeHandler(event)"
+    @onsubmit="onSubmitHandler"
+    class="mb-16"
+  />
+  <!-- <ConfirmationModalV2
+    :type="'negative'"
+    :show-confirmation-modal="showConfirmationModal"
+    @cancel="() => {
+      console.log(nextPath)
+       useRouter().push(nextPath)
+       showConfirmationModal = false
+    }"
+  /> -->
 </template>

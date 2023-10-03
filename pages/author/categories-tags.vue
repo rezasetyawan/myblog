@@ -11,6 +11,9 @@ const tags = ref<{ id: string; name: string }[] | undefined | null>();
 const showCategoryForm = ref<boolean>(false);
 const showTagForm = ref<boolean>(false);
 const currentSection = ref<string>("categories");
+const tagDeleteModal = ref<boolean>(false);
+const categoryDeleteModal = ref<boolean>(false);
+const selectedId = ref<string>("");
 
 onMounted(async () => {
   const categorySnapshots = await getCategories(client);
@@ -32,18 +35,20 @@ const addCategoryHandler = async (value: string) => {
   try {
     await addCategory(client, value);
     showCategoryForm.value = false;
+    categories.value = await getCategories(client);
     showSuccessToast("new category added");
   } catch (error: any) {
     showErrorToast(error.message);
   }
 };
 
-const deleteCategoryHandler = async (id: string) => {
+const deleteCategoryHandler = async () => {
   try {
-    if (confirm("are you sure want to delete this?")) {
-      await deleteCategoryById(client, id);
-      showSuccessToast("category deleted");
-    }
+    await deleteCategoryById(client, selectedId.value);
+    categoryDeleteModal.value = false;
+    selectedId.value = "";
+    categories.value = await getCategories(client);
+    showSuccessToast("category deleted");
   } catch (error: any) {
     showErrorToast(error.message);
   }
@@ -53,18 +58,21 @@ const addTagHandler = async (value: string) => {
   try {
     await addTag(client, value);
     showTagForm.value = false;
+    tags.value = await getTags(client);
     showSuccessToast("new tag added");
   } catch (error: any) {
     showErrorToast(error.message);
   }
 };
 
-const deleteTagHandler = async (id: string) => {
+const deleteTagHandler = async () => {
   try {
-    if (confirm("are you sure want to delete this?")) {
-      await deleteTagById(client, id);
-      showSuccessToast("tag deleted");
-    }
+    console.log(selectedId.value);
+    await deleteTagById(client, selectedId.value);
+    tagDeleteModal.value = false;
+    selectedId.value = "";
+    tags.value = await getTags(client);
+    showSuccessToast("tag deleted");
   } catch (error: any) {
     showErrorToast(error.message);
   }
@@ -79,7 +87,7 @@ definePageMeta({
   <section class="w-full flex justify-evenly mb-5">
     <label
       class="hover:cursor-pointer text-sm sm:text-base"
-      :class="{'border-b-2 border-red-800': currentSection === 'categories'}"
+      :class="{ 'border-b-2 border-red-800': currentSection === 'categories' }"
     >
       <input
         type="radio"
@@ -90,7 +98,7 @@ definePageMeta({
       categories </label
     ><label
       class="hover:cursor-pointer text-sm sm:text-base"
-      :class="{'border-b-2 border-red-800': currentSection === 'tags'}"
+      :class="{ 'border-b-2 border-red-800': currentSection === 'tags' }"
     >
       <input
         type="radio"
@@ -117,7 +125,10 @@ definePageMeta({
       :tableHeadTitle="'Categories'"
       :datas="categories"
       @edit="(id:string) => editCategoryHandler(id) "
-      @delete="(id:string) => deleteCategoryHandler(id)"
+      @delete="(id:string)=> {
+        categoryDeleteModal = true
+        selectedId = id
+      }"
     />
 
     <NewCategoryTagForm
@@ -143,7 +154,10 @@ definePageMeta({
       :datas="tags"
       :url="'/author/tag/'"
       @edit="(id:string) => editTagHandler(id) "
-      @delete="(id:string) => deleteTagHandler(id)"
+      @delete="(id:string) => {
+        tagDeleteModal = true
+        selectedId = id
+      }"
       class="mt-2"
     />
     <NewCategoryTagForm
@@ -153,4 +167,19 @@ definePageMeta({
       @closeModal="() => (showTagForm = false)"
     />
   </section>
+  <ConfirmationModalV2
+    :show-confirmation-modal="categoryDeleteModal"
+    :type="'negative'"
+    :message="'Are you sure want to delete the category?'"
+    @cancel="categoryDeleteModal = false"
+    @confirm="async () => await deleteCategoryHandler()"
+  />
+
+  <ConfirmationModalV2
+    :show-confirmation-modal="tagDeleteModal"
+    :type="'negative'"
+    :message="'Are you sure want to delete the tag?'"
+    @cancel="tagDeleteModal = false"
+    @confirm="async () => await deleteTagHandler()"
+  />
 </template>
