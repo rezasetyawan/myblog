@@ -44,6 +44,13 @@ const signOutUser = async () => {
           </NuxtLink>
         </li>
         <li class="group">
+          <NuxtLink to="/author/categories-tags" class="flex items-center p-2 font-semibold rounded-lg hover:bg-gray-100">
+            <Icon name="carbon:categories" size="24"
+              class="w-6 h-6 transition duration-75 group-hover:scale-105 font-semibold" />
+            <span class="flex-1 ml-3 whitespace-nowrap"> Categories & Tags </span>
+          </NuxtLink>
+        </li>
+        <li class="group">
           <button class="flex items-center p-2 font-semibold rounded-lg hover:bg-gray-100 pr-[120px]"
             @click="() => signoutModal = true">
             <svg class="flex-shrink-0 w-6 h-6 transition duration-75 group-hover:scale-105 font-semibold"
