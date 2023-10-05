@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { showSuccessToast } from '../../utils/toast'
-import { getTags } from '../../composables/useTags';
-import { getCategories } from '../../composables/useCategories'
-
 const client = useSupabaseClient();
 const route = useRoute();
 
@@ -21,14 +17,14 @@ const queryParams = ref({
 });
 
 const fetchBlogCategories = async () => {
-  const categories = await getCategories(client)
-  blogCategories.value = categories
+  const categories = await getCategories(client);
+  blogCategories.value = categories;
 };
 
 const fetchBlogTags = async () => {
-  const tags = await getTags(client)
-  blogTags.value = tags
-}
+  const tags = await getTags(client);
+  blogTags.value = tags;
+};
 
 const fetchBlogs = async () => {
   try {
@@ -45,14 +41,24 @@ const fetchBlogs = async () => {
         cacheKey.value
       );
 
+      console.log(data);
       data ? (blogsData.value = data) : null;
     }
 
     blogsData.value && (isLoading.value = false);
   } catch (error: any) {
-    showErrorToast(error.message)
+    showErrorToast(error.message);
   }
 };
+
+// BUAT SOLVE BUG ANEH (DATA NULL) NGGAK TAU KENAPA, TAPI INTINYA FUNCTIONNYA TETAP KE CALL SATU KALI DOANG BESOK GWE BENERIN (OPSIONAL)
+await getAuthorBlogs(
+  queryParams.value.searchKey,
+  queryParams.value.category,
+  queryParams.value.tags,
+  page.value,
+  cacheKey.value
+);
 
 onMounted(async () => {
   cacheKey.value = route.fullPath;
@@ -98,7 +104,7 @@ const handlePublishStatusChange = (postId: string) => {
   if (index !== -1 && index !== undefined) {
     blogsData.value?.blogs
       ? (blogsData.value.blogs[index].is_published =
-        !blogsData.value?.blogs[index].is_published)
+          !blogsData.value?.blogs[index].is_published)
       : null;
   }
 };
@@ -108,42 +114,41 @@ const handleDeletePost = (postId: string) => {
     const index = blogsData.value?.blogs?.findIndex(
       (blog) => blog.id === postId
     );
-    if (index !== undefined && index !== -1) blogsData.value?.blogs?.splice(index, 1);
-    showSuccessToast('post deleted')
+    if (index !== undefined && index !== -1)
+      blogsData.value?.blogs?.splice(index, 1);
+    showSuccessToast("post deleted");
   } catch (error: any) {
-    showErrorToast(error.message)
+    showErrorToast(error.message);
   }
 };
 
-useServerSeoMeta({
-  title: "My Blog",
-  ogTitle: "My Blog",
-  description: "Blog Website that talk about technology and daily life",
-  ogDescription: "Blog Website that talk about technology and daily life",
-});
-
 useHead({
-  title: "My Blog | Posts",
-  titleTemplate: "My Blog | Posts",
-  meta: [
-    {
-      name: "description",
-      content: "Blog Website that talk about technology and daily life",
-    },
-  ],
+  title: "Posts | My Blog",
+  titleTemplate: "Posts | My Blog",
 });
 
 definePageMeta({
   middleware: "author",
-  layout: 'author-layout'
+  layout: "author-layout",
 });
 </script>
 <template>
-  <FilterSection :queryParams="queryParams" :postCategories="blogCategories" :postTags="blogTags" @onSearch="page = 1" />
-  <AuthorPosts :blogs="blogsData?.blogs" :isLoading="isLoading"
+  <FilterSection
+    :queryParams="queryParams"
+    :postCategories="blogCategories"
+    :postTags="blogTags"
+    @onSearch="page = 1"
+  />
+  <AuthorPosts
+    :blogs="blogsData?.blogs"
+    :isLoading="isLoading"
     @update-post-status="(id: string) => handlePublishStatusChange(id)"
-    @delete-post="(id: string) => handleDeletePost(id)" />
-  <h2 v-if="blogsData?.blogs.length === 0 && !isLoading" class="text-center mb-40">
+    @delete-post="(id: string) => handleDeletePost(id)"
+  />
+  <h2
+    v-if="blogsData?.blogs.length === 0 && !isLoading"
+    class="text-center mb-40"
+  >
     Blog Not Found
   </h2>
   <Pagination :page="page" :totalPage="blogsData?.totalPage" />

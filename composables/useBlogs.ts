@@ -23,7 +23,7 @@ const getBlogs = async (search_key: string = "", category_id: string = "", tags:
     }
 }
 
-const getAuthorBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "/blogs") => {
+const getAuthorBlogs = async (search_key: string = "", category_id: string = "", tags: string[] = [], page: number = 1, cacheKey: string = "/author/posts") => {
     try {
         const { data, error } = await useFetch('/api/author/posts', {
             query: {
