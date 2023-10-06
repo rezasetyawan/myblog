@@ -1,6 +1,9 @@
 <script setup lang="ts">
+const client = useSupabaseClient();
 const route = useRoute();
 const blog = ref<GetBlogDetail | undefined>();
+const categories = ref<{ id: string; name: string }[] | undefined | null>();
+const tags = ref<{ id: string; name: string }[] | undefined | null>();
 const postTitle = ref<string>(route.params.title as string);
 const isLoading = ref<boolean>(true);
 
@@ -10,10 +13,10 @@ const getBlogInitalData = async () => {
 
     if (cacheBlog.value) {
       isLoading.value = false;
-      return (blog.value = cacheBlog.value);
+      return (blog.value = cacheBlog.value.data);
     } else {
       const blogResult = await getBlogByTitle(postTitle.value);
-      if (blogResult) {      
+      if (blogResult) {
         isLoading.value = false;
         return (blog.value = blogResult);
       } else {
@@ -30,9 +33,15 @@ const getBlogInitalData = async () => {
 onMounted(async () => {
   try {
     await getBlogInitalData();
+    const categorySnapshots = await getCategories(client);
+    const tagSnapshots = await getTags(client);
+
+    categories.value = categorySnapshots;
+    tags.value = tagSnapshots;
+
     useHead({
-      title: `Edit Post |  ${blog.value?.title}`,
-      titleTemplate: `Edit Post | ${blog.value?.title}`,
+      title: `${blog.value?.title} | My Blog`,
+      titleTemplate: `${blog.value?.title} | My Blog`,
     });
   } catch (error: any) {
     showErrorToast(error.message);
@@ -41,10 +50,15 @@ onMounted(async () => {
 
 definePageMeta({
   middleware: "author",
-  layout: 'author-layout'
+  layout: "author-layout",
 });
 </script>
 <template>
-  <AuthorEditPost :blog="blog" v-if="blog" />
+  <AuthorEditPost
+    :blog="blog"
+    :categories="categories"
+    :tags="tags"
+    v-if="blog && categories && tags"
+  />
   <Loading v-if="isLoading" />
 </template>

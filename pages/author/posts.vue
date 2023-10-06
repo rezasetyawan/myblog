@@ -45,6 +45,19 @@ const fetchBlogs = async () => {
       data ? (blogsData.value = data) : null;
     }
 
+    //  buat fix data null (side effect dari useNuxtData), nggak boros api soalnya teta nembak api sekali
+    if (!blogsData.value) {
+      const data = await getAuthorBlogs(
+        queryParams.value.searchKey,
+        queryParams.value.category,
+        queryParams.value.tags,
+        page.value,
+        cacheKey.value
+      );
+
+      data ? (blogsData.value = data) : null;
+    }
+
     blogsData.value && (isLoading.value = false);
   } catch (error: any) {
     showErrorToast(error.message);

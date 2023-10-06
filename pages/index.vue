@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { getTags } from "../composables/useTags";
-import { getCategories } from "../composables/useCategories";
-
 definePageMeta({
   middleware: "is-admin",
   layout: "my-layout",
 });
+
+
 const client = useSupabaseClient();
 const route = useRoute();
 
 const blogsData = ref<BlogSnapshots | null | undefined>();
-const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
-const blogTags = ref<Array<{ id: string; name: string }> | null>(null);
+const blogCategories = ref<{ id: string; name: string }[] | null>(null);
+const blogTags = ref<{ id: string; name: string }[] | null>(null);
 const isLoading = ref<boolean>(true);
 const page = ref<number>(parseInt(route.query.page as string) || 1);
 const cacheKey = ref<string>("/");

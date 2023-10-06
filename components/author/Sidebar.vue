@@ -18,7 +18,7 @@ const signOutUser = async () => {
 </script>
 <template>
   <aside id="logo-sidebar"
-    class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform duration-200 -translate-x-full bg-white border-r border-gray-200"
+    class="fixed top-0 left-0 z-[2000] w-64 h-screen pt-20 transition-transform duration-200 -translate-x-full bg-white border-r border-gray-200"
     :class="{ 'translate-x-0': props.sidebar }" aria-label="Sidebar">
     <div class="h-full px-3 pb-4 overflow-y-auto bg-white">
       <ul class="space-y-2 font-medium text-sm">
@@ -44,7 +44,7 @@ const signOutUser = async () => {
           </NuxtLink>
         </li>
         <li class="group">
-          <NuxtLink to="/author/categories-tags" class="flex items-center p-2 font-semibold rounded-lg hover:bg-gray-100">
+          <NuxtLink to="/author/categories" class="flex items-center p-2 font-semibold rounded-lg hover:bg-gray-100">
             <Icon name="carbon:categories" size="24"
               class="w-6 h-6 transition duration-75 group-hover:scale-105 font-semibold" />
             <span class="flex-1 ml-3 whitespace-nowrap"> Categories & Tags </span>

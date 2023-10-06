@@ -22,7 +22,7 @@ const handleDeletePost = (postId: string) => {
     POSTS
   </h2>
   <section
-    class="sm:grid grid-cols-1 gap-4 justify-items-center relative sm:grid-cols-2 sm:mx-5 xl:grid-cols-3 lg:mx-10 overflow-hidden pb-32"
+    class="sm:grid grid-cols-1 mx-2 gap-4 justify-items-center relative sm:grid-cols-2 sm:mx-5 xl:grid-cols-3 lg:mx-10 overflow-hidden pb-32"
     v-if="!props.isLoading"
   >
     <AuthorPostItem
@@ -35,7 +35,7 @@ const handleDeletePost = (postId: string) => {
   </section>
   <section
     v-if="props.isLoading"
-    class="grid grid-cols-1 mx-0 gap-4 justify-items-center relative sm:grid-cols-2 sm:mx-5 xl:grid-cols-3 lg:mx-10 overflow-hidden pb-32"
+    class="grid grid-cols-1 mx-2 gap-4 justify-items-center relative sm:grid-cols-2 sm:mx-5 xl:grid-cols-3 lg:mx-10 overflow-hidden pb-32"
   >
     <AuthorPostItemSkeleton :counts="6" />
   </section>

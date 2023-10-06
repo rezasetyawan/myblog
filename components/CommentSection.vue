@@ -2,6 +2,7 @@
 interface Props {
   commentData: CommentSnapshots;
   postId: string;
+  comment_counts: string;
 }
 const props = defineProps<Props>();
 
@@ -20,8 +21,8 @@ const hasActiveCommentForm = computed(() => {
 });
 </script>
 <template>
-  <article class="my-20 max-w-[75ch] mx-auto">
-    <h3 class="my-6 font-medium">Comments</h3>
+  <article class="max-w-[75ch] mx-auto border-t-[1.3px]">
+    <h3 class="my-6 font-medium">{{ props.comment_counts }} Comments</h3>
     <div class="">
       <CommentList
         :comments="commentData.comments"
@@ -30,11 +31,11 @@ const hasActiveCommentForm = computed(() => {
         :postId="props.postId"
       />
       <CommentForm
-      v-show="!hasActiveCommentForm"
-      class="my-5"
-      @commentAdded="refetchComments()"
-      :postId="props.postId"
-    />
+        v-show="!hasActiveCommentForm"
+        class="my-5"
+        @commentAdded="refetchComments()"
+        :postId="props.postId"
+      />
     </div>
   </article>
 </template>

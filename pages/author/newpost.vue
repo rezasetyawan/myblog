@@ -1,13 +1,13 @@
 <script setup lang="ts">
 useHead({
-    title: 'My Blog | New Post'
-})
+  title: "New Post | My Blog ",
+});
 
 definePageMeta({
   middleware: "author",
-  layout: 'author-layout'
+  layout: "author-layout",
 });
 </script>
 <template>
-    <AuthorNewPost />
+  <AuthorNewPost />
 </template>

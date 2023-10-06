@@ -1,15 +1,10 @@
 <script setup lang="ts">
-// import { updateBlogById, updateBlogTagsById } from "../../composables/useBlogs";
-// import { deleteImage } from "../../composables/usePostImage";
-// import { isObjectEqual } from "../../utils/isObjectEqual";
-// import { isArrayEqual } from "../../utils/isArrayEqual";
-// import { getFileNameFromUrl } from "../../utils/getFileName";
-// import { showSuccessToast, showErrorToast } from '../../utils/toast'
-
 const config = useRuntimeConfig();
 
 interface Props {
   blog: GetBlogDetail;
+  categories: { id: string; name: string }[];
+  tags: { id: string; name: string }[];
 }
 
 interface ContentDraft {
@@ -23,8 +18,8 @@ const props = defineProps<Props>();
 const { blog } = toRefs(props);
 const client = useSupabaseClient();
 
-const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
-const taglist = ref<Array<{ id: string; name: string }> | null>(null);
+const categories = ref<{ id: string; name: string }[] | null>(props.categories);
+const tags = ref<{ id: string; name: string }[] | null>(props.tags);
 const image = ref<File>();
 const isImageChanged = ref<boolean>(false);
 const isPostUpdated = ref<boolean>(false);
@@ -36,6 +31,7 @@ const contentDraft = ref<ContentDraft>({
   is_published: false,
 });
 
+// blog initial value that used to compare with current blog value to know if the blog value is updated or not
 const initialContentDraft: ContentDraft = {
   title: blog.value.title,
   text: blog.value.text,
@@ -53,30 +49,12 @@ contentDraft.value = {
 };
 
 const contentTags = ref<string[]>();
-contentTags.value = blog.value.tags.map((tag) => tag.id);
+contentTags.value = blog.value.tags ? blog.value.tags.map((tag) => tag.id) : [];
 
 const initialContentTags: string[] = [];
-blog.value.tags.map((tag) => initialContentTags.push(tag.id));
-
-const getCategories = async () => {
-  const { data: categories } = await useAsyncData("categories", async () => {
-    const { data } = (await client.from("categories").select("id, name")) as {
-      data: Array<{ id: string; name: string }>;
-    };
-    return data;
-  });
-  blogCategories.value = categories.value;
-};
-
-const getTags = async () => {
-  const { data } = await useAsyncData("categories", async () => {
-    const { data } = (await client.from("tags").select("id, name")) as {
-      data: Array<{ id: string; name: string }>;
-    };
-    return data;
-  });
-  taglist.value = data.value;
-};
+blog.value.tags
+  ? blog.value.tags.map((tag) => initialContentTags.push(tag.id))
+  : null;
 
 const getImageFile = async (): Promise<Blob> => {
   const { data } = await useFetch(blog.value.image_url);
@@ -101,8 +79,8 @@ const setImageInitialValue = async () => {
 };
 
 onMounted(async () => {
-  await getCategories();
-  await getTags();
+  // await getCategories();
+  // await getTags();
   await setImageInitialValue();
 
   if (image.value) {
@@ -147,16 +125,15 @@ const checkIsPostUpdated = () => {
 
 const updatePost = async () => {
   try {
-
     if (!contentDraft.value.title) {
-      return showErrorToast('please provide post title')
+      return showErrorToast("please provide post title");
     }
     if (!contentDraft.value.category_id.length) {
-      return showErrorToast('please provide post category')
+      return showErrorToast("please provide post category");
     }
 
     if (!contentTags.value?.length) {
-      return showErrorToast('please provide post tag')
+      return showErrorToast("please provide post tag");
     }
 
     const isContentChanged: boolean = !isObjectEqual(
@@ -191,7 +168,7 @@ const updatePost = async () => {
       ...contentDraft.value,
       image_url: imageUrl,
       is_published: false,
-      url_param: contentDraft.value.title.toLowerCase().replaceAll(' ', '-')
+      url_param: contentDraft.value.title.toLowerCase().replaceAll(" ", "-"),
     });
 
     if (isContentChanged) {
@@ -207,14 +184,14 @@ const updatePost = async () => {
     }
 
     isPostUpdated.value = true;
-    showSuccessToast('post updated')
+    showSuccessToast("post updated");
   } catch (error: any) {
-    showErrorToast(error.message)
+    showErrorToast(error.message);
   }
 };
 
 onBeforeRouteLeave(async (to, from, next) => {
-  const isPostChanged = checkIsPostUpdated()
+  const isPostChanged = checkIsPostUpdated();
   if (isPostChanged && !isPostUpdated.value) {
     if (
       confirm("You changed the post content, do you want save it as draft?")
@@ -236,12 +213,21 @@ const onSubmitHandler = async () => {
 };
 </script>
 <template>
-  <div>
-    <button class="absolute top-5 left-5" @click="() => useRouter().go(-1)">
-      <Icon name="eva:arrow-back-fill" class="w-8 h-8" />
+  <div class="sm:mx-6 lg:mx-40 relative">
+    <button class="absolute top-5 left-2" @click="() => useRouter().go(-1)">
+      <Icon name="eva:arrow-back-fill" class="w-7 h-7 sm:w-8 sm:h-8" />
     </button>
-    <AuthorPostForm :contentDraft="contentDraft" :contentTags="contentTags" :categories="blogCategories" :tags="taglist"
-      :image="image" :isEdit="true" @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
-      @onfilechange="(event: Event) => onFileChangeHandler(event)" @onsubmit="onSubmitHandler" class="mb-16" />
   </div>
+  <AuthorPostForm
+    :contentDraft="contentDraft"
+    :contentTags="contentTags"
+    :categories="categories"
+    :tags="tags"
+    :image="image"
+    :isEdit="true"
+    @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
+    @onfilechange="(event: Event) => onFileChangeHandler(event)"
+    @onsubmit="onSubmitHandler"
+    class="mb-16"
+  />
 </template>

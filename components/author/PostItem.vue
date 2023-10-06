@@ -133,7 +133,7 @@ const deletePostHandler = async (postId: string) => {
   </ConfirmationModal>
 </template>
 <style scoped>
-.tooltip {
+.tooltip {  
   @apply hidden bg-gray-200 group-hover:inline group-hover:absolute right-0 top-8 z-20 px-[0.8em] py-[0.4em] rounded-sm whitespace-nowrap text-black
 }
 </style>

@@ -7,7 +7,9 @@ const toggleSidebar = () => {
 </script>
 <template>
   <header class="font-rubik">
-    <nav class="fixed top-0 z-[1000] w-full bg-white border-b border-gray-200 h-16">
+    <nav
+      class="fixed top-0 z-[2001] w-full bg-white border-b border-gray-200 h-16"
+    >
       <div class="px-3 py-3 lg:px-5 lg:pl-3">
         <div class="flex items-center justify-between">
           <div class="flex items-center justify-start">

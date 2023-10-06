@@ -11,11 +11,9 @@ const fetchBlogContent = async () => {
     const { data: cacheBlog } = useNuxtData(postTitle.value);
 
     if (cacheBlog.value) {
-      console.log("dari cache (konten)");
       isLoading.value = false;
       return (blog.value = cacheBlog.value.data);
     } else {
-      console.log("bukan dari cache (konten)");
       const blogResult = await getBlogByTitle(postTitle.value);
       if (blogResult) {
         isLoading.value = false;
@@ -36,10 +34,8 @@ const fetchBlogComments = async () => {
     const { data: cacheComments } = useNuxtData(`comments-${blog.value?.id}`);
 
     if (cacheComments.value) {
-      console.log("dari cache (komen)");
       return (commentData.value = cacheComments.value);
     } else if (blog.value) {
-      console.log("bukan dari cache (komen)");
       const commentResult = await getComments(blog.value.id);
       return (commentData.value = commentResult);
     }
@@ -49,7 +45,7 @@ const fetchBlogComments = async () => {
 };
 
 definePageMeta({
-  middleware: 'is-admin',
+  middleware: "is-admin",
 });
 
 onMounted(async () => {
