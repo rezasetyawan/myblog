@@ -8,9 +8,9 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <section v-if="props.blog" class="mt-10 mx-3 mb-20 sm:mx-6 lg:mx-40">
+  <section class="mt-10 mx-3 mb-20 sm:mx-6 lg:mx-40 relative">
     <button
-      class="absolute -top-8 left-1 sm:top-0 sm:left-5"
+      class="absolute -top-8 left-0 sm:top-0 sm:left-0"
       @click="() => useRouter().push('/')"
     >
       <Icon name="eva:arrow-back-fill" class="w-7 h-7 sm:w-8 sm:h-8" />

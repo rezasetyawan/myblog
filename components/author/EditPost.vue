@@ -52,27 +52,9 @@ const contentTags = ref<string[]>();
 contentTags.value = blog.value.tags ? blog.value.tags.map((tag) => tag.id) : [];
 
 const initialContentTags: string[] = [];
-blog.value.tags.map((tag) => initialContentTags.push(tag.id));
-
-// const getCategories = async () => {
-//   const { data: categories } = await useAsyncData("categories", async () => {
-//     const { data } = (await client.from("categories").select("id, name")) as {
-//       data: Array<{ id: string; name: string }>;
-//     };
-//     return data;
-//   });
-//   categories.value = categories.value;
-// };
-
-// const getTags = async () => {
-//   const { data } = await useAsyncData("categories", async () => {
-//     const { data } = (await client.from("tags").select("id, name")) as {
-//       data: Array<{ id: string; name: string }>;
-//     };
-//     return data;
-//   });
-//   tags.value = data.value;
-// };
+blog.value.tags
+  ? blog.value.tags.map((tag) => initialContentTags.push(tag.id))
+  : null;
 
 const getImageFile = async (): Promise<Blob> => {
   const { data } = await useFetch(blog.value.image_url);

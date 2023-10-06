@@ -7,7 +7,7 @@ const props = defineProps<Props>();
 </script>
 
 <template>
-  <section v-if="props.blog" class=" mx-3 mb-20 sm:mx-6 lg:mx-40">
+  <section class="mt-5 mx-3 mb-20 sm:mx-6 lg:mx-40">
     <button
       class="absolute -top-1 left-1 sm:top-0 sm:left-5"
       @click="() => useRouter().push('/author/posts')"
