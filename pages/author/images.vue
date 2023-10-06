@@ -71,7 +71,7 @@ definePageMeta({
 </script>
 <template>
   <h2 class="font-rubik font-bold text-2xl my-5 text-center sm:my-8 lg:text-3xl lg:my-10">Images</h2>
-  <section class="max-w-sm sm:mx-5 lg:grid-cols-3 lg:mx-10">
+  <section class="max-w-sm mx-1 sm:mx-5 lg:grid-cols-3 lg:mx-10">
     <form @submit.prevent="onUploadImageHandler">
       <label class="block mb-2 text-lg font-semibold text-gray-900" for="file_input">Upload Image</label>
       <img v-if="imageFile" :src="getImageUrl()" alt="Selected Image" class="max-h-[150px] my-3" />

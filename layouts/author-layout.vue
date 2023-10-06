@@ -19,7 +19,7 @@ definePageMeta({
   <AuthorTheNavbar @toggleSidebar="sidebar = !sidebar" />
   <div class="font-rubik bg-white">
     <AuthorSidebar :sidebar="sidebar" id="sidebar" />
-    <main id="content" class="mt-20 transition-all duration-200 relative p-3 sm:p-0 bg-white" @click="() => sidebar = false">
+    <main id="content" class="mt-20 transition-all duration-200 relative p-1 sm:p-0 bg-white" @click="() => sidebar = false">
       <slot />
     </main>
   </div>

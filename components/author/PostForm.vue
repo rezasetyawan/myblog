@@ -63,21 +63,39 @@ onMounted(() => {
 });
 </script>
 <template>
-  <form id="post-form" class="font-rubik sm:mx-6 lg:mx-40" @submit.prevent="() => emit('onsubmit')">
-    <h2 class="font-bold text-xl my-3 text-center sm:text-2xl sm:my-5 lg:text-3xl">
+  <form
+    id="post-form"
+    class="font-rubik p-2 sm:mx-6 lg:mx-40"
+    @submit.prevent="() => emit('onsubmit')"
+  >
+    <h2
+      class="font-bold text-xl my-3 text-center sm:text-2xl sm:my-5 lg:text-3xl"
+    >
       {{ props.isEdit ? "Edit Post" : "Create New Post" }}
     </h2>
     <section class="text-sm sm:text-base">
       <div class="my-5">
         <label class="font-medium my-1">Title</label>
-        <input class="bg-white px-[0.4em] py-[0.3em] border-[1px] rounded-md block w-full sm:w-[50%] focus:outline-none"
-          v-model="contentDraft.title" required />
+        <input
+          class="bg-white px-[0.4em] py-[0.3em] border-[1px] rounded-md block w-full sm:w-[50%] focus:outline-none"
+          v-model="contentDraft.title"
+          required
+        />
       </div>
       <div class="my-5">
         <label class="font-medium my-1 block">Category</label>
-        <select class="px-[0.4em] py-[0.3em] block border-[1px] rounded-md b" v-model="contentDraft.category_id" required>
+        <select
+          class="px-[0.4em] py-[0.3em] block border-[1px] rounded-md b"
+          v-model="contentDraft.category_id"
+          required
+        >
           <option value="" disabled class="px-2 py-1">Chose Category</option>
-          <option v-for="category in categories" :key="category.id" :value="category.id" class="px-2 py-1 my-1">
+          <option
+            v-for="category in categories"
+            :key="category.id"
+            :value="category.id"
+            class="px-2 py-1 my-1"
+          >
             {{ category.name }}
           </option>
         </select>
@@ -85,37 +103,65 @@ onMounted(() => {
       <div class="font-rubik my-5">
         <label class="font-medium">Tags</label>
         <div class="flex flex-wrap max-w-[300px] gap-0">
-          <label v-for="tag in checkedTags" :key="tag.id"
-            class="checked-label border-2 border-slate-100 px-[0.8em] py-[0.4em] rounded-md hover:cursor-pointer">
-            <input type="checkbox" @change="emit('on-tags-update', tag.id)" :value="tag.id"
-              class="w-full h-full hidden" />
+          <label
+            v-for="tag in checkedTags"
+            :key="tag.id"
+            class="checked-label border-2 border-slate-100 px-[0.8em] py-[0.4em] rounded-md hover:cursor-pointer"
+          >
+            <input
+              type="checkbox"
+              @change="emit('on-tags-update', tag.id)"
+              :value="tag.id"
+              class="w-full h-full hidden"
+            />
             {{ tag.name }}
           </label>
-          <label v-for="tag in uncheckedTags" :key="tag.id"
-            class="border-2 border-slate-100 px-[0.8em] py-[0.4em] rounded-md hover:cursor-pointer">
-            <input type="checkbox" @change="emit('on-tags-update', tag.id)" :value="tag.id"
-              class="w-full h-full hidden" />
+          <label
+            v-for="tag in uncheckedTags"
+            :key="tag.id"
+            class="border-2 border-slate-100 px-[0.8em] py-[0.4em] rounded-md hover:cursor-pointer"
+          >
+            <input
+              type="checkbox"
+              @change="emit('on-tags-update', tag.id)"
+              :value="tag.id"
+              class="w-full h-full hidden"
+            />
             {{ tag.name }}
           </label>
         </div>
       </div>
       <div class="my-5 w-fit">
         <label class="font-medium">Image</label>
-        <img v-if="image" :src="getImageUrl()" alt="Selected Image" class="max-w-[150px] mt-3" />
-      
-          <input id="inputImage" type="file" @change="(event) => emit('onfilechange', event)"
-            accept="image/png, image/jpeg, image/jpg" required class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:border-none file:p-2 file:mr-4 file:py-2 file:px-4
-      file:text-sm file:font-semibold my-2" />
-        
+        <img
+          v-if="image"
+          :src="getImageUrl()"
+          alt="Selected Image"
+          class="max-w-[150px] mt-3"
+        />
+
+        <input
+          id="inputImage"
+          type="file"
+          @change="(event) => emit('onfilechange', event)"
+          accept="image/png, image/jpeg, image/jpg"
+          required
+          class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:border-none file:p-2 file:mr-4 file:py-2 file:px-4 file:text-sm file:font-semibold my-2"
+        />
       </div>
     </section>
     <div class="my-5">
       <label class="font-medium my-1 block">Body</label>
-      <TiptapEditor :text="contentDraft.text" @onchange="(editorcontent) => (contentDraft.text = editorcontent)" />
+      <TiptapEditor
+        :text="contentDraft.text"
+        @onchange="(editorcontent) => (contentDraft.text = editorcontent)"
+      />
     </div>
     <div class="flex justify-end items-center">
-      <button type="submit"
-        class="text-sm leading-tight font-bold text-white bg-red-800 px-3 py-1.5 my-2 sm:text-base lg:text-lg">
+      <button
+        type="submit"
+        class="text-sm leading-tight font-bold text-white bg-red-800 px-3 py-1.5 my-2 sm:text-base lg:text-lg"
+      >
         {{ props.isEdit ? "UPDATE POST" : "CREATE POST" }}
       </button>
     </div>

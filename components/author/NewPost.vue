@@ -151,11 +151,11 @@ onBeforeRouteLeave(async (to, from, next) => {
 });
 </script>
 <template>
-  <button class="absolute top-5 left-5" @click="() => useRouter().go(-1)">
-    <Icon name="eva:arrow-back-fill" class="w-8 h-8" />
+  <button class="absolute top-5 left-2" @click="() => useRouter().go(-1)">
+    <Icon name="eva:arrow-back-fill" class="w-7 h-7 sm:w-8 sm:h-8" />
   </button>
-  <button class="absolute top-5 right-5 group" @click="onSaveDraftHandler">
-    <Icon name="material-symbols:save" class="w-8 h-8" /><span
+  <button class="absolute top-5 right-2 group" @click="onSaveDraftHandler">
+    <Icon name="material-symbols:save" class="w-7 h-7 sm:w-8 sm:h-8" /><span
       class="hidden bg-slate-100 group-hover:inline whitespace-nowrap group-hover:absolute right-0 top-8 z-20 px-[0.8em] py-[0.4em] rounded-sm"
       >save to draft</span
     >
@@ -171,13 +171,4 @@ onBeforeRouteLeave(async (to, from, next) => {
     @onsubmit="onSubmitHandler"
     class="mb-16"
   />
-  <!-- <ConfirmationModalV2
-    :type="'negative'"
-    :show-confirmation-modal="showConfirmationModal"
-    @cancel="() => {
-      console.log(nextPath)
-       useRouter().push(nextPath)
-       showConfirmationModal = false
-    }"
-  /> -->
 </template>

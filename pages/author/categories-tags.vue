@@ -84,7 +84,7 @@ definePageMeta({
 });
 </script>
 <template>
-  <section class="w-full flex justify-evenly mb-5">
+  <section class="w-full flex justify-evenly mb-5 p-3">
     <label
       class="hover:cursor-pointer text-sm sm:text-base"
       :class="{ 'border-b-2 border-red-800': currentSection === 'categories' }"
