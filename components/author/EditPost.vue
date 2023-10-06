@@ -3,6 +3,8 @@ const config = useRuntimeConfig();
 
 interface Props {
   blog: GetBlogDetail;
+  categories: { id: string; name: string }[];
+  tags: { id: string; name: string }[];
 }
 
 interface ContentDraft {
@@ -16,8 +18,8 @@ const props = defineProps<Props>();
 const { blog } = toRefs(props);
 const client = useSupabaseClient();
 
-const blogCategories = ref<Array<{ id: string; name: string }> | null>(null);
-const taglist = ref<Array<{ id: string; name: string }> | null>(null);
+const categories = ref<{ id: string; name: string }[] | null>(props.categories);
+const tags = ref<{ id: string; name: string }[] | null>(props.tags);
 const image = ref<File>();
 const isImageChanged = ref<boolean>(false);
 const isPostUpdated = ref<boolean>(false);
@@ -52,25 +54,25 @@ contentTags.value = blog.value.tags ? blog.value.tags.map((tag) => tag.id) : [];
 const initialContentTags: string[] = [];
 blog.value.tags.map((tag) => initialContentTags.push(tag.id));
 
-const getCategories = async () => {
-  const { data: categories } = await useAsyncData("categories", async () => {
-    const { data } = (await client.from("categories").select("id, name")) as {
-      data: Array<{ id: string; name: string }>;
-    };
-    return data;
-  });
-  blogCategories.value = categories.value;
-};
+// const getCategories = async () => {
+//   const { data: categories } = await useAsyncData("categories", async () => {
+//     const { data } = (await client.from("categories").select("id, name")) as {
+//       data: Array<{ id: string; name: string }>;
+//     };
+//     return data;
+//   });
+//   categories.value = categories.value;
+// };
 
-const getTags = async () => {
-  const { data } = await useAsyncData("categories", async () => {
-    const { data } = (await client.from("tags").select("id, name")) as {
-      data: Array<{ id: string; name: string }>;
-    };
-    return data;
-  });
-  taglist.value = data.value;
-};
+// const getTags = async () => {
+//   const { data } = await useAsyncData("categories", async () => {
+//     const { data } = (await client.from("tags").select("id, name")) as {
+//       data: Array<{ id: string; name: string }>;
+//     };
+//     return data;
+//   });
+//   tags.value = data.value;
+// };
 
 const getImageFile = async (): Promise<Blob> => {
   const { data } = await useFetch(blog.value.image_url);
@@ -95,8 +97,8 @@ const setImageInitialValue = async () => {
 };
 
 onMounted(async () => {
-  await getCategories();
-  await getTags();
+  // await getCategories();
+  // await getTags();
   await setImageInitialValue();
 
   if (image.value) {
@@ -236,8 +238,8 @@ const onSubmitHandler = async () => {
     <AuthorPostForm
       :contentDraft="contentDraft"
       :contentTags="contentTags"
-      :categories="blogCategories"
-      :tags="taglist"
+      :categories="categories"
+      :tags="tags"
       :image="image"
       :isEdit="true"
       @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"

@@ -8,8 +8,7 @@ const props = defineProps<Props>();
 const emit = defineEmits(["edit", "delete"]);
 </script>
 <template>
-  <div class="shadow-md sm:rounded-lg bg-white sm:min-w-[500px]">
-    <table class="w-full text-sm text-left text-gray-800 rounded-lg">
+    <table class="w-full text-sm text-left text-gray-800 rounded-lg shadow-md sm:rounded-lg bg-white sm:min-w-[500px] mx-auto">
       <thead class="text-xs text-gray-700 uppercase bg-gray-200">
         <tr>
           <th class="p-2">No</th>
@@ -28,5 +27,4 @@ const emit = defineEmits(["edit", "delete"]);
         </template>
       </tbody>
     </table>
-  </div>
 </template>

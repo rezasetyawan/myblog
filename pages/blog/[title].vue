@@ -45,7 +45,7 @@ const fetchBlogComments = async () => {
 };
 
 definePageMeta({
-  middleware: 'is-admin',
+  middleware: "is-admin",
 });
 
 onMounted(async () => {

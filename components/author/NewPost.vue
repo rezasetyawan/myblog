@@ -69,7 +69,6 @@ const onTagsUpdateHandler = (tagId: string) => {
 const onFileChangeHandler = (event: Event) => {
   try {
     const target = event.target as HTMLInputElement;
-    // !!target.files && (image.value = target.files[0]);
     if (target.files) image.value = target.files[0];
   } catch (error) {}
 };

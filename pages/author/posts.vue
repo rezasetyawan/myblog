@@ -31,6 +31,7 @@ const fetchBlogs = async () => {
     isLoading.value = true;
     const { data: blogsDataCache } = useNuxtData(cacheKey.value);
     if (blogsDataCache.value) {
+      console.log("dari cache");
       blogsData.value = blogsDataCache.value;
     } else {
       const data = await getAuthorBlogs(
@@ -41,7 +42,19 @@ const fetchBlogs = async () => {
         cacheKey.value
       );
 
-      console.log(data);
+      data ? (blogsData.value = data) : null;
+    }
+
+    //  buat fix data null (side effect dari useNuxtData), nggak boros api soalnya teta nembak api sekali
+    if (!blogsData.value) {
+      const data = await getAuthorBlogs(
+        queryParams.value.searchKey,
+        queryParams.value.category,
+        queryParams.value.tags,
+        page.value,
+        cacheKey.value
+      );
+
       data ? (blogsData.value = data) : null;
     }
 
@@ -50,15 +63,6 @@ const fetchBlogs = async () => {
     showErrorToast(error.message);
   }
 };
-
-// BUAT SOLVE BUG ANEH (DATA NULL) NGGAK TAU KENAPA, TAPI INTINYA FUNCTIONNYA TETAP KE CALL SATU KALI DOANG BESOK GWE BENERIN (OPSIONAL)
-await getAuthorBlogs(
-  queryParams.value.searchKey,
-  queryParams.value.category,
-  queryParams.value.tags,
-  page.value,
-  cacheKey.value
-);
 
 onMounted(async () => {
   cacheKey.value = route.fullPath;

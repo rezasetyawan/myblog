@@ -25,12 +25,22 @@ const onSubmitHandler = async () => {
     showErrorToast(error.message);
   }
 };
+
+definePageMeta({
+  middleware: "author",
+  layout: "author-layout",
+});
+
+useHead({
+  title: `${category.value?.name} | My Blog`,
+  titleTemplate: `${category.value?.name} | My Blog`,
+});
 </script>
 <template>
   <section class="flex justify-center">
     <button
       class="absolute -top-3 left-1 sm:top-0 sm:left-5"
-      @click="() => useRouter().push('/author/categories-tags')"
+      @click="() => useRouter().push('/author/categories')"
     >
       <Icon name="eva:arrow-back-fill" class="w-7 h-7 sm:w-8 sm:h-8" />
     </button>

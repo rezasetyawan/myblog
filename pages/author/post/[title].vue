@@ -49,8 +49,8 @@ onMounted(async () => {
   await fetchBlogComments();
 
   useHead({
-    title: `My Blog | ${blog.value?.title}`,
-    titleTemplate: `My Blog | ${blog.value?.title}`,
+    title: `${blog.value?.title} | My Blog`,
+    titleTemplate: `${blog.value?.title} | My Blog`,
   });
 });
 
