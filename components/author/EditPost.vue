@@ -231,21 +231,21 @@ const onSubmitHandler = async () => {
 };
 </script>
 <template>
-  <div>
+  <div class="sm:mx-6 lg:mx-40 relative">
     <button class="absolute top-5 left-2" @click="() => useRouter().go(-1)">
       <Icon name="eva:arrow-back-fill" class="w-7 h-7 sm:w-8 sm:h-8" />
     </button>
-    <AuthorPostForm
-      :contentDraft="contentDraft"
-      :contentTags="contentTags"
-      :categories="categories"
-      :tags="tags"
-      :image="image"
-      :isEdit="true"
-      @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
-      @onfilechange="(event: Event) => onFileChangeHandler(event)"
-      @onsubmit="onSubmitHandler"
-      class="mb-16"
-    />
   </div>
+  <AuthorPostForm
+    :contentDraft="contentDraft"
+    :contentTags="contentTags"
+    :categories="categories"
+    :tags="tags"
+    :image="image"
+    :isEdit="true"
+    @on-tags-update="(tagId: string) => onTagsUpdateHandler(tagId)"
+    @onfilechange="(event: Event) => onFileChangeHandler(event)"
+    @onsubmit="onSubmitHandler"
+    class="mb-16"
+  />
 </template>

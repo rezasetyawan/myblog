@@ -31,7 +31,6 @@ const fetchBlogs = async () => {
     isLoading.value = true;
     const { data: blogsDataCache } = useNuxtData(cacheKey.value);
     if (blogsDataCache.value) {
-      console.log("dari cache");
       blogsData.value = blogsDataCache.value;
     } else {
       const data = await getAuthorBlogs(
