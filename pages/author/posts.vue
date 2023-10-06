@@ -41,6 +41,7 @@ const fetchBlogs = async () => {
         cacheKey.value
       );
 
+      console.log(data);
       data ? (blogsData.value = data) : null;
     }
 
@@ -62,6 +63,15 @@ const fetchBlogs = async () => {
     showErrorToast(error.message);
   }
 };
+
+// BUAT SOLVE BUG ANEH (DATA NULL) NGGAK TAU KENAPA, TAPI INTINYA FUNCTIONNYA TETAP KE CALL SATU KALI DOANG BESOK GWE BENERIN (OPSIONAL)
+await getAuthorBlogs(
+  queryParams.value.searchKey,
+  queryParams.value.category,
+  queryParams.value.tags,
+  page.value,
+  cacheKey.value
+);
 
 onMounted(async () => {
   cacheKey.value = route.fullPath;

@@ -4,6 +4,7 @@ definePageMeta({
   layout: "my-layout",
 });
 
+
 const client = useSupabaseClient();
 const route = useRoute();
 
